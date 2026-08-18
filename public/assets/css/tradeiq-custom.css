@@ -1,0 +1,46 @@
+/* fallback so the mobile menu is actually usable now that the original
+   Next.js "open" class name isn't recoverable from the static snapshot */
+.TradeIQHeader_carnival_links___dUpj.nav-open{ display:flex !important; flex-direction:column; position:absolute; top:100%; left:0; right:0; }
+
+/* =========================================================================
+   COLOR THEME OVERRIDE — teal (#007a78 / #2da499) -> black
+   Loaded AFTER 6246d53ec2140ccc.css and b9ffb8ba246b9beb.css, so these
+   redeclared custom properties win and cascade through every component
+   that already consumes var(--bg-green), var(--fc-green), var(--a-clr), etc.
+   No markup changes required — this only repoints the design tokens.
+   ========================================================================= */
+:root{
+  /* --- primary brand color (was #007a78) --- */
+  --bg-green:#111111;
+  --bg-green-gradient:linear-gradient(90deg,#000000,#2b2b2b);
+  --bg-green-gradient-reverse:linear-gradient(270deg,#000000,#2b2b2b);
+
+  /* --- text / accent color (was #007a78 / #00787a) --- */
+  --fc-green:#111111;
+  --fc-green2:#111111;
+  --a-clr:#111111;
+
+  /* --- buttons that reused the green gradient --- */
+  --bg-google-btn:linear-gradient(90deg,#000000,#2b2b2b);
+  --bg-google-btn-reverse:linear-gradient(270deg,#000000,#2b2b2b);
+  --bg-error-btn:linear-gradient(90deg,#000000,#2b2b2b);
+
+  /* --- borders that referenced the old primary --- */
+  --bord-primary:1px solid #111111;
+  --bord-green:1px solid #111111;
+  --bord-left-coupon:8px solid linear-gradient(180.01deg,#000000 1.26%,#2b2b2b 98.51%);
+
+  /* --- instructor profile-pic ring gradient (was teal->green stops) --- */
+  --bord-instructor-profilePic:2px solid linear-gradient(#f6f6f6 100%,#2b2b2b 0,#1a1a1a 0,#000000 0);
+
+  /* --- subtle themed surfaces (was a warm gold tint) --- */
+  --bg-subcard-portal:hsla(0,0%,90%,.75);
+}
+
+/* Hover/darker state for anything using --bg-green as a solid hover fill
+   (buttons, chips) — pure black, one step darker than the #111 base,
+   matching the old pattern where hover states were a darker version
+   of the brand color. */
+:root{
+  --bg-green-hover:#000000;
+}
