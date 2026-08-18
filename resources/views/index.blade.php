@@ -7602,6 +7602,206 @@
     }
 }
 </style>
+
+and ye css add hogi
+
+<style>
+.th-signup-item {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: 8px !important;
+}
+
+.th-signup-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    padding: 9px 22px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    color: #1a1a1a !important;
+    background: linear-gradient(90deg, #94815A, #FADA98) !important;
+    border-radius: 999px !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+    box-sizing: border-box !important;
+}
+
+.th-signup-btn:hover {
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
+}
+
+@media (max-width: 900px) {
+    .TradeIQHeader_carnival_links___dUpj.false {
+        flex-wrap: wrap !important;
+    }
+    .th-signup-item {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-top: 10px !important;
+        justify-content: center !important;
+    }
+    .th-signup-btn {
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+</style>
+<style>
+.rm-toggle {
+    display: none !important;
+}
+
+.rm-trigger-btn {
+    cursor: pointer !important;
+    display: inline-flex !important;
+}
+
+.rm-overlay {
+    display: none !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px !important;
+    box-sizing: border-box !important;
+}
+
+.rm-toggle:checked ~ .rm-overlay {
+    display: flex !important;
+}
+
+.rm-overlay-bg {
+    position: absolute !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(3px) !important;
+    cursor: pointer !important;
+}
+
+.rm-modal {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+    padding: 32px 28px !important;
+    background: linear-gradient(160deg, #1a1220, #0d0a10) !important;
+    border: 1px solid rgba(250, 218, 152, 0.35) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+}
+
+.rm-close {
+    position: absolute !important;
+    top: 16px !important;
+    right: 16px !important;
+    width: 30px !important;
+    height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    cursor: pointer !important;
+}
+
+.rm-title {
+    margin: 0 0 6px 0 !important;
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+    color: #ffffff !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+.rm-subtitle {
+    margin: 0 0 22px 0 !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #b3b3b3 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+.rm-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.rm-field {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.rm-field label {
+    font-size: 12.5px !important;
+    color: #d9d9d9 !important;
+    white-space: normal !important;
+}
+
+.rm-field input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 11px 14px !important;
+    font-size: 14px !important;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    outline: none !important;
+    transition: border-color 0.2s ease !important;
+}
+
+.rm-field input:focus {
+    border-color: #FADA98 !important;
+}
+
+.rm-field input::placeholder {
+    color: #777777 !important;
+}
+
+.rm-submit-btn {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-top: 6px !important;
+    padding: 13px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #1a1a1a !important;
+    background: linear-gradient(90deg, #94815A, #FADA98) !important;
+    border: none !important;
+    border-radius: 999px !important;
+    cursor: pointer !important;
+}
+
+@media (max-width: 480px) {
+    .rm-modal {
+        padding: 26px 20px !important;
+    }
+}
+</style>
+<style>
+.rm-trigger-wrap {
+    cursor: pointer !important;
+    display: inline-flex !important;
+}
+
+.rm-trigger-wrap button {
+    pointer-events: none !important;
+}
+</style>
 </head>
 <body>
     <div id="__next">
@@ -7647,10 +7847,54 @@
                         </div>
                     </div>
 
-                    <div class="HeroSection_btn_cntnr__4eEPD">
-                        <a href="#pricing"><button class="HeroSection_rgstr_btn__M_wmX"><span>Register Now</span></button></a>
+                   <div class="HeroSection_btn_cntnr__4eEPD">
+                        <label for="register-modal-toggle" class="rm-trigger-wrap">
+                            <button type="button" class="HeroSection_rgstr_btn__M_wmX"><span>Register Now</span></button>
+                        </label>
                     </div>
 
+                    <!-- Modal state toggle (CSS-only, no JS needed) -->
+                    <input type="checkbox" id="register-modal-toggle" class="rm-toggle" />
+
+                    <div class="rm-overlay">
+                        <label for="register-modal-toggle" class="rm-overlay-bg"></label>
+
+                        <div class="rm-modal">
+                            <label for="register-modal-toggle" class="rm-close">
+                                <svg fill="none" height="14" viewBox="0 0 14 14" width="14" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.3327 12.3337L1.66602 1.66699M12.3327 1.66699L1.66602 12.3337" stroke="#fff" stroke-linecap="round" stroke-width="2"></path>
+                                </svg>
+                            </label>
+
+                            <h3 class="rm-title">Register for the Conclave</h3>
+                            <p class="rm-subtitle">Enter your details to get your event pass.</p>
+
+                            <form class="rm-form" action="" method="POST">
+                                @csrf
+                                <div class="rm-field">
+                                    <label for="rm-name">Full Name</label>
+                                    <input type="text" id="rm-name" name="name" placeholder="Enter your full name" required />
+                                </div>
+
+                                <div class="rm-field">
+                                    <label for="rm-email">Email Address</label>
+                                    <input type="email" id="rm-email" name="email" placeholder="Enter your email" required />
+                                </div>
+
+                                <div class="rm-field">
+                                    <label for="rm-phone">Mobile Number</label>
+                                    <input type="tel" id="rm-phone" name="phone" placeholder="Enter your mobile number" pattern="[0-9]{10}" maxlength="10" required />
+                                </div>
+
+                                <div class="rm-field">
+                                    <label for="rm-city">City</label>
+                                    <input type="text" id="rm-city" name="city" placeholder="Enter your city" required />
+                                </div>
+
+                                <button type="submit" class="rm-submit-btn">Continue to Payment</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 
