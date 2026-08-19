@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
@@ -194,21 +195,78 @@
             display: inline-flex;
         }
 
+        .menu-toggle {
+            display: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            align-items: center;
+            justify-content: center;
+            color: #f6f3fa;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .menu-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 70px;
+            bottom: 0;
+            padding: 16px 24px 32px;
+            background: #050208;
+            z-index: 90;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .mobile-menu.open {
+            display: flex;
+        }
+
+        .mobile-menu a:not(.btn) {
+            padding: 14px 2px;
+            font-size: 15px;
+            color: #e9e4f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .mobile-menu a:not(.btn):active {
+            color: var(--purple-1);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 16px;
+            width: 100%;
+        }
+
         @media(max-width:819px) {
             nav.links {
                 display: none;
             }
 
             .nav-cta {
-                padding: 10px 16px;
-                font-size: 13px;
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
             }
         }
 
-        @media(max-width:400px) {
-            .nav-cta {
-                padding: 9px 13px;
-                font-size: 12px;
+        @media(min-width:820px) {
+            .mobile-menu {
+                display: none !important;
             }
         }
 
@@ -254,6 +312,25 @@
             opacity: .8;
         }
 
+        .logo-img {
+            height: 32px;
+            width: auto;
+            display: block;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: .55;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: 1;
+        }
+
         .hero-sparkles {
             position: absolute;
             inset: 0;
@@ -282,7 +359,7 @@
             }
         }
 
-        .hero>*:not(.hero-beam):not(.hero-sparkles) {
+        .hero>*:not(.hero-beam):not(.hero-sparkles):not(.hero-video) {
             position: relative;
             z-index: 2;
         }
@@ -421,9 +498,9 @@
 
         .info-fields {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
-            gap: 46px;
+            gap: 36px;
         }
 
         .info-field {
@@ -466,15 +543,57 @@
             .info-card {
                 left: 50%;
                 top: 56px;
-                padding: 16px 22px;
+                width: calc(100% - 32px);
+                max-width: calc(100% - 32px);
+                padding: 0;
+                background: none;
+                border: none;
+                box-shadow: none;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
             }
 
             .info-fields {
-                gap: 20px;
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 10px;
             }
 
             .info-field {
                 white-space: normal;
+                min-width: 0;
+                background: rgba(8, 4, 14, 0.94);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 18px;
+                padding: 14px 14px;
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+            }
+
+            .info-field>div {
+                min-width: 0;
+                overflow-wrap: break-word;
+            }
+
+            .info-field .ic {
+                width: 38px;
+                height: 38px;
+                flex-shrink: 0;
+            }
+
+            .info-field:nth-child(3) {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media(max-width:360px) {
+            .info-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .info-field:nth-child(3) {
+                grid-column: 1;
             }
         }
 
@@ -493,42 +612,82 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
             gap: 18px;
         }
 
-        .price-row {
+        .price-tiers {
             display: flex;
-            align-items: center;
-            gap: 20px;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .price-tier {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
             flex-wrap: wrap;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .price-tier .tier-label {
+            white-space: nowrap;
         }
 
         .price-old {
             color: var(--muted-2);
             text-decoration: line-through;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .price-new {
             font-weight: 700;
-            font-size: 17px;
+            font-size: 16px;
+            color: var(--ink);
+        }
+
+        .price-tier.client .tier-label {
+            color: var(--muted);
+        }
+
+        .price-tier.client .price-new {
+            color: var(--purple-1);
+            font-size: 16px;
+        }
+
+        @media(max-width:600px) {
+            .info-inner {
+                justify-content: center;
+                text-align: center;
+                flex-direction: column;
+            }
+
+            .price-tiers {
+                align-items: center;
+            }
+
+            .price-tier {
+                justify-content: center;
+            }
         }
 
         /* ---------- SECTION HEADS ---------- */
         .section-head {
             text-align: center;
             max-width: 640px;
-            margin: 0 auto 44px;
+            margin: 0 auto 48px;
         }
 
         .section-head h2 {
-            font-size: clamp(28px, 4vw, 40px);
-            font-weight: 700;
+            font-size: clamp(32px, 5.2vw, 52px);
+            font-weight: 800;
+            letter-spacing: -.01em;
         }
 
         .section-head.purple h2 {
             color: var(--purple-1);
+            text-shadow: 0 0 40px rgba(184, 102, 247, 0.45);
         }
 
         .section-head p {
@@ -547,8 +706,8 @@
 
         .lg-glow {
             position: absolute;
-            top: -6%;
-            left: -12%;
+            top: 0;
+            left: 0;
             pointer-events: none;
             user-select: none;
             mix-blend-mode: screen;
@@ -556,17 +715,15 @@
         }
 
         .lg-glow-soft {
-            width: 62%;
-            max-width: 820px;
-            opacity: .9;
+            width: 520px;
+            max-width: 65%;
         }
 
         .lg-glow-beam {
-            width: 42%;
-            max-width: 560px;
-            top: -4%;
-            left: -16%;
-            opacity: .85;
+            width: 400px;
+            max-width: 52%;
+            top: 0;
+            left: 0;
         }
 
         /* ---------- LEARN / GET CARDS ---------- */
@@ -601,67 +758,90 @@
         }
 
         .card {
-            background: var(--card-grad);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 30px 22px;
+            background: linear-gradient(160deg, rgba(22, 12, 30, 0.9) 0%, rgba(8, 4, 12, 0.96) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 40px 26px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+            transition: transform .3s ease, box-shadow .3s ease;
         }
 
         .card::before {
             content: "";
             position: absolute;
             inset: 0;
-            border-radius: 16px;
-            padding: 1px;
-            background: linear-gradient(160deg, rgba(180, 110, 255, 0.5), rgba(180, 110, 255, 0) 40%, rgba(180, 110, 255, 0.35) 100%);
+            border-radius: 18px;
+            padding: 1.5px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 55%, rgba(216, 110, 255, 0.55) 85%, rgba(224, 110, 255, 0.95) 100%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
-            opacity: 0;
+            opacity: 1;
             transition: opacity .3s ease;
+            pointer-events: none;
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            left: 8%;
+            right: 8%;
+            bottom: 0;
+            height: 46px;
+            background: radial-gradient(ellipse at center, rgba(210, 120, 255, 0.5) 0%, transparent 72%);
+            filter: blur(10px);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(120, 40, 200, 0.25);
+            box-shadow: 0 24px 48px rgba(140, 40, 200, 0.35);
         }
 
         .card:hover::before {
             opacity: 1;
         }
 
+        .card>* {
+            position: relative;
+            z-index: 1;
+        }
+
         .icon-circle {
-            width: 56px;
-            height: 56px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            margin: 0 auto 18px;
-            border: 1.5px solid rgba(190, 120, 255, 0.55);
-            background: radial-gradient(circle at 30% 25%, rgba(160, 80, 230, 0.35), rgba(20, 10, 30, 0.4));
+            margin: 0 auto 22px;
+            border: 2px solid transparent;
+            background:
+                radial-gradient(circle at 32% 28%, rgba(150, 70, 220, 0.55), rgba(16, 8, 24, 0.9)) padding-box,
+                linear-gradient(135deg, var(--purple-1), var(--magenta)) border-box;
+            box-shadow: 0 0 26px rgba(184, 102, 247, 0.5), inset 0 0 18px rgba(184, 102, 247, 0.18);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .icon-circle svg {
-            width: 22px;
-            height: 22px;
+            width: 27px;
+            height: 27px;
             stroke: var(--purple-1);
+            filter: drop-shadow(0 0 7px rgba(190, 110, 255, 0.85));
         }
 
         .card h3 {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 6px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
 
         .card p {
-            font-size: 13.5px;
+            font-size: 14.5px;
             color: var(--muted);
-            line-height: 1.5;
+            line-height: 1.55;
         }
 
         .get {
@@ -711,10 +891,92 @@
             position: relative;
             z-index: 2;
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0));
-            border: 1px solid rgba(180, 120, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
             padding: 10px 40px;
-            box-shadow: 0 0 60px rgba(150, 60, 230, 0.25), inset 0 0 40px rgba(150, 60, 230, 0.05);
+            overflow: visible;
+            box-shadow:
+                -35px -25px 90px rgba(150, 90, 230, 0.14),
+                55px 55px 120px rgba(210, 90, 235, 0.30),
+                inset 0 0 40px rgba(150, 60, 230, 0.05);
+        }
+
+        .schedule-box::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1.4px;
+            pointer-events: none;
+            z-index: 3;
+            background:
+                radial-gradient(150px 150px at 0% 0%, rgba(240, 215, 255, 0.95) 0%, rgba(200, 140, 255, 0.35) 45%, transparent 72%),
+                radial-gradient(210px 210px at 100% 100%, rgba(226, 140, 255, 0.95) 0%, rgba(190, 80, 225, 0.4) 45%, transparent 72%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .corner-light {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            mix-blend-mode: screen;
+            z-index: 1;
+        }
+
+        .corner-light-tl-1 {
+            top: -72px;
+            left: -160px;
+            width: 480px;
+            opacity: .5;
+        }
+
+        .corner-light-tl-2 {
+            top: -42px;
+            left: -125px;
+            width: 420px;
+            opacity: .7;
+            transform: rotate(-4deg);
+        }
+
+        .corner-light-tl-3 {
+            top: -98px;
+            left: -182px;
+            width: 380px;
+            opacity: .45;
+            transform: rotate(5deg);
+        }
+
+        .corner-light-br-1 {
+            bottom: -160px;
+            right: -150px;
+            width: 500px;
+            opacity: .7;
+        }
+
+        .corner-light-br-2 {
+            bottom: -95px;
+            right: -70px;
+            width: 360px;
+            opacity: .85;
+        }
+
+        @media(max-width:760px) {
+
+            .corner-light-tl-1,
+            .corner-light-tl-2,
+            .corner-light-tl-3,
+            .corner-light-br-1,
+            .corner-light-br-2 {
+                width: 260px;
+            }
+        }
+
+        .agenda-wrap {
+            position: relative;
+            z-index: 2;
         }
 
         .agenda-item {
@@ -771,6 +1033,22 @@
         .panel-sec {
             padding: 100px 24px;
             background: var(--bg-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-sec::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140%;
+            height: 33%;
+            background: radial-gradient(ellipse at center bottom, rgba(150, 50, 220, 0.55) 0%, rgba(120, 30, 190, 0.3) 45%, transparent 75%);
+            filter: blur(30px);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .panelist-card {
@@ -780,6 +1058,13 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
             padding: 28px 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-sec .center-btn {
+            position: relative;
+            z-index: 1;
         }
 
         .panelist-card h3 {
@@ -826,9 +1111,9 @@
             color: var(--muted);
         }
 
-        /* ---------- INVITE & EARN ---------- */
+        /* ---------- INVITE & EARN (FIXED) ---------- */
         .invite {
-            padding: 130px 24px 160px;
+            padding: 130px 24px 110px;
             background: #000;
             text-align: center;
             position: relative;
@@ -836,9 +1121,8 @@
         }
 
         .invite-sphere {
-            width: min(600px, 90vw);
-            height: min(600px, 90vw);
-            border-radius: 50%;
+            width: min(760px, 94vw);
+            height: min(760px, 94vw);
             margin: 0 auto;
             position: relative;
             display: flex;
@@ -846,33 +1130,40 @@
             align-items: center;
             justify-content: center;
             padding: 40px;
-            background: radial-gradient(circle at 50% 40%, rgba(80, 20, 140, 0.15), rgba(0, 0, 0, 0) 60%);
         }
 
-        .invite-sphere::before {
-            content: "";
+        .sphere-img {
             position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at 50% 105%, #e070ff 0%, #9b2fe0 22%, #5a1aa8 42%, rgba(15, 5, 30, 0.4) 62%, rgba(0, 0, 0, 0) 75%);
-            filter: blur(1px);
-        }
-
-        .invite-sphere::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 120%;
-            height: 120%;
             transform: translate(-50%, -50%);
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(220, 120, 255, 0.35), transparent 65%);
-            filter: blur(50px);
-            z-index: -1;
+            pointer-events: none;
+            user-select: none;
+            mix-blend-mode: screen;
+            width: min(660px, 90vw);
+            height: min(660px, 90vw);
         }
 
-        .invite-sphere>* {
+        .sphere-img-left {
+            top: 45%;
+            left: 42%;
+            opacity: .9;
+            z-index: 0;
+        }
+
+        .sphere-img-right {
+            top: 45%;
+            left: 58%;
+            opacity: .9;
+            z-index: 0;
+        }
+
+        .sphere-img-base {
+            top: 50%;
+            left: 50%;
+            z-index: 2;
+            opacity: 1;
+        }
+
+        .invite-sphere>*:not(.sphere-img) {
             position: relative;
             z-index: 2;
         }
@@ -900,30 +1191,97 @@
 
         /* ---------- READY TO TRADE / SPHERE ---------- */
         .cta-sphere-sec {
-            padding: 150px 24px 220px;
+            padding: 110px 24px 260px;
             background: #000;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        .shard {
+        /* Fan of soft diagonal light beams rising from each bottom corner toward
+     the orb — screen-blended, untouched originals, several per side so it
+     reads as a converging glow rather than two flat beams. */
+        .light-ray {
             position: absolute;
-            top: 38%;
-            width: 340px;
-            max-width: 36vw;
+            bottom: -6%;
             pointer-events: none;
-            opacity: 0.9;
-            z-index: 1;
+            user-select: none;
+            mix-blend-mode: screen;
+            z-index: 0;
         }
 
-        .shard.left {
-            left: -60px;
+        /* left family: mirrored so each beam's bright source points inward
+     toward the orb instead of outward off the edge of the page */
+        .light-ray-left-1 {
+            left: -6%;
+            bottom: -8%;
+            width: min(360px, 42vw);
+            opacity: .55;
             transform: scaleX(-1);
         }
 
+        .light-ray-left-2 {
+            left: 0%;
+            bottom: -10%;
+            width: min(460px, 48vw);
+            opacity: .45;
+            transform: scaleX(-1);
+        }
+
+        .light-ray-left-3 {
+            left: 8%;
+            bottom: -5%;
+            width: min(300px, 36vw);
+            opacity: .6;
+            transform: scaleX(-1);
+        }
+
+        /* right family: mirrored so each beam's bright source points inward
+     toward the orb instead of outward off the edge of the page */
+        .light-ray-right-1 {
+            right: -6%;
+            bottom: -8%;
+            width: min(360px, 42vw);
+            opacity: .55;
+            transform: scaleX(-1);
+        }
+
+        .light-ray-right-2 {
+            right: 0%;
+            bottom: -10%;
+            width: min(460px, 48vw);
+            opacity: .45;
+            transform: scaleX(-1);
+        }
+
+        .light-ray-right-3 {
+            right: 8%;
+            bottom: -5%;
+            width: min(300px, 36vw);
+            opacity: .6;
+            transform: scaleX(-1);
+        }
+
+        /* Two DISTINCT glass-shard assets (not one image mirrored twice) — left
+     skews blue/violet, right skews pink/magenta, matching the reference.
+     They anchor to the bottom edge and flare outward past the padding. */
+        .shard {
+            position: absolute;
+            bottom: -70px;
+            width: 320px;
+            max-width: 38vw;
+            pointer-events: none;
+            z-index: 1;
+            opacity: .95;
+            filter: drop-shadow(0 30px 70px rgba(120, 40, 200, 0.4));
+        }
+
+        .shard.left {
+            left: -50px;
+        }
+
         .shard.right {
-            right: -60px;
+            right: -50px;
         }
 
         .cta-sphere-sec .wrap-inner {
@@ -953,34 +1311,10 @@
 
         .orb-stage {
             margin: 70px auto 0;
-            width: 220px;
-            height: 220px;
+            width: 380px;
+            height: 380px;
             position: relative;
             perspective: 900px;
-        }
-
-        .orb-glow {
-            position: absolute;
-            inset: -70px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(190, 70, 255, 0.5), rgba(120, 20, 200, 0.15) 45%, transparent 70%);
-            filter: blur(30px);
-            animation: orbGlowPulse 6s ease-in-out infinite;
-            z-index: 0;
-        }
-
-        @keyframes orbGlowPulse {
-
-            0%,
-            100% {
-                opacity: .7;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.12);
-            }
         }
 
         .orb-wobble {
@@ -989,30 +1323,6 @@
             border-radius: 50%;
             position: relative;
             z-index: 2;
-            transform-style: preserve-3d;
-            animation: orbWobble 11s ease-in-out infinite;
-        }
-
-        @keyframes orbWobble {
-            0% {
-                transform: rotateX(6deg) rotateY(-10deg) rotateZ(-1.5deg);
-            }
-
-            25% {
-                transform: rotateX(-4deg) rotateY(4deg) rotateZ(1deg);
-            }
-
-            50% {
-                transform: rotateX(5deg) rotateY(12deg) rotateZ(-1deg);
-            }
-
-            75% {
-                transform: rotateX(-6deg) rotateY(-3deg) rotateZ(1.5deg);
-            }
-
-            100% {
-                transform: rotateX(6deg) rotateY(-10deg) rotateZ(-1.5deg);
-            }
         }
 
         .orb-mask {
@@ -1021,86 +1331,16 @@
             border-radius: 50%;
             overflow: hidden;
             position: relative;
-            box-shadow:
-                0 0 0 1px rgba(220, 170, 255, 0.25),
-                inset 0 0 40px rgba(0, 0, 0, 0.6),
-                inset 10px 10px 30px rgba(255, 255, 255, 0.08),
-                0 20px 60px rgba(150, 40, 220, 0.55);
-            background: #0a0210;
+            background: transparent;
         }
 
         .orb-img {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 180%;
-            height: 180%;
-            transform: translate(-50%, -50%) rotate(0deg) scale(1.05);
-            background-image: url('assets/images/5.svg');
-            background-size: cover;
-            background-position: center;
-            animation: orbSpin 34s linear infinite;
-            filter: saturate(1.3) brightness(1.05);
-        }
-
-        .orb-img.layer2 {
-            width: 200%;
-            height: 200%;
-            animation: orbSpinRev 48s linear infinite;
-            mix-blend-mode: screen;
-            opacity: .55;
-            filter: hue-rotate(15deg) saturate(1.4) brightness(1.1);
-        }
-
-        @keyframes orbSpin {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg) scale(1.05);
-            }
-
-            to {
-                transform: translate(-50%, -50%) rotate(360deg) scale(1.05);
-            }
-        }
-
-        @keyframes orbSpinRev {
-            from {
-                transform: translate(-50%, -50%) rotate(360deg) scale(1.15);
-            }
-
-            to {
-                transform: translate(-50%, -50%) rotate(0deg) scale(1.15);
-            }
-        }
-
-        .orb-sheen {
-            position: absolute;
             inset: 0;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, transparent 0%, rgba(255, 220, 255, 0.28) 8%, transparent 20%, transparent 60%, rgba(200, 140, 255, 0.2) 72%, transparent 85%);
-            animation: sheenSpin 9s linear infinite;
-            mix-blend-mode: plus-lighter;
-            pointer-events: none;
-        }
-
-        @keyframes sheenSpin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            .orb-wobble,
-            .orb-img,
-            .orb-img.layer2,
-            .orb-sheen,
-            .orb-glow {
-                animation: none;
-            }
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
         /* ---------- FAQ ---------- */
@@ -1270,6 +1510,183 @@
         ::selection {
             background: rgba(180, 80, 255, 0.4);
         }
+
+        /* ---------- RESERVE / CLAIM MODAL ---------- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(3, 1, 6, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            background: linear-gradient(165deg, #170b22 0%, #0b0511 65%, #0a0410 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 26px;
+            padding: 38px 34px 34px;
+            overflow: hidden;
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-card::before {
+            content: "";
+            position: absolute;
+            top: -45%;
+            left: -32%;
+            width: 75%;
+            height: 85%;
+            background: radial-gradient(circle, rgba(196, 120, 255, 0.4) 0%, rgba(140, 70, 220, 0.14) 45%, transparent 75%);
+            filter: blur(22px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .modal-card::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 55%;
+            height: 60%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1.4px);
+            background-size: 9px 9px;
+            -webkit-mask-image: radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.9) 0%, transparent 70%);
+            mask-image: radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.9) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            z-index: 2;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f6f3fa;
+            cursor: pointer;
+        }
+
+        .modal-close svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .modal-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Sora', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: .01em;
+            margin-bottom: 26px;
+        }
+
+        .modal-field {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 16px 18px;
+            color: var(--ink);
+            font-size: 14.5px;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 14px;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .modal-field::placeholder {
+            color: rgba(230, 220, 240, 0.4);
+        }
+
+        .modal-field:focus {
+            border-color: rgba(184, 102, 247, 0.55);
+        }
+
+        .modal-check-row {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 6px 0 24px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .modal-check-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .modal-check-row input[type="checkbox"]:checked {
+            background: var(--btn-grad);
+            border-color: transparent;
+        }
+
+        .modal-check-row input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 1px;
+            width: 4px;
+            height: 9px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .modal-check-row a {
+            color: var(--purple-1);
+            font-weight: 500;
+        }
+
+        .modal-check-row a:hover {
+            text-decoration: underline;
+        }
+
+        .modal-submit {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        @media(max-width:480px) {
+            .modal-card {
+                padding: 30px 22px 26px;
+                border-radius: 22px;
+            }
+        }
     </style>
 </head>
 
@@ -1277,21 +1694,36 @@
 
     <header>
         <div class="nav">
-            <div class="logo"><span class="mark">A</span>Arihant<span class="plus">PLUS</span></div>
+            <div class="logo"><img src="assets/images/logo.png" alt="ArihantPLUS" class="logo-img"></div>
             <nav class="links">
                 <a href="#home">Home</a>
                 <a href="#speaker">Speaker</a>
                 <a href="#agenda">Agenda</a>
             </nav>
             <a href="#" class="btn btn-primary nav-cta">Reserve Your Spot</a>
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 7h16M4 12h16M4 17h16" />
+                </svg>
+            </button>
         </div>
     </header>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home">Home</a>
+        <a href="#speaker">Speaker</a>
+        <a href="#agenda">Agenda</a>
+        <a href="#" class="btn btn-primary">Reserve Your Spot</a>
+    </div>
 
     <section class="hero" id="home">
         <img class="hero-beam beam-right-top" src="assets/images/right-top.png" alt="" aria-hidden="true">
         <img class="hero-beam beam-left" src="assets/images/left-shade.png" alt="" aria-hidden="true">
         <img class="hero-beam beam-right-bottom" src="assets/images/right-bottom.png" alt="" aria-hidden="true">
         <div class="hero-sparkles" id="hero-sparkles"></div>
+
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="assets/images/fireworks.mp4" type="video/mp4">
+        </video>
 
         <span class="eyebrow">#Live Event</span>
         <div class="countdown">
@@ -1323,7 +1755,7 @@
                                 <path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round" />
                             </svg>
                         </span>
-                        <div>Date<br><strong>14 August 2026</strong></div>
+                        <div>Date<br><strong>8 September 2026</strong></div>
                     </div>
                     <div class="info-field">
                         <span class="ic">
@@ -1332,7 +1764,7 @@
                                 <path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </span>
-                        <div>Time<br><strong>2:00 PM - 4:00 PM</strong></div>
+                        <div>Time<br><strong>10:00 AM - 5:00 PM</strong></div>
                     </div>
                     <div class="info-field">
                         <span class="ic">
@@ -1349,17 +1781,24 @@
 
     <div class="info-bar">
         <div class="info-inner">
-            <div class="price-row">
-                <span class="price-old">₹1999</span>
-                <span class="price-new">Just - ₹999</span>
-                <a href="#" class="btn btn-primary">Claim your spot</a>
+            <div class="price-tiers">
+                <div class="price-tier">
+                    <span class="tier-label">Non clients</span>
+                    <span class="price-old">₹999</span>
+                    <span class="price-new">Just - ₹599</span>
+                </div>
+                <div class="price-tier client">
+                    <span class="tier-label">For clients -</span>
+                    <span class="price-new">₹299</span>
+                </div>
             </div>
+            <a href="#" class="btn btn-primary">Claim your spot</a>
         </div>
     </div>
 
     <div class="learn-get-wrap">
-        <img class="lg-glow lg-glow-soft" src="assets/images/Rectangle_1430153649.png" alt="" aria-hidden="true">
-        <img class="lg-glow lg-glow-beam" src="assets/images/Rectangle_1430153648.png" alt="" aria-hidden="true">
+        <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
+        <img class="lg-glow lg-glow-beam" src="assets/images/8.png" alt="" aria-hidden="true">
 
         <section class="learn" id="learn">
             <div class="section-head purple">
@@ -1484,7 +1923,16 @@
             <h2>Here's What's Happening</h2>
             <p>Two hours of practical learning, market insights and conversations with experienced traders.</p>
         </div>
-        <div class="schedule-box" id="agenda-list"></div>
+
+        <div class="schedule-box">
+            <img class="corner-light corner-light-tl-1" src="assets/images/9.png" alt="" aria-hidden="true">
+            <img class="corner-light corner-light-tl-2" src="assets/images/10.png" alt="" aria-hidden="true">
+            <img class="corner-light corner-light-tl-3" src="assets/images/11.png" alt="" aria-hidden="true">
+            <img class="corner-light corner-light-br-1" src="assets/images/13.png" alt="" aria-hidden="true">
+            <img class="corner-light corner-light-br-2" src="assets/images/12.png" alt="" aria-hidden="true">
+            <div class="agenda-wrap" id="agenda-list"></div>
+        </div>
+
         <div class="center-btn"><a href="#" class="btn btn-primary">Claim your spot</a></div>
     </section>
 
@@ -1498,6 +1946,9 @@
 
     <section class="invite">
         <div class="invite-sphere">
+            <img class="sphere-img sphere-img-left" src="assets/images/14.png" alt="" aria-hidden="true">
+            <img class="sphere-img sphere-img-right" src="assets/images/15.png" alt="" aria-hidden="true">
+            <img class="sphere-img sphere-img-base" src="assets/images/16.png" alt="" aria-hidden="true">
             <h2>Invite &amp; Earn</h2>
             <p>The best traders don't learn alone. Bring your circle, get rewarded for it.</p>
             <a href="#" class="btn btn-ghost">Benefits</a>
@@ -1506,20 +1957,27 @@
     </section>
 
     <section class="cta-sphere-sec">
-        <img class="shard left" src="assets/images/glass-shards.png" alt="">
-        <img class="shard right" src="assets/images/glass-shards.png" alt="">
+        <!-- Left fan: source at bottom-left, beams rise toward center/top -->
+        <img class="light-ray light-ray-left-1" src="assets/images/glow/1.png" alt="" aria-hidden="true">
+        <img class="light-ray light-ray-left-2" src="assets/images/glow/2.png" alt="" aria-hidden="true">
+        <img class="light-ray light-ray-left-3" src="assets/images/glow/4.png" alt="" aria-hidden="true">
+        <!-- Right fan: source at bottom-right, beams rise toward center/top -->
+        <img class="light-ray light-ray-right-1" src="assets/images/glow/6.png" alt="" aria-hidden="true">
+        <img class="light-ray light-ray-right-2" src="assets/images/glow/6.png" alt="" aria-hidden="true">
+        <img class="light-ray light-ray-right-3" src="assets/images/glow/6.png" alt="" aria-hidden="true">
+        <img class="shard left" src="assets/images/shard-left.png" alt="">
+        <img class="shard right" src="assets/images/shard-right.png" alt="">
         <div class="wrap-inner">
             <h2>Ready To Trade<br>Smarter?</h2>
             <p>Join the masterclass and discover how experienced traders think, analyse and act in changing markets.</p>
             <a href="#" class="btn btn-white">Reserve Your Spot</a>
 
             <div class="orb-stage">
-                <div class="orb-glow"></div>
                 <div class="orb-wobble">
                     <div class="orb-mask">
-                        <div class="orb-img"></div>
-                        <div class="orb-img layer2"></div>
-                        <div class="orb-sheen"></div>
+                        <video class="orb-img" autoplay muted loop playsinline>
+                            <source src="assets/images/orb-video.mp4" type="video/mp4">
+                        </video>
                     </div>
                 </div>
             </div>
@@ -1559,7 +2017,75 @@
         </div>
     </footer>
 
+    <div class="modal-overlay" id="reserveModal">
+        <div class="modal-card">
+            <div class="modal-close" id="modalClose" role="button" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 4l16 16M20 4L4 20" />
+                </svg>
+            </div>
+            <div class="modal-title">AI TRADING SUMMIT</div>
+            <input class="modal-field" type="tel" placeholder="+91 00000 00000">
+            <input class="modal-field" type="text" placeholder="OTP">
+            <div class="modal-check-row">
+                <input type="checkbox" id="modalTerms">
+                <label for="modalTerms">I read all the <a href="#">Terms &amp; Condition</a> | <a href="#">Privacy
+                        Policy</a></label>
+            </div>
+            <button type="button" class="btn btn-primary modal-submit">Sent OTP</button>
+        </div>
+    </div>
+
     <script>
+        // ---------- Reserve / Claim modal ----------
+        (function () {
+            var overlay = document.getElementById('reserveModal');
+            var closeBtn = document.getElementById('modalClose');
+            if (!overlay) return;
+            function openModal() {
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            document.querySelectorAll('.btn').forEach(function (el) {
+                var label = el.textContent.trim().toLowerCase();
+                if (label === 'reserve your spot' || label === 'claim your spot') {
+                    el.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        openModal();
+                    });
+                }
+            });
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
+        // ---------- Mobile menu toggle ----------
+        (function () {
+            var btn = document.getElementById('menuToggle');
+            var menu = document.getElementById('mobileMenu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function () {
+                var isOpen = menu.classList.toggle('open');
+                btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    menu.classList.remove('open');
+                    btn.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                });
+            });
+        })();
+
         // ---------- Hero sparkles ----------
         (function () {
             var host = document.getElementById('hero-sparkles');
@@ -1580,10 +2106,7 @@
 
         // ---------- Countdown ----------
         (function () {
-            var target = new Date();
-            target.setDate(target.getDate() + 28);
-            target.setHours(target.getHours() + 12);
-            target.setMinutes(target.getMinutes() + 24);
+            var target = new Date(2026, 8, 8, 10, 0, 0); // 8 September 2026, 10:00 AM
             function tick() {
                 var now = new Date();
                 var diff = Math.max(0, target - now);
@@ -1616,18 +2139,18 @@
         }).join('');
         document.getElementById('agenda-list').innerHTML = agendaHTML;
 
-        // ---------- Panelists ----------
         var panelists = [
-            { group: "Welcome To Our Virtual Creator Marketing", name: "Learn from the experts", role: "Founder, at MNC of California" },
-            { group: "Welcome To Our Virtual Creator Marketing", name: "Learn from the experts", role: "Founder, at MNC of California" },
-            { group: "Welcome To Our Virtual Creator Marketing", name: "Learn from the experts", role: "Founder, at MNC of California" }
+            { group: "India's Lead Technical Analyst & Algo Trader", name: "Vishal Mehta", role: "Algo Trader | Market Educator", img: "assets/images/21.png" },
+            { group: "India's #1 Financial Astrology Expert", name: "Harshubh", role: "Financial Astrology", img: "assets/images/22.png" },
+            { group: "Co-Founder Quantify Capital | Algorithmic Trading", name: "Saurabh Sisodia", role: "Data Driven Trader", img: "assets/images/23.png" }
         ];
         var avatarSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#d8bfff" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2"/></svg>';
         document.getElementById('panelist-list').innerHTML = panelists.map(function (p) {
+            var avatarContent = p.img ? '<img src="' + p.img + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;">' : avatarSVG;
             return '<div class="panelist-card">' +
                 '<h3>' + p.group + '</h3>' +
                 '<div class="panelist-person">' +
-                '<div class="avatar">' + avatarSVG + '</div>' +
+                '<div class="avatar">' + avatarContent + '</div>' +
                 '<div><h4>' + p.name + '</h4><span>' + p.role + '</span></div>' +
                 '</div>' +
                 '</div>';
