@@ -1699,8 +1699,20 @@
                 <a href="#home">Home</a>
                 <a href="#speaker">Speaker</a>
                 <a href="#agenda">Agenda</a>
+                @auth
+                    @if(auth()->user()->eventRegistrations()->exists())
+                        <a href="{{ route('registration.success') }}">My Ticket</a>
+                    @endif
+                @endauth
             </nav>
-            <a href="#" class="btn btn-primary nav-cta">Reserve Your Spot</a>
+            @auth
+                <form method="POST" action="{{ route('logout') }}" style="display:inline">
+                    @csrf
+                    <button type="submit" class="btn btn-ghost nav-cta">Logout</button>
+                </form>
+            @else
+                <a href="/register" class="btn btn-primary nav-cta">Reserve Your Spot</a>
+            @endauth
             <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                     <path d="M4 7h16M4 12h16M4 17h16" />
@@ -1712,7 +1724,7 @@
         <a href="#home">Home</a>
         <a href="#speaker">Speaker</a>
         <a href="#agenda">Agenda</a>
-        <a href="#" class="btn btn-primary">Reserve Your Spot</a>
+        <a href="/register" class="btn btn-primary">Reserve Your Spot</a>
     </div>
 
     <section class="hero" id="home">
@@ -1792,7 +1804,7 @@
                     <span class="price-new">₹299</span>
                 </div>
             </div>
-            <a href="#" class="btn btn-primary">Claim your spot</a>
+            <a href="/register" class="btn btn-primary">Claim your spot</a>
         </div>
     </div>
 
@@ -1912,7 +1924,7 @@
                 </div>
             </div>
             <div class="center-btn left">
-                <a href="#" class="btn btn-primary">Claim your spot</a>
+                <a href="/register" class="btn btn-primary">Claim your spot</a>
             </div>
         </section>
     </div>
@@ -1933,7 +1945,7 @@
             <div class="agenda-wrap" id="agenda-list"></div>
         </div>
 
-        <div class="center-btn"><a href="#" class="btn btn-primary">Claim your spot</a></div>
+        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
     </section>
 
     <section class="panel-sec" id="speaker">
@@ -1941,7 +1953,7 @@
             <h2>Meet Our Panelist</h2>
         </div>
         <div id="panelist-list"></div>
-        <div class="center-btn"><a href="#" class="btn btn-primary">Claim your spot</a></div>
+        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
     </section>
 
     <section class="invite">
@@ -1970,7 +1982,7 @@
         <div class="wrap-inner">
             <h2>Ready To Trade<br>Smarter?</h2>
             <p>Join the masterclass and discover how experienced traders think, analyse and act in changing markets.</p>
-            <a href="#" class="btn btn-white">Reserve Your Spot</a>
+            <a href="/register" class="btn btn-white">Reserve Your Spot</a>
 
             <div class="orb-stage">
                 <div class="orb-wobble">
@@ -2037,36 +2049,6 @@
     </div>
 
     <script>
-        // ---------- Reserve / Claim modal ----------
-        (function () {
-            var overlay = document.getElementById('reserveModal');
-            var closeBtn = document.getElementById('modalClose');
-            if (!overlay) return;
-            function openModal() {
-                overlay.classList.add('open');
-                document.body.style.overflow = 'hidden';
-            }
-            function closeModal() {
-                overlay.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-            document.querySelectorAll('.btn').forEach(function (el) {
-                var label = el.textContent.trim().toLowerCase();
-                if (label === 'reserve your spot' || label === 'claim your spot') {
-                    el.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        openModal();
-                    });
-                }
-            });
-            closeBtn.addEventListener('click', closeModal);
-            overlay.addEventListener('click', function (e) {
-                if (e.target === overlay) closeModal();
-            });
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') closeModal();
-            });
-        })();
         // ---------- Mobile menu toggle ----------
         (function () {
             var btn = document.getElementById('menuToggle');

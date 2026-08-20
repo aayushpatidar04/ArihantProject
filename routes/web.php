@@ -1,7 +1,92 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\StallController;
+use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\InfluencerController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
+/* ---------- Public Routes ---------- */
 Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 
+Route::get('/login', [HomeController::class, 'showLogin'])->name('login');
+Route::post('/login', [HomeController::class, 'login'])->name('login.post');
+
+/* ---------- Registration Flow ---------- */
+
+// Step 1: Phone number + client check
+Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
+Route::post('/register', [RegistrationController::class, 'submitPhone'])->name('registration.submit');
+
+// Step 2A: Existing client — confirm pre-filled details
+Route::get('/register/confirm', [RegistrationController::class, 'showClientConfirm'])->name('registration.client.confirm');
+Route::post('/register/confirm', [RegistrationController::class, 'submitClientConfirm'])->name('registration.client.confirm.submit');
+
+// Step 2B: New user — OTP verification
+Route::get('/register/otp', [RegistrationController::class, 'showOtp'])->name('registration.otp');
+Route::post('/register/otp', [RegistrationController::class, 'verifyOtp'])->name('registration.otp.verify');
+Route::post('/register/otp/resend', [RegistrationController::class, 'resendOtp'])->name('registration.otp.resend');
+
+// Step 3: New user — fill details (after OTP)
+Route::get('/register/details', [RegistrationController::class, 'showDetails'])->name('registration.details');
+Route::post('/register/details', [RegistrationController::class, 'submitDetails'])->name('registration.details.submit');
+
+Route::middleware(['auth'])->group(function () {
+    // Step 4: KYC (new users only)
+    Route::get('/register/kyc', [RegistrationController::class, 'showKyc'])->name('registration.kyc');
+    Route::post('/register/kyc', [RegistrationController::class, 'submitKyc'])->name('registration.kyc.submit');
+
+    // Step 5: Payment
+    Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
+
+    // Step 6: Success
+    Route::get('/register/success', [RegistrationController::class, 'success'])->name('registration.success');
+
+    /* ---------- Stalls ---------- */
+    Route::get('/stalls', [StallController::class, 'index'])->name('stalls.index');
+    Route::post('/stalls/feedback', [StallController::class, 'submitFeedback'])->name('stalls.feedback');
+
+    /* ---------- Referral ---------- */
+    Route::get('/refer', [ReferralController::class, 'index'])->name('referral.index');
+    Route::post('/refer', [ReferralController::class, 'invite'])->name('referral.invite');
+
+    /* ---------- Influencer ---------- */
+    Route::get('/influencer', [InfluencerController::class, 'index'])->name('influencer.index');
+    Route::post('/influencer', [InfluencerController::class, 'submit'])->name('influencer.submit');
+});
+
+Route::get('/venue/login', [CheckInController::class, 'showVenueLogin'])->name('venue.login');
+Route::post('/venue/login', [CheckInController::class, 'venueLogin'])->name('venue.login.post');
+Route::middleware(['venue'])->group(function () {
+    Route::get('/checkin/scanner', [CheckInController::class, 'scanner'])->name('checkin.scanner');
+    Route::post('/checkin/validate', [CheckInController::class, 'validateQr'])->name('checkin.validate');
+    Route::post('/checkin/allocate', [CheckInController::class, 'allocateSeat'])->name('checkin.allocate');
+});
+/* ---------- Payment Callback ---------- */
+Route::post('/payment/callback', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
+Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
+
+/* ---------- Check-In (Venue Staff) ---------- */
+Route::get('/checkin/confirmation', [CheckInController::class, 'mobileConfirmation'])->name('checkin.confirmation');
+
+/* ---------- Stall API (for QR scanning at stalls) ---------- */
+Route::post('/stalls/checkin', [StallController::class, 'checkIn'])->name('stalls.checkin');
+
+/* ---------- Admin Routes ---------- */
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
+    Route::get('/checkins', [AdminController::class, 'checkIns'])->name('checkins');
+    Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
+    Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
+    Route::get('/leaderboard', [AdminController::class, 'leaderboard'])->name('leaderboard');
+    Route::get('/influencer', [AdminController::class, 'influencerPosts'])->name('influencer');
+    Route::post('/influencer/{post}/approve', [AdminController::class, 'approvePost'])->name('influencer.approve');
+    Route::post('/influencer/{post}/reject', [AdminController::class, 'rejectPost'])->name('influencer.reject');
+    Route::get('/communications', [AdminController::class, 'communications'])->name('communications');
+});
