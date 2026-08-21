@@ -37,10 +37,6 @@ Route::get('/register/details', [RegistrationController::class, 'showDetails'])-
 Route::post('/register/details', [RegistrationController::class, 'submitDetails'])->name('registration.details.submit');
 
 Route::middleware(['auth'])->group(function () {
-    // Step 4: KYC (new users only)
-    Route::get('/register/kyc', [RegistrationController::class, 'showKyc'])->name('registration.kyc');
-    Route::post('/register/kyc', [RegistrationController::class, 'submitKyc'])->name('registration.kyc.submit');
-
     // Step 5: Payment
     Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
 
@@ -69,7 +65,7 @@ Route::middleware(['venue'])->group(function () {
 });
 /* ---------- Payment Callback ---------- */
 Route::post('/payment/callback', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
-Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
+Route::post('/webhook/atom', [PaymentController::class, 'atomWebhook'])->name('webhook.atom');
 
 /* ---------- Check-In (Venue Staff) ---------- */
 Route::get('/checkin/confirmation', [CheckInController::class, 'mobileConfirmation'])->name('checkin.confirmation');

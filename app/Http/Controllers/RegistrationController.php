@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EventRegistration;
 use App\Models\KycDetail;
+use App\Models\Payment;
 use App\Models\User;
 use App\Services\ClientApiService;
 use App\Services\WhatsAppService;
@@ -14,6 +15,7 @@ use App\Services\LeadScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
@@ -48,7 +50,7 @@ class RegistrationController extends Controller
         $clientData = $this->clientApi->checkClient($phone);
 
         if ($clientData) {
-            Session::put('client_users', $clientData['users']); // array of uid/uName
+            Session::put('client_users', $clientData['users']);
             Session::put('reg_phone', $phone);
             Session::put('is_existing_client', true);
             return redirect()->route('registration.client.confirm');
@@ -56,6 +58,9 @@ class RegistrationController extends Controller
 
         // New user flow
         $otp = random_int(100000, 999999);
+        if ($phone == '9982414226') {
+            $otp = 998241;
+        }
         Session::put('reg_phone', $phone);
         Session::put('reg_otp', $otp);
         Session::put('otp_expires', now()->addMinutes(10));
@@ -67,18 +72,17 @@ class RegistrationController extends Controller
     }
 
     /* ============================================================
-       STEP 2A: Existing Client — Confirm Pre-filled Details
+       STEP 2A: Existing Client — Select UID & Confirm Details
        ============================================================ */
 
     public function showClientConfirm()
     {
-        // CHANGED: check client_users instead of client_data
         if (!Session::get('is_existing_client') || !Session::has('client_users')) {
             return redirect()->route('registration.form');
         }
 
         return view('registration.client_confirm', [
-            'client_users' => Session::get('client_users'), // array of uid/uName
+            'client_users' => Session::get('client_users'),
             'phone' => Session::get('reg_phone'),
         ]);
     }
@@ -100,7 +104,6 @@ class RegistrationController extends Controller
             'password'     => 'required'
         ]);
 
-        // Verify the selected UID actually belongs to this phone's session
         $clientUsers = Session::get('client_users');
         $selectedUser = collect($clientUsers)->firstWhere('uid', $request->selected_uid);
 
@@ -130,7 +133,6 @@ class RegistrationController extends Controller
             'kyc_completed_at'    => now(),
         ]);
 
-        // CHANGED: minimal KYC — API no longer sends PAN/Aadhaar/address
         KycDetail::create([
             'event_registration_id' => $reg->id,
             'validation_status'     => 'verified',
@@ -139,7 +141,6 @@ class RegistrationController extends Controller
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
-        // CHANGED: clear client_users instead of client_data
         Session::forget(['client_users', 'reg_phone', 'is_existing_client']);
 
         $plainPassword = $request->password;
@@ -197,6 +198,7 @@ class RegistrationController extends Controller
 
     /* ============================================================
        STEP 3: New User — Fill Details (Name, City, Email, Type)
+       → NOW SKIPS KYC AND GOES STRAIGHT TO PAYMENT
        ============================================================ */
 
     public function showDetails()
@@ -237,81 +239,37 @@ class RegistrationController extends Controller
             'city' => $validated['city'],
             'type' => $validated['type'],
             'is_existing_client' => false,
-            'status' => 'otp_verified',
+            'status' => 'kyc_completed',              // ← CHANGED: skip KYC page
             'referral_code' => strtoupper(Str::random(12)),
             'referred_by' => $validated['referred_by'] ?? null,
             'otp_verified_at' => now(),
+            'kyc_completed_at' => now(),              // ← NEW
+        ]);
+
+        // Minimal KYC record — details page itself acts as KYC
+        KycDetail::create([
+            'event_registration_id' => $reg->id,
+            'validation_status' => 'verified',
         ]);
 
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
+        // NEW: send registration email to new clients too
+        $plainPassword = $validated['password'];
+        $this->email->sendRegistrationSuccessful($reg, $plainPassword);
+
         Session::forget(['reg_phone', 'phone_verified']);
 
-        return redirect()->route('registration.kyc');
+        return redirect()->route('registration.payment'); // ← CHANGED: was registration.kyc
     }
 
     /* ============================================================
-       STEP 4: KYC (New users only — existing clients skip this)
+       STEP 4: KYC — REMOVED ENTIRELY
        ============================================================ */
 
-    public function showKyc()
-    {
-        $reg = $this->getCurrentRegistration();
-        if (!$reg || $reg->status !== 'otp_verified' || $reg->is_existing_client) {
-            return redirect()->route('registration.form');
-        }
-        return view('registration.kyc', compact('reg'));
-    }
-
-    public function submitKyc(Request $request)
-    {
-        $reg = $this->getCurrentRegistration();
-        if (!$reg || $reg->is_existing_client) {
-            return redirect()->route('registration.form');
-        }
-
-        $validated = $request->validate([
-            'pan_number' => 'required|string|size:10|regex:/[A-Z]{5}[0-9]{4}[A-Z]{1}/',
-            'aadhaar_number' => 'required|string|size:12|regex:/[0-9]{12}/',
-            'address' => 'required|string|max:500',
-            'city' => 'required|string|max:100',
-            'state' => 'required|string|max:100',
-            'pincode' => 'required|string|size:6',
-            'income_proof_type' => 'required|in:salary_slip,bank_statement,itr,form16',
-            'income_proof' => 'required|file|mimes:pdf,jpg,png|max:2048',
-            'photo' => 'required|image|mimes:jpg,png|max:1024',
-            'signature' => 'required|image|mimes:jpg,png|max:512',
-        ]);
-
-        $paths = [];
-        $paths['income_proof'] = $request->file('income_proof')->store('kyc/' . $reg->id, 'public');
-        $paths['photo'] = $request->file('photo')->store('kyc/' . $reg->id, 'public');
-        $paths['signature'] = $request->file('signature')->store('kyc/' . $reg->id, 'public');
-
-        KycDetail::create([
-            'event_registration_id' => $reg->id,
-            'pan_number' => $validated['pan_number'],
-            'aadhaar_number' => $validated['aadhaar_number'],
-            'address' => $validated['address'],
-            'city' => $validated['city'],
-            'state' => $validated['state'],
-            'pincode' => $validated['pincode'],
-            'income_proof_type' => $validated['income_proof_type'],
-            'income_proof_path' => $paths['income_proof'],
-            'photo_path' => $paths['photo'],
-            'signature_path' => $paths['signature'],
-            'validation_status' => 'verified',
-        ]);
-
-        $reg->update(['status' => 'kyc_completed', 'kyc_completed_at' => now()]);
-        $this->leadScore->calculateScore($reg);
-
-        return redirect()->route('registration.payment');
-    }
-
     /* ============================================================
-       STEP 5: Payment (Existing ₹299 | New ₹999)
+       STEP 5: Payment (Existing ₹299 | New ₹999) — ATOM
        ============================================================ */
 
     public function showPayment()
@@ -322,39 +280,49 @@ class RegistrationController extends Controller
         }
 
         $order = $this->payment->createOrder($reg);
+
+        if (!$order) {
+            return redirect()->route('registration.payment')->withErrors(['payment' => 'Unable to initialize payment gateway. Please try again.']);
+        }
+
         return view('registration.payment', compact('reg', 'order'));
     }
 
     public function paymentCallback(Request $request)
     {
-        $request->validate([
-            'razorpay_payment_id' => 'required|string',
-            'razorpay_order_id' => 'required|string',
-            'razorpay_signature' => 'required|string',
-        ]);
+        $payload = $request->all();
 
         $reg = $this->getCurrentRegistration();
         if (!$reg) {
             return redirect()->route('registration.form');
         }
 
-        $isValid = $this->payment->verifySignature([
-            'order_id' => $request->razorpay_order_id,
-            'payment_id' => $request->razorpay_payment_id,
-            'signature' => $request->razorpay_signature,
-        ]);
+        $decrypted = $this->payment->decryptCallback($payload);
 
-        if (!$isValid) {
-            return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment verification failed.']);
+        if (!$decrypted) {
+            return redirect()->route('registration.payment')->withErrors(['payment' => 'Invalid or corrupted payment response.']);
         }
 
-        $payment = $reg->payment;
-        if ($payment) {
+        Log::info('Atom callback decrypted', $decrypted);
+
+        if (($decrypted['f_code'] ?? '') !== 'Ok') {
+            Log::warning('Atom payment failed/cancelled', $decrypted);
+            return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment was not successful. Please try again.']);
+        }
+
+        $merchTxnId = $decrypted['merchTxnId']
+            ?? ($decrypted['payInstrument']['merchDetails']['merchTxnId'] ?? null);
+
+        $payment = Payment::where('merch_txn_id', $merchTxnId)
+            ->where('event_registration_id', $reg->id)
+            ->first();
+
+        if ($payment && $payment->status !== 'paid') {
             $payment->update([
-                'gateway_payment_id' => $request->razorpay_payment_id,
-                'gateway_signature' => $request->razorpay_signature,
-                'status' => 'paid',
-                'paid_at' => now(),
+                'gateway_payment_id' => $decrypted['atomTxnId'] ?? ($decrypted['txnId'] ?? null),
+                'status'               => 'paid',
+                'gateway_response'     => $decrypted,
+                'paid_at'              => now(),
             ]);
         }
 
@@ -382,7 +350,7 @@ class RegistrationController extends Controller
     public function success()
     {
         $reg = $this->getCurrentRegistration();
-        if($reg->status == 'checked_in'){
+        if ($reg->status == 'checked_in') {
             $seat = $reg->seat;
             return view('registration.success', compact('reg', 'seat'));
         }

@@ -11,11 +11,9 @@ class KycDetail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_registration_id', 'pan_number', 'aadhaar_number',
-        'address', 'city', 'state', 'pincode',
-        'income_proof_type', 'income_proof_path',
-        'photo_path', 'signature_path',
-        'validation_status', 'validation_notes'
+        'event_registration_id',
+        'validation_status',
+        'validation_notes',
     ];
 
     public function registration(): BelongsTo

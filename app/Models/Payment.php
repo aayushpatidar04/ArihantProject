@@ -12,7 +12,7 @@ class Payment extends Model
 
     protected $fillable = [
         'event_registration_id', 'gateway', 'gateway_order_id',
-        'gateway_payment_id', 'gateway_signature', 'amount',
+        'gateway_payment_id', 'gateway_signature', 'merch_txn_id', 'atom_token_id', 'amount',
         'currency', 'status', 'gateway_response', 'paid_at'
     ];
 

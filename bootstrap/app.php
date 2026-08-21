@@ -14,6 +14,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'venue' => \App\Http\Middleware\VenueStaffMiddleware::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'payment/callback',
+            'webhook/atom',
+            'webhook/pickyassist/event',
+            'webhook/pickyassist/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

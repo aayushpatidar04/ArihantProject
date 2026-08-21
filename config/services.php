@@ -58,5 +58,18 @@ return [
         'url' => env('ARIHAINT_CLIENT_API_URL'),
         'auth' => env('ARIHAINT_CLIENT_API_AUTH'),
     ],
+    'atom' => [
+        'merchant_id'         => env('ATOM_MERCHANT_ID'),
+        'password'            => env('ATOM_PASSWORD'),
+        'product_id'          => env('ATOM_PRODUCT_ID'),
+        'pay_url'             => env('ATOM_PAY_URL', 'https://payment1.atomtech.in/ots/aipay/auth'),
+        'js_cdn'              => env('ATOM_JS_CDN', 'https://psa.atomtech.in/staticdata/ots/js/atom.js'),
+
+        'aes_request_key'     => env('ATOM_AES_REQUEST_KEY'),
+        'aes_request_salt'    => env('ATOM_AES_REQUEST_SALT'),
+        'aes_response_key'    => env('ATOM_AES_RESPONSE_KEY'),
+        'aes_response_salt'   => env('ATOM_AES_RESPONSE_SALT'),
+        'return_url' => env('ATOM_RETURN_URL', env('APP_URL') . '/payment/callback'),
+    ],
 
 ];
