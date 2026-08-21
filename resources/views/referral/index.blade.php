@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="leaderboard">
+        {{-- <div class="leaderboard">
             <h3>🏆 Top 10 Leaderboard</h3>
             @foreach($leaderboard as $idx => $l)
             <div class="lb-row">
@@ -59,7 +59,7 @@
                 <div class="pts">{{ $l->total_points ?? 0 }} pts</div>
             </div>
             @endforeach
-        </div>
+        </div> --}}
     </div>
 </div>
 @endsection

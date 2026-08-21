@@ -51,7 +51,7 @@
         <div style="margin-bottom:24px">
             <div class="info-pill">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg>
-                8 Sept 2026
+                5 Sept 2026
             </div>
             <div class="info-pill">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -65,7 +65,7 @@
 
         <div class="action-btns">
             <a href="{{ route('referral.index') }}" class="btn btn-ghost">Refer & Earn</a>
-            <a href="{{ route('influencer.index') }}" class="btn btn-ghost">Submit Post</a>
+            {{-- <a href="{{ route('influencer.index') }}" class="btn btn-ghost">Submit Post</a> --}}
             <a href="{{ route('stalls.index') }}" class="btn btn-primary">Explore Stalls</a>
         </div>
     </div>
