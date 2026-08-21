@@ -327,7 +327,7 @@
                 </button>
             </form>
 
-            <p class="hint" id="hintText">We will verify your number via WhatsApp & SMS.</p>
+            {{-- <p class="hint" id="hintText">We will verify your number via WhatsApp & SMS.</p> --}}
             <p class="hint">Already Registered? <a href="/login" style="color: white;">Login</a></p>
         </div>
     </div>

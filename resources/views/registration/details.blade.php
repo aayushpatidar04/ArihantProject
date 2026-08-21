@@ -221,12 +221,12 @@
                     <input type="hidden" name="referred_by" value="{{ request('ref') }}">
                 @endif
 
-                <div class="kyc-note">
+                {{-- <div class="kyc-note">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 6L9 17l-5-5" />
                     </svg>
                     Your profile details serve as KYC verification. No additional documents required.
-                </div>
+                </div> --}}
 
                 <div class="price-box">
                     <div class="price">₹599</div>
