@@ -70,7 +70,7 @@ Route::middleware(['venue'])->group(function () {
     Route::post('/checkin/allocate', [CheckInController::class, 'allocateSeat'])->name('checkin.allocate');
 });
 /* ---------- Payment Callback ---------- */
-Route::post('/payment/callback', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
+Route::post('/payment/callback/{id}', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
 Route::post('/webhook/atom', [PaymentController::class, 'atomWebhook'])->name('webhook.atom');
 
 /* ---------- Check-In (Venue Staff) ---------- */

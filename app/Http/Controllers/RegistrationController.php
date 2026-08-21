@@ -291,9 +291,12 @@ class RegistrationController extends Controller
         return view('registration.payment', compact('reg', 'order'));
     }
 
-    public function paymentCallback(Request $request)
+    public function paymentCallback(Request $request, $id)
     {
+        $user = User::find($id);
+        Auth::login($user);
         $payload = $request->all();
+        \Log::info($request->all());
 
         $reg = $this->getCurrentRegistration();
         if (!$reg) {
