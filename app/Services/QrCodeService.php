@@ -64,18 +64,23 @@ class QrCodeService
 
     protected function generateImage(string $data): string
     {
-        $builder = new Builder(writer: new PngWriter());
+        // Create QR code instance
+        $qrCode = new QrCode($data);
+        $qrCode->setSize(400);
+        $qrCode->setMargin(10);
 
-        $result = $builder->build(
-            data: $data,
-            size: 400,
-            margin: 10,
-            foregroundColor: new Color(255, 255, 255),
-            backgroundColor: new Color(6, 2, 8),
-        );
+        // Set colors using Color objects (not arrays)
+        $qrCode->setForegroundColor(new Color(255, 255, 255)); // white
+        $qrCode->setBackgroundColor(new Color(6, 2, 8));       // dark background
 
+        // Render with PNG writer
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+
+        // Return raw image string (binary PNG data)
         return $result->getString();
     }
+
 
     public function validateQr(string $code): ?QrCodeModel
     {
