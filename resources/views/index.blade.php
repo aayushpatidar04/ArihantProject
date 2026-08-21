@@ -2779,6 +2779,237 @@
             line-height: 1.3;
         }
     </style>
+    <style>
+        footer {
+            position: relative;
+            background: linear-gradient(180deg, #0a0410 0%, #060208 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 60px 24px 0;
+            overflow: hidden;
+        }
+
+        .footer-glow {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(184, 102, 247, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .footer-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: rgba(230, 220, 240, 0.6);
+            line-height: 1.5;
+        }
+
+        .footer-col ul li a {
+            color: rgba(230, 220, 240, 0.6);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: #d4a5ff;
+        }
+
+        .brand-col .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Sora', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .brand-col .footer-desc {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-ic {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: all 0.2s;
+        }
+
+        .social-ic:hover {
+            background: rgba(184, 102, 247, 0.1);
+            border-color: rgba(184, 102, 247, 0.3);
+            color: #d4a5ff;
+        }
+
+        .social-ic svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+
+        .footer-sebi {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .footer-sebi p {
+            font-size: 12px;
+            line-height: 1.7;
+            color: rgba(230, 220, 240, 0.5);
+            margin-bottom: 12px;
+        }
+
+        .footer-sebi p strong {
+            color: rgba(230, 220, 240, 0.75);
+        }
+
+        .sebi-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            margin-bottom: 16px;
+        }
+
+        .sebi-grid span {
+            font-size: 11px;
+            color: rgba(230, 220, 240, 0.45);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sebi-notice {
+            font-style: italic;
+            padding: 12px 16px;
+            background: rgba(255, 200, 0, 0.04);
+            border-left: 3px solid rgba(255, 200, 0, 0.3);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .sebi-attention {
+            padding: 12px 16px;
+            background: rgba(40, 180, 100, 0.04);
+            border-left: 3px solid rgba(40, 180, 100, 0.3);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .sebi-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin-top: 12px;
+        }
+
+        .sebi-links a {
+            font-size: 11px;
+            color: rgba(184, 102, 247, 0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .sebi-links a:hover {
+            color: #d4a5ff;
+            text-decoration: underline;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(230, 220, 240, 0.35);
+        }
+
+        .footer-bottom a {
+            color: rgba(230, 220, 240, 0.5);
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            color: #d4a5ff;
+        }
+
+        .heart {
+            color: #ff6b81;
+        }
+
+        @media (max-width: 900px) {
+            .footer-main {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-main {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .sebi-grid {
+                gap: 6px 10px;
+            }
+
+            .sebi-links {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -2789,7 +3020,7 @@
             <nav class="links">
                 <a href="#home">Home</a>
                 <a href="#speaker">Speaker</a>
-                <a href="#agenda">Agenda</a>
+                {{-- <a href="#agenda">Agenda</a> --}}
             </nav>
             <div>
                 <a href="/login" class="btn btn-primary nav-cta">Login</a>
@@ -2805,7 +3036,7 @@
     <div class="mobile-menu" id="mobileMenu">
         <a href="#home">Home</a>
         <a href="#speaker">Speaker</a>
-        <a href="#agenda">Agenda</a>
+        {{-- <a href="#agenda">Agenda</a> --}}
         <a href="/register" class="btn btn-primary">Claim Your Spot</a>
     </div>
 
@@ -2886,7 +3117,7 @@
                 <h3>Arihant Users</h3>
                 <div class="price-row">
                     <span class="price-old">₹599</span>
-                    <span class="price-new">₹1</span>
+                    <span class="price-new">₹299</span>
                 </div>
                 <div class="price-gst">Incl 18% GST</div>
                 <hr class="price-divider">
@@ -3184,46 +3415,127 @@
 
     <footer>
         <div class="footer-glow"></div>
-        <div class="footer-social">
-            <a class="social-ic" target="_blank" href="https://www.instagram.com/arihant_plus/" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                    <rect x="3" y="3" width="18" height="18" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
-                </svg>
-            </a>
-            <a class="social-ic" target="_blank"
-                href="https://www.linkedin.com/company/arihant-capital-markets-ltd/about/?viewAsMember=true"
-                aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                    <rect x="3" y="3" width="18" height="18" rx="3" />
-                    <path d="M7 10v7M7 7v.01M11 17v-4.5a2 2 0 014-.2M15 17v-4.5" />
-                </svg>
-            </a>
-            <a class="social-ic" target="_blank" href="https://x.com/ArihantPlus" aria-label="X">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                    <path d="M4 4l16 16M20 4L4 20" />
-                </svg>
-            </a>
-            <a class="social-ic" target="_blank" href="https://www.youtube.com/@arihant_plus" aria-label="YouTube">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                    <rect x="3" y="3" width="18" height="18" rx="4" />
-                    <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
-                </svg>
-            </a>
-            <a class="social-ic" target="_blank" href="https://www.facebook.com/arihantcapitalmarket"
-                aria-label="Facebook">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                    <rect x="3" y="3" width="18" height="18" rx="4" />
-                    <path d="M13 10h2v-2h-2c-1.1 0-2 .9-2 2v2h-2v2h2v6h2v-6h2l1-2h-3v-2c0-.55.45-1 1-1z" />
-                </svg>
-            </a>
+
+        <div class="footer-main">
+            <div class="footer-col brand-col">
+                <div class="footer-logo">
+                    <div class="logo"><img src="assets/images/logo.png" alt="ArihantPLUS" class="logo-img"></div>
+                </div>
+                <p class="footer-desc">AI & Algo Conclave 2026 — Empowering investors and traders with cutting-edge
+                    technology.</p>
+                <div class="footer-social">
+                    <a class="social-ic" target="_blank" href="https://www.instagram.com/arihant_plus/"
+                        aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                            <rect x="3" y="3" width="18" height="18" rx="5" />
+                            <circle cx="12" cy="12" r="4" />
+                            <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
+                        </svg>
+                    </a>
+                    <a class="social-ic" target="_blank"
+                        href="https://www.linkedin.com/company/arihant-capital-markets-ltd/about/?viewAsMember=true"
+                        aria-label="LinkedIn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                            <rect x="3" y="3" width="18" height="18" rx="3" />
+                            <path d="M7 10v7M7 7v.01M11 17v-4.5a2 2 0 014-.2M15 17v-4.5" />
+                        </svg>
+                    </a>
+                    <a class="social-ic" target="_blank" href="https://x.com/ArihantPlus" aria-label="X">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                            <path d="M4 4l16 16M20 4L4 20" />
+                        </svg>
+                    </a>
+                    <a class="social-ic" target="_blank" href="https://www.youtube.com/@arihant_plus"
+                        aria-label="YouTube">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                            <rect x="3" y="3" width="18" height="18" rx="4" />
+                            <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
+                        </svg>
+                    </a>
+                    <a class="social-ic" target="_blank" href="https://www.facebook.com/arihantcapitalmarket"
+                        aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                            <rect x="3" y="3" width="18" height="18" rx="4" />
+                            <path d="M13 10h2v-2h-2c-1.1 0-2 .9-2 2v2h-2v2h2v6h2v-6h2l1-2h-3v-2c0-.55.45-1 1-1z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ route('event.policy') }}">Event Policy</a></li>
+                    <li><a href="{{ route('payment.terms') }}">Payment Terms</a></li>
+                    <li><a href="{{ route('cookie.policy') }}">Cookie Policy</a></li>
+                    <li><a href="{{ route('disclaimer') }}">Disclaimer & Risk Disclosure</a></li>
+                    <li><a href="/login">Login</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="mailto:compliance@arihantcapital.com">compliance@arihantcapital.com</a></li>
+                    <li><a href="mailto:depository@arihantcapital.com">depository@arihantcapital.com</a></li>
+                    <li>601, Atlantis Tower, Plot No. 13A, Scheme No. 78, Indore – 452010</li>
+                    <li>#1011 Solitaire Corporate Park, Andheri Ghatkopar Link Road, Chakala, Andheri (E), Mumbai -
+                        400093</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Important Links</h4>
+                <ul>
+                    <li><a href="https://www.sebi.gov.in" target="_blank">SEBI</a></li>
+                    <li><a href="https://www.bseindia.com" target="_blank">BSE</a></li>
+                    <li><a href="https://www.nseindia.com" target="_blank">NSE</a></li>
+                    <li><a href="https://www.mcxindia.com" target="_blank">MCX</a></li>
+                    <li><a href="https://www.cdslindia.com" target="_blank">CDSL</a></li>
+                    <li><a href="https://scores.sebi.gov.in" target="_blank">SEBI SCORES</a></li>
+                    <li><a href="https://smartodr.in" target="_blank">ODR Portal</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-sebi">
+            <p><strong>Arihant Capital Markets Limited</strong> is a SEBI registered stock broker and depository
+                participant.</p>
+            <div class="sebi-grid">
+                <span>SEBI Stock Broker: INZ000180939</span>
+                <span>DP: IN301983</span>
+                <span>NSDL: IN-DP-127-2015</span>
+                <span>CDSL DP ID: 43000</span>
+                <span>NCDEX: 01274</span>
+                <span>MCX: 56565</span>
+                <span>AMFI: ARN 15114</span>
+                <span>SEBI Research Analyst: INH000002764</span>
+            </div>
+            <p class="sebi-notice">
+                Investments in securities market are subject to market risks; read all the related documents carefully
+                before investing.
+                Brokerage will not exceed the SEBI prescribed limit. The securities are quoted as an example and not as
+                a recommendation.
+            </p>
+            <p class="sebi-attention">
+                <strong>Attention Investors:</strong> KYC is one time exercise while dealing in securities markets.
+                Prevent unauthorised transactions in your account — update your mobile numbers/email IDs with your
+                stockbrokers. Receive information of your transactions directly from Exchange on your mobile/email at
+                the end of the day. Update your Mobile Number with your Depository Participant to receive alerts for all
+                debit and other important transactions in your demat account directly from CDSL/NSDL on the same day.
+            </p>
+            <p class="sebi-links">
+                <a href="https://www.bseindia.com/investors/aperc.aspx" target="_blank">BSE Rights & Obligations</a> |
+                <a href="https://www.nseindia.com/invest/resources/download-documents" target="_blank">NSE Do's &
+                    Don'ts</a> |
+                <a href="https://www.mcxindia.com/investor-education" target="_blank">MCX Investor Charter</a> |
+                <a href="https://www.cdslindia.com/investor-charter.aspx" target="_blank">CDSL Investor Charter</a> |
+                <a href="https://smartodr.in" target="_blank">ODR Portal</a>
+            </p>
         </div>
 
         <div class="footer-bottom">
-            <span>All copyrights are reserved @Arihantcapital</span>
-            <span>Made with <span class="heart">♥ </span>by <a href="https://intouchsoftware.co.in"
-                    target="_blank">InTouch Software Solutions</a></span>
+            <span>All copyrights are reserved © Arihant Capital Markets Limited</span>
         </div>
     </footer>
 

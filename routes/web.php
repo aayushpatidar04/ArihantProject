@@ -36,6 +36,12 @@ Route::post('/register/otp/resend', [RegistrationController::class, 'resendOtp']
 Route::get('/register/details', [RegistrationController::class, 'showDetails'])->name('registration.details');
 Route::post('/register/details', [RegistrationController::class, 'submitDetails'])->name('registration.details.submit');
 
+Route::get('/event-policy', function () {return view('registration.policy'); })->name('event.policy');
+Route::get('/payment-terms', function () {return view('registration.payment_terms'); })->name('payment.terms');
+Route::get('/cookie-policy', function () {return view('registration.cookie_policy'); })->name('cookie.policy');
+Route::get('/disclaimer', function () {return view('registration.disclaimer'); })->name('disclaimer');
+
+
 Route::middleware(['auth'])->group(function () {
     // Step 5: Payment
     Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
