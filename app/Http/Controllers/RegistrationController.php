@@ -296,13 +296,9 @@ class RegistrationController extends Controller
     {
         $user = User::find($id);
         Auth::login($user);
+
         $payload = $request->all();
         Log::info('Atom callback raw payload', $payload);
-
-        $reg = $this->getCurrentRegistration();
-        if (!$reg) {
-            return redirect()->route('registration.form');
-        }
 
         $decrypted = $this->payment->decryptCallback($payload);
 
@@ -312,20 +308,23 @@ class RegistrationController extends Controller
 
         Log::info('Atom callback decrypted', $decrypted);
 
-        // Atom has TWO success formats — handle both
-        $isSuccess = false;
+        // Atom callback nests everything inside 'payInstrument'
+        $payInstrument = $decrypted['payInstrument'] ?? $decrypted;
 
-        // Format 1: Some accounts return f_code === 'Ok'
-        if (($decrypted['f_code'] ?? '') === 'Ok') {
+        // Success check — responseDetails is inside payInstrument in callbacks
+        $isSuccess = false;
+        if (($payInstrument['f_code'] ?? '') === 'Ok') {
             $isSuccess = true;
         }
 
-        // Format 2: Your account returns responseDetails.statusCode === 'OTS0000'
-        $statusCode = $decrypted['responseDetails']['statusCode'] ?? $decrypted['statusCode'] ?? null;
-        $message = $decrypted['responseDetails']['message'] ?? $decrypted['message'] ?? null;
-        Log::info($statusCode);
-        Log::info($decrypted['responseDetails']['statusCode']);
-        if ($statusCode === 'OTS0000') {
+        $statusCode = $payInstrument['responseDetails']['statusCode']
+            ?? $payInstrument['statusCode']
+            ?? null;
+        $message = $payInstrument['responseDetails']['message']
+            ?? $payInstrument['message']
+            ?? null;
+
+        if ($statusCode === 'OTS0000' || $message === 'SUCCESS') {
             $isSuccess = true;
         }
 
@@ -334,16 +333,20 @@ class RegistrationController extends Controller
             return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment was not successful. Please try again.']);
         }
 
-        // Extract merchTxnId — nested in payInstrument.merchDetails
-        $merchTxnId = $decrypted['payInstrument']['merchDetails']['merchTxnId']
-            ?? $decrypted['merchTxnId']
-            ?? null;
+        // Extract registration ID from extras inside payInstrument
+        $regIdFromCallback = $payInstrument['extras']['udf2'] ?? Session::get('payment_registration_id');
+        $reg = EventRegistration::find($regIdFromCallback);
 
-        // Extract atomTxnId — nested in payInstrument.payDetails
-        $atomTxnId = $decrypted['payInstrument']['payDetails']['atomTxnId']
-            ?? $decrypted['atomTxnId']
-            ?? $decrypted['txnId']
-            ?? null;
+        if (!$reg) {
+            Log::error('Atom callback: registration not found', ['reg_id' => $regIdFromCallback]);
+            return redirect()->route('registration.form');
+        }
+
+        // merchTxnId is inside payInstrument.merchDetails
+        $merchTxnId = $payInstrument['merchDetails']['merchTxnId'] ?? null;
+
+        // atomTxnId is inside payInstrument.payDetails
+        $atomTxnId = $payInstrument['payDetails']['atomTxnId'] ?? null;
 
         $payment = Payment::where('merch_txn_id', $merchTxnId)
             ->where('event_registration_id', $reg->id)
@@ -359,8 +362,9 @@ class RegistrationController extends Controller
         }
 
         $reg->update(['status' => 'paid', 'paid_at' => now()]);
+        Session::forget('payment_registration_id');
 
-        // Idempotent: only generate QR once
+        // Idempotent QR
         $existingQr = $reg->qrCodes()->where('purpose', 'entry')->first();
         if (!$existingQr) {
             $qr = $this->qr->generateEntryQr($reg);
