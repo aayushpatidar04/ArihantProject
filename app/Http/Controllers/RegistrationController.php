@@ -29,7 +29,8 @@ class RegistrationController extends Controller
         protected PaymentGatewayService $payment,
         protected QrCodeService $qr,
         protected LeadScoringService $leadScore,
-    ) {}
+    ) {
+    }
 
     /* ============================================================
        STEP 1: Enter Phone Number → Check Existing Client
@@ -98,13 +99,13 @@ class RegistrationController extends Controller
 
         $request->validate([
             'selected_uid' => 'required|string',
-            'full_name'    => 'required|string|max:255',
-            'email'        => 'required|email|max:255|unique:event_registrations,email',
-            'phone'        => 'required|unique:event_registrations,phone',
-            'city'         => 'required|string|max:100',
-            'type'         => 'required|in:investor,trader',
-            'referred_by'  => 'nullable|string|size:12',
-            'password'     => 'required'
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:event_registrations,email',
+            'phone' => 'required|unique:event_registrations,phone',
+            'city' => 'required|string|max:100',
+            'type' => 'required|in:investor,trader',
+            'referred_by' => 'nullable|string|size:12',
+            'password' => 'required'
         ]);
 
         $clientUsers = Session::get('client_users');
@@ -115,30 +116,30 @@ class RegistrationController extends Controller
         }
 
         $user = User::create([
-            'name'     => $request->full_name,
-            'email'    => $request->email,
+            'name' => $request->full_name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
         $reg = EventRegistration::create([
-            'user_id'             => $user->id,
+            'user_id' => $user->id,
             'registration_number' => 'ARI-' . now()->format('Y') . '-' . strtoupper(Str::random(6)),
-            'full_name'           => $request->full_name,
-            'email'               => $request->email,
-            'phone'               => $request->phone,
-            'city'                => $request->city,
-            'type'                => $request->type,
-            'is_existing_client'  => true,
-            'status'              => 'kyc_completed',
-            'referral_code'       => strtoupper(Str::random(12)),
-            'referred_by'         => $request->referred_by ?? null,
-            'otp_verified_at'     => now(),
-            'kyc_completed_at'    => now(),
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'city' => $request->city,
+            'type' => $request->type,
+            'is_existing_client' => true,
+            'status' => 'kyc_completed',
+            'referral_code' => strtoupper(Str::random(12)),
+            'referred_by' => $request->referred_by ?? null,
+            'otp_verified_at' => now(),
+            'kyc_completed_at' => now(),
         ]);
 
         KycDetail::create([
             'event_registration_id' => $reg->id,
-            'validation_status'     => 'verified',
+            'validation_status' => 'verified',
         ]);
 
         Auth::login($user);
@@ -291,12 +292,10 @@ class RegistrationController extends Controller
         return view('registration.payment', compact('reg', 'order'));
     }
 
-    public function paymentCallback(Request $request, $id)
+    public function paymentCallback(Request $request)
     {
-        $user = User::find($id);
-        Auth::login($user);
         $payload = $request->all();
-        \Log::info($request->all());
+        Log::info('Atom callback raw payload', $payload);
 
         $reg = $this->getCurrentRegistration();
         if (!$reg) {
@@ -311,13 +310,37 @@ class RegistrationController extends Controller
 
         Log::info('Atom callback decrypted', $decrypted);
 
-        if (($decrypted['f_code'] ?? '') !== 'Ok') {
+        // Atom has TWO success formats — handle both
+        $isSuccess = false;
+
+        // Format 1: Some accounts return f_code === 'Ok'
+        if (($decrypted['f_code'] ?? '') === 'Ok') {
+            $isSuccess = true;
+        }
+
+        // Format 2: Your account returns responseDetails.statusCode === 'OTS0000'
+        $statusCode = $decrypted['responseDetails']['statusCode'] ?? $decrypted['statusCode'] ?? null;
+        $message = $decrypted['responseDetails']['message'] ?? $decrypted['message'] ?? null;
+
+        if ($statusCode === 'OTS0000' || $message === 'SUCCESS') {
+            $isSuccess = true;
+        }
+
+        if (!$isSuccess) {
             Log::warning('Atom payment failed/cancelled', $decrypted);
             return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment was not successful. Please try again.']);
         }
 
-        $merchTxnId = $decrypted['merchTxnId']
-            ?? ($decrypted['payInstrument']['merchDetails']['merchTxnId'] ?? null);
+        // Extract merchTxnId — nested in payInstrument.merchDetails
+        $merchTxnId = $decrypted['payInstrument']['merchDetails']['merchTxnId']
+            ?? $decrypted['merchTxnId']
+            ?? null;
+
+        // Extract atomTxnId — nested in payInstrument.payDetails
+        $atomTxnId = $decrypted['payInstrument']['payDetails']['atomTxnId']
+            ?? $decrypted['atomTxnId']
+            ?? $decrypted['txnId']
+            ?? null;
 
         $payment = Payment::where('merch_txn_id', $merchTxnId)
             ->where('event_registration_id', $reg->id)
@@ -325,20 +348,23 @@ class RegistrationController extends Controller
 
         if ($payment && $payment->status !== 'paid') {
             $payment->update([
-                'gateway_payment_id' => $decrypted['atomTxnId'] ?? ($decrypted['txnId'] ?? null),
-                'status'               => 'paid',
-                'gateway_response'     => $decrypted,
-                'paid_at'              => now(),
+                'gateway_payment_id' => $atomTxnId,
+                'status' => 'paid',
+                'gateway_response' => $decrypted,
+                'paid_at' => now(),
             ]);
         }
 
         $reg->update(['status' => 'paid', 'paid_at' => now()]);
 
-        $qr = $this->qr->generateEntryQr($reg);
-        $qrUrl = asset('storage/' . $qr->image_path);
-
-        $this->whatsapp->sendQrImage($reg, $qrUrl);
-        $this->email->sendConfirmation($reg, $qr->image_path);
+        // Idempotent: only generate QR once
+        $existingQr = $reg->qrCodes()->where('purpose', 'entry')->first();
+        if (!$existingQr) {
+            $qr = $this->qr->generateEntryQr($reg);
+            $qrUrl = asset('storage/' . $qr->image_path);
+            $this->whatsapp->sendQrImage($reg, $qrUrl);
+            $this->email->sendConfirmation($reg, $qr->image_path);
+        }
 
         $this->leadScore->calculateScore($reg);
 
@@ -373,7 +399,8 @@ class RegistrationController extends Controller
 
     protected function getCurrentRegistration(): ?EventRegistration
     {
-        if (!Auth::check()) return null;
+        if (!Auth::check())
+            return null;
         return EventRegistration::where('user_id', Auth::id())->latest()->first();
     }
 
