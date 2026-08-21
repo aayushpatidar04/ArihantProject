@@ -323,8 +323,9 @@ class RegistrationController extends Controller
         // Format 2: Your account returns responseDetails.statusCode === 'OTS0000'
         $statusCode = $decrypted['responseDetails']['statusCode'] ?? $decrypted['statusCode'] ?? null;
         $message = $decrypted['responseDetails']['message'] ?? $decrypted['message'] ?? null;
-
-        if ($statusCode === 'OTS0000' || $message === 'SUCCESS') {
+        Log::info($statusCode);
+        Log::info($decrypted['responseDetails']['statusCode']);
+        if ($statusCode === 'OTS0000') {
             $isSuccess = true;
         }
 
