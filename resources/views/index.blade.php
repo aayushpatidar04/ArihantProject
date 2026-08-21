@@ -3445,11 +3445,11 @@
 
             // Replace "id" with real YouTube video IDs (the part after ?v= in the URL).
             var videos = [
-                { id: "YOUR_VIDEO_ID_1", title: "Opening Keynote — Why AI Is Changing Trading", tag: "Keynote", duration: "18:24" },
-                { id: "YOUR_VIDEO_ID_2", title: "Live AI Stock Screening Walkthrough", tag: "Demo", duration: "12:10" },
-                { id: "YOUR_VIDEO_ID_3", title: "Algo Trading 101 — Core Concepts", tag: "Session", duration: "15:47" },
-                { id: "YOUR_VIDEO_ID_4", title: "AI vs Algo vs Human — The Full Debate", tag: "Debate", duration: "24:02" },
-                { id: "YOUR_VIDEO_ID_5", title: "Attendee Q&A Highlights", tag: "Q&A", duration: "9:35" }
+                {id:"bY89Pvsefzc",  title:"SEBI's New Algo Trading Rules Explained",                                  tag:"Regulation", duration:"18:24"},
+                {id:"w_mtfEx-rCI",  title:"What If Your Next Investment Decision Had An AI Thinking With You?",        tag:"AI Insight",  duration:"12:10"},
+                {id:"ADQXJmZYFOc",  title:"अरिहंतप्लस MCP को AI चैटबॉट्स से कनेक्ट करना सीखें",                          tag:"Tutorial",    duration:"15:47"},
+                {id:"BKACdyjnx8w",  title:"Don't Miss Trades! Auto-Login To Stratzy Algo Via ArihantPlus",              tag:"Quick Tip",   duration:"24:02"},
+                {id:"rUTS-bKB5W4",  title:"How To Setup Algo Strategies Via Arihant Plus App",                          tag:"Tutorial",    duration:"9:35"}
             ];
 
             var playSVG = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
