@@ -176,8 +176,8 @@
 
         nav.links {
             display: flex;
-            gap: 38px;
-            font-size: 15px;
+            gap: 22px;
+            font-size: 14.5px;
             color: #e9e4f0;
         }
 
@@ -250,7 +250,7 @@
             width: 100%;
         }
 
-        @media(max-width:819px) {
+        @media(max-width:1080px) {
             nav.links {
                 display: none;
             }
@@ -264,7 +264,7 @@
             }
         }
 
-        @media(min-width:820px) {
+        @media(min-width:1081px) {
             .mobile-menu {
                 display: none !important;
             }
@@ -278,6 +278,16 @@
                 linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
             position: relative;
             overflow: hidden;
+        }
+
+        @media(max-width:700px) {
+            .hero {
+                padding-bottom: 40px;
+                background:
+                    linear-gradient(180deg, rgba(6, 2, 8, 1) 0%, rgba(6, 2, 8, 0.55) 42%, rgba(6, 2, 8, 0.25) 62%, rgba(6, 2, 8, 0.7) 100%),
+                    url('assets/images/skyline.png') center bottom / cover no-repeat,
+                    linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
+            }
         }
 
         .hero-beam {
@@ -407,15 +417,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background:
-                radial-gradient(120% 140% at 50% 105%, rgba(215, 180, 255, 0.9) 0%, rgba(150, 100, 220, 0.5) 16%, transparent 40%),
-                linear-gradient(150deg, #6a49a8 0%, #3c2470 38%, #180d30 78%, #0e0820 100%);
+            background: url('assets/images/gradiant.png') center / cover no-repeat;
             border: 1px solid rgba(200, 160, 255, 0.28);
             border-radius: 24px;
             padding: 0;
             box-shadow:
                 0 18px 40px rgba(90, 30, 160, 0.4),
-                inset 0 -14px 26px rgba(190, 140, 255, 0.35),
                 inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
@@ -432,6 +439,28 @@
             color: var(--muted);
             margin-top: 10px;
             font-weight: 400;
+        }
+
+        @media(max-width:700px) {
+            .countdown {
+                gap: 12px;
+                margin: 20px 0 26px;
+            }
+
+            .cbox {
+                width: 76px;
+                height: 76px;
+                border-radius: 18px;
+            }
+
+            .cbox .num {
+                font-size: 28px;
+            }
+
+            .cbox .lbl {
+                font-size: 12px;
+                margin-top: 5px;
+            }
         }
 
         .hero h1 {
@@ -470,6 +499,21 @@
             inset: 0;
             background: linear-gradient(180deg, rgba(6, 2, 8, 0) 55%, rgba(6, 2, 8, 0.55) 100%);
             pointer-events: none;
+        }
+
+        @media(max-width:700px) {
+            .hero-visual {
+                position: relative;
+                margin-top: 28px;
+            }
+
+            .hero-visual img {
+                display: none;
+            }
+
+            .hero-visual::after {
+                display: none;
+            }
         }
 
         /* ---------- INFO CARD (date / time / venue pill) ---------- */
@@ -516,7 +560,7 @@
 
         .info-field strong {
             color: #f6f3fa;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 600;
         }
 
@@ -541,10 +585,13 @@
 
         @media(max-width:700px) {
             .info-card {
-                left: 50%;
-                top: 56px;
-                width: calc(100% - 32px);
-                max-width: calc(100% - 32px);
+                position: static;
+                left: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                max-width: 100%;
+                margin: 0 auto;
                 padding: 0;
                 background: none;
                 border: none;
@@ -658,17 +705,40 @@
 
         @media(max-width:600px) {
             .info-inner {
-                justify-content: center;
-                text-align: center;
-                flex-direction: column;
+                justify-content: space-between;
+                text-align: left;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 12px;
+                padding: 18px 16px;
             }
 
             .price-tiers {
-                align-items: center;
+                align-items: flex-start;
+                flex-shrink: 1;
+                min-width: 0;
+                gap: 4px;
             }
 
             .price-tier {
-                justify-content: center;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                font-size: 12.5px;
+            }
+
+            .price-tier .price-new {
+                font-size: 14px;
+            }
+
+            .price-tier.client .price-new {
+                font-size: 14px;
+            }
+
+            .info-inner .btn {
+                flex-shrink: 0;
+                padding: 11px 18px;
+                font-size: 13.5px;
+                white-space: nowrap;
             }
         }
 
@@ -760,8 +830,8 @@
         .card {
             background: linear-gradient(160deg, rgba(22, 12, 30, 0.9) 0%, rgba(8, 4, 12, 0.96) 100%);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
-            padding: 40px 26px;
+            border-radius: 20px;
+            padding: 28px 26px 24px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -772,7 +842,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            border-radius: 18px;
+            border-radius: 20px;
             padding: 1.5px;
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 55%, rgba(216, 110, 255, 0.55) 85%, rgba(224, 110, 255, 0.95) 100%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -789,7 +859,7 @@
             left: 8%;
             right: 8%;
             bottom: 0;
-            height: 46px;
+            height: 36px;
             background: radial-gradient(ellipse at center, rgba(210, 120, 255, 0.5) 0%, transparent 72%);
             filter: blur(10px);
             pointer-events: none;
@@ -811,10 +881,10 @@
         }
 
         .icon-circle {
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            margin: 0 auto 22px;
+            margin: 0 auto 16px;
             border: 2px solid transparent;
             background:
                 radial-gradient(circle at 32% 28%, rgba(150, 70, 220, 0.55), rgba(16, 8, 24, 0.9)) padding-box,
@@ -826,10 +896,9 @@
         }
 
         .icon-circle svg {
-            width: 27px;
-            height: 27px;
-            stroke: var(--purple-1);
-            filter: drop-shadow(0 0 7px rgba(190, 110, 255, 0.85));
+            width: 22px;
+            height: 22px;
+            stroke: #fff;
         }
 
         .card h3 {
@@ -1029,6 +1098,418 @@
             flex-shrink: 0;
         }
 
+        /* ---------- EVENT GALLERY ---------- */
+        .gallery {
+            padding: 100px 24px;
+            background: var(--bg-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .gallery-side-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            user-select: none;
+            mix-blend-mode: screen;
+            z-index: 0;
+        }
+
+        .gallery-side-glow-soft {
+            width: 520px;
+            max-width: 65%;
+        }
+
+        .gallery-side-glow-beam {
+            width: 400px;
+            max-width: 52%;
+            top: 0;
+            left: 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: var(--max);
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: linear-gradient(160deg, rgba(70, 26, 112, 0.4) 0%, rgba(10, 4, 16, 0.97) 60%);
+            aspect-ratio: 3/2;
+            opacity: 0;
+            transform: translateY(30px);
+            box-shadow: 0 10px 26px rgba(100, 30, 160, 0.16);
+            transition: opacity .7s ease, transform .7s ease, box-shadow .4s ease, border-color .35s ease;
+        }
+
+        .gallery-item.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-item.hidden {
+            display: none;
+        }
+
+        .gallery-item img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .7s cubic-bezier(.2, .8, .2, 1), filter .5s ease;
+            filter: saturate(1.02);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.09);
+        }
+
+        .gallery-item::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            padding: 1.5px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.08) 55%, rgba(216, 110, 255, 0.6) 85%, rgba(224, 110, 255, 1) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: .4;
+            transition: opacity .4s ease;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-item:hover {
+            box-shadow:
+                0 24px 55px rgba(140, 40, 200, 0.42),
+                0 0 0 4px rgba(184, 102, 247, 0.3),
+                0 0 46px rgba(184, 102, 247, 0.32);
+        }
+
+        .gallery-shade {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(6, 2, 8, 0) 38%, rgba(6, 2, 8, 0.88) 100%);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 20px 22px;
+            z-index: 2;
+            transform: translateY(10px);
+            opacity: .94;
+            transition: transform .35s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-cat {
+            display: inline-block;
+            background: #f4defc;
+            color: #8a1fae;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: .02em;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .gallery-overlay h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            font-family: 'Sora', sans-serif;
+            line-height: 1.35;
+        }
+
+        .gallery-zoom-hint {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(8, 4, 14, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            opacity: .4;
+            transform: scale(.9);
+            transition: opacity .3s ease, transform .3s ease;
+        }
+
+        .gallery-item:hover .gallery-zoom-hint {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .gallery-zoom-hint svg {
+            width: 16px;
+            height: 16px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.8;
+        }
+
+        @media(max-width:900px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:600px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        .gallery-more-wrap {
+            text-align: center;
+            margin-top: 44px;
+        }
+
+        .gallery-more-btn {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 13px 34px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background .25s ease, border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+        }
+
+        .gallery-more-btn:hover {
+            background: rgba(184, 102, 247, 0.15);
+            border-color: rgba(184, 102, 247, 0.55);
+            transform: translateY(-2px);
+        }
+
+        .gallery-more-btn.hidden {
+            display: none;
+        }
+
+        /* Lightbox */
+        .lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(3, 1, 6, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox-overlay.open {
+            display: flex;
+        }
+
+        .lightbox-inner {
+            position: relative;
+            max-width: 960px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-media {
+            position: relative;
+            max-width: 100%;
+            max-height: 82vh;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65);
+            background: #0a0410;
+            opacity: 0;
+            transform: scale(.96);
+            transition: opacity .35s ease, transform .35s ease;
+        }
+
+        .lightbox-overlay.open .lightbox-media {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .lightbox-media img {
+            display: block;
+            max-width: 100%;
+            max-height: 82vh;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 22px 26px;
+            background: linear-gradient(180deg, rgba(6, 2, 8, 0) 0%, rgba(6, 2, 8, 0.85) 100%);
+        }
+
+        .lightbox-caption h4 {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Sora', sans-serif;
+            margin-top: 6px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -52px;
+            right: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            cursor: pointer;
+            z-index: 5;
+            transition: background .2s, transform .2s;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(184, 102, 247, 0.25);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(10, 5, 16, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            cursor: pointer;
+            z-index: 5;
+            transition: background .25s, border-color .25s, transform .25s;
+        }
+
+        .lightbox-nav svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(184, 102, 247, 0.3);
+            border-color: rgba(184, 102, 247, 0.6);
+        }
+
+        .lightbox-prev {
+            left: -16px;
+        }
+
+        .lightbox-next {
+            right: -16px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            top: -52px;
+            left: 0;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        @media(max-width:760px) {
+            .lightbox-close {
+                top: -48px;
+                width: 38px;
+                height: 38px;
+            }
+
+            .lightbox-nav {
+                width: 42px;
+                height: 42px;
+            }
+
+            .lightbox-prev {
+                left: 4px;
+            }
+
+            .lightbox-next {
+                right: 4px;
+            }
+
+            .lightbox-counter {
+                top: -46px;
+            }
+        }
+
+        /* Respect reduced motion across the whole page */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: .001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .001ms !important;
+                scroll-behavior: auto !important;
+            }
+
+            .gallery-item {
+                opacity: 1;
+                transform: none;
+            }
+
+            .gallery-item:hover img {
+                transform: none;
+            }
+        }
+
         /* ---------- PANELIST ---------- */
         .panel-sec {
             padding: 100px 24px;
@@ -1037,78 +1518,150 @@
             overflow: hidden;
         }
 
-        .panel-sec::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 140%;
-            height: 33%;
-            background: radial-gradient(ellipse at center bottom, rgba(150, 50, 220, 0.55) 0%, rgba(120, 30, 190, 0.3) 45%, transparent 75%);
-            filter: blur(30px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .panelist-card {
-            max-width: var(--max);
-            margin: 0 auto 20px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 28px 32px;
-            position: relative;
-            z-index: 1;
-        }
-
         .panel-sec .center-btn {
             position: relative;
             z-index: 1;
         }
 
-        .panelist-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            font-family: 'Inter';
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 22px;
-        }
-
-        .panelist-person {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .avatar {
-            width: 76px;
-            height: 76px;
-            border-radius: 14px;
-            flex-shrink: 0;
-            background: linear-gradient(145deg, #5a2f8f, #231238);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .panelist-slider-wrap {
+            max-width: var(--max);
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
             overflow: hidden;
         }
 
-        .avatar svg {
-            width: 38px;
-            height: 38px;
-            opacity: .85;
+        .panelist-track {
+            display: flex;
+            gap: 32px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 14px 24px 18px;
         }
 
-        .panelist-person h4 {
-            font-size: 16px;
+        .panelist-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .panelist-slide {
+            flex: 0 0 calc((100% - 48px)/3);
+            scroll-snap-align: start;
+        }
+
+        @media(max-width:900px) {
+            .panelist-slide {
+                flex: 0 0 calc((100% - 24px)/2);
+            }
+        }
+
+        @media(max-width:600px) {
+            .panelist-track {
+                padding: 14px 26px 18px;
+                gap: 24px;
+                justify-content: center;
+                scroll-padding: 0 26px;
+            }
+
+            .panelist-slide {
+                flex: 0 0 78%;
+                max-width: 280px;
+                scroll-snap-align: center;
+                margin: 0 auto;
+            }
+
+            .panelist-nav {
+                justify-content: center;
+            }
+        }
+
+        .panelist-photo-card {
+            position: relative;
+            border-radius: 28px;
+            aspect-ratio: 0.95;
+            background: #1c0e30;
+            border: 4px solid #0a0410;
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.18);
+            padding: 0;
+        }
+
+        .panelist-photo-mask {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .panelist-photo-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+
+        .panelist-info {
+            padding: 16px 4px 0;
+        }
+
+        .panelist-info h4 {
+            font-size: 17px;
             font-weight: 700;
+            color: #fff;
+            text-transform: capitalize;
         }
 
-        .panelist-person span {
+        .panelist-info span {
             font-size: 13.5px;
             color: var(--muted);
+            margin-top: 4px;
+            display: block;
+        }
+
+        .panelist-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            max-width: var(--max);
+            margin: 22px auto 40px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panelist-arrow {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: #f4f1f7;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .2s ease, background .2s ease;
+        }
+
+        .panelist-arrow:hover {
+            background: #fff;
+            transform: translateY(-2px);
+        }
+
+        .panelist-arrow:disabled {
+            opacity: .35;
+            cursor: default;
+            transform: none;
+        }
+
+        .panelist-arrow svg {
+            width: 18px;
+            height: 18px;
+            stroke: #150a1e;
+            stroke-width: 2;
+            fill: none;
         }
 
         /* ---------- INVITE & EARN (FIXED) ---------- */
@@ -1687,6 +2240,482 @@
                 border-radius: 22px;
             }
         }
+
+        /* ---------- VIDEOS ---------- */
+        .videos-sec {
+            padding: 100px 24px;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .videos-sec::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(700px 500px at 12% 20%, rgba(184, 102, 247, 0.16), transparent 65%),
+                radial-gradient(760px 560px at 90% 85%, rgba(201, 47, 208, 0.14), transparent 65%);
+        }
+
+        .videos-glow {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(70px);
+        }
+
+        .videos-glow-1 {
+            top: -8%;
+            left: -6%;
+            background: radial-gradient(circle, rgba(184, 102, 247, 0.4), transparent 70%);
+        }
+
+        .videos-glow-2 {
+            bottom: -16%;
+            right: -8%;
+            background: radial-gradient(circle, rgba(201, 47, 208, 0.35), transparent 70%);
+        }
+
+        .videos-sec::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140%;
+            height: 33%;
+            background: radial-gradient(ellipse at center bottom, rgba(150, 50, 220, 0.55) 0%, rgba(120, 30, 190, 0.3) 45%, transparent 75%);
+            filter: blur(30px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .videos-sec>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 28px;
+            align-items: start;
+        }
+
+        @media(max-width:900px) {
+            .video-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Main player — animated rotating gradient ring instead of the static
+     mask-border pattern used on cards/gallery elsewhere on the page */
+        .video-main {
+            background: linear-gradient(160deg, rgba(70, 26, 112, 0.3) 0%, rgba(8, 4, 12, 0.97) 60%);
+            border-radius: 22px;
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(90, 30, 160, 0.25);
+        }
+
+        .video-main::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            padding: 2.5px;
+            z-index: 1;
+            background: linear-gradient(160deg,
+                    rgba(201, 47, 208, 0.85) 0%,
+                    rgba(216, 110, 255, 0.5) 12%,
+                    rgba(255, 255, 255, 0.06) 30%,
+                    rgba(255, 255, 255, 0.06) 70%,
+                    rgba(216, 110, 255, 0.5) 88%,
+                    rgba(201, 47, 208, 0.85) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .video-main>* {
+            position: relative;
+            z-index: 2;
+        }
+
+        .video-frame-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 14px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 25% 20%, rgba(184, 102, 247, 0.35), transparent 55%),
+                radial-gradient(circle at 80% 85%, rgba(201, 47, 208, 0.3), transparent 55%),
+                linear-gradient(160deg, #2a1240 0%, #180a28 55%, #0a0410 100%);
+            cursor: pointer;
+        }
+
+        .video-frame-wrap::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+            background-size: 22px 22px;
+        }
+
+        .video-frame-wrap iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-frame-wrap img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-frame-wrap .video-shade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(6, 2, 8, 0.15) 0%, rgba(6, 2, 8, 0.55) 100%);
+        }
+
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: var(--btn-grad);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 34px rgba(160, 40, 200, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .video-frame-wrap:hover .video-play-btn {
+            transform: translate(-50%, -50%) scale(1.08);
+            box-shadow: 0 14px 42px rgba(190, 50, 230, 0.7);
+        }
+
+        .video-play-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: #fff;
+            margin-left: 4px;
+        }
+
+        .video-info {
+            padding: 20px 10px 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-tag {
+            display: inline-block;
+            background: #f4defc;
+            color: #8a1fae;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: .02em;
+            padding: 5px 14px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .video-info h3 {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Sora', sans-serif;
+            line-height: 1.35;
+        }
+
+        .video-playlist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 520px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .video-playlist::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .video-playlist::-webkit-scrollbar-thumb {
+            background: rgba(184, 102, 247, 0.35);
+            border-radius: 999px;
+        }
+
+        .video-playlist::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .video-playlist-item {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 8px;
+            transition: background .25s ease, border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+        }
+
+        .video-playlist-item:hover {
+            background: rgba(184, 102, 247, 0.1);
+            border-color: rgba(184, 102, 247, 0.4);
+            transform: translateX(-2px);
+            box-shadow: 0 0 0 1px rgba(184, 102, 247, 0.2), 0 10px 26px rgba(140, 40, 200, 0.22);
+        }
+
+        .video-playlist-item:hover .video-thumb .video-thumb-play {
+            background: rgba(140, 40, 200, 0.32);
+        }
+
+        .video-playlist-item.active {
+            background: rgba(184, 102, 247, 0.16);
+            border-color: rgba(184, 102, 247, 0.6);
+            box-shadow: 0 0 0 1px rgba(184, 102, 247, 0.35), 0 10px 30px rgba(140, 40, 200, 0.32);
+        }
+
+        .video-thumb {
+            position: relative;
+            flex-shrink: 0;
+            width: 104px;
+            aspect-ratio: 16/9;
+            border-radius: 9px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 25% 20%, rgba(184, 102, 247, 0.35), transparent 60%),
+                linear-gradient(160deg, #2a1240 0%, #180a28 60%, #0a0410 100%);
+        }
+
+        .video-frame-wrap img[data-broken="1"],
+        .video-thumb img[data-broken="1"] {
+            display: none;
+        }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-thumb .video-thumb-play {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(6, 2, 8, 0.25);
+            transition: background .25s ease;
+        }
+
+        .video-thumb .video-thumb-play svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+            opacity: .9;
+        }
+
+        .video-playlist-item.active .video-thumb .video-thumb-play {
+            background: rgba(140, 40, 200, 0.4);
+        }
+
+        .video-meta {
+            min-width: 0;
+        }
+
+        .video-meta h4 {
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta span {
+            font-size: 11.5px;
+            color: var(--muted);
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        @media(max-width:900px) {
+            .video-playlist {
+                flex-direction: row;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: visible;
+                padding-bottom: 6px;
+            }
+
+            .video-playlist-item {
+                flex-direction: column;
+                align-items: stretch;
+                width: 180px;
+                flex-shrink: 0;
+            }
+
+            .video-thumb {
+                width: 100%;
+            }
+        }
+
+        /* ---------- PRICING ---------- */
+        .pricing-sec {
+            position: relative;
+            overflow: hidden;
+            padding: 100px 24px;
+            background: var(--bg);
+        }
+
+        .pricing-sec .lg-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            user-select: none;
+            mix-blend-mode: screen;
+            z-index: 0;
+        }
+
+        .pricing-sec>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pricing-sec .section-head p {
+            max-width: 520px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        @media(max-width:800px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .price-card {
+            background: #0d0712;
+            border-radius: 20px;
+            padding: 34px 32px;
+            min-height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1.5px;
+            background: radial-gradient(650px 650px at 0% 0%, rgba(240, 190, 255, 1) 0%, rgba(216, 110, 255, 0.9) 20%, rgba(216, 110, 255, 0.55) 45%, rgba(216, 110, 255, 0.2) 65%, transparent 85%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .price-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .price-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .price-row .price-old {
+            color: var(--muted-2);
+            text-decoration: line-through;
+            font-size: 18px;
+        }
+
+        .price-row .price-new {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--ink);
+            font-family: 'Sora', sans-serif;
+        }
+
+        .price-card .price-gst {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .price-card .price-divider {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 22px 0;
+        }
+
+        .price-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .price-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14.5px;
+            color: var(--ink);
+        }
+
+        .price-features li svg {
+            width: 17px;
+            height: 17px;
+            stroke: var(--purple-1);
+            flex-shrink: 0;
+        }
+
+        .pricing-sec .center-btn {
+            margin-top: 44px;
+        }
     </style>
 </head>
 
@@ -1699,20 +2728,11 @@
                 <a href="#home">Home</a>
                 <a href="#speaker">Speaker</a>
                 <a href="#agenda">Agenda</a>
-                @auth
-                    @if(auth()->user()->eventRegistrations()->exists())
-                        <a href="{{ route('registration.success') }}">My Ticket</a>
-                    @endif
-                @endauth
             </nav>
-            @auth
-                <form method="POST" action="{{ route('logout') }}" style="display:inline">
-                    @csrf
-                    <button type="submit" class="btn btn-ghost nav-cta">Logout</button>
-                </form>
-            @else
-                <a href="/register" class="btn btn-primary nav-cta">Reserve Your Spot</a>
-            @endauth
+            <div>
+                <a href="/login" class="btn btn-primary nav-cta">Login</a>
+                <a href="/register" class="btn btn-primary nav-cta">Claim Your Spot</a>
+            </div>
             <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                     <path d="M4 7h16M4 12h16M4 17h16" />
@@ -1724,7 +2744,7 @@
         <a href="#home">Home</a>
         <a href="#speaker">Speaker</a>
         <a href="#agenda">Agenda</a>
-        <a href="/register" class="btn btn-primary">Reserve Your Spot</a>
+        <a href="/register" class="btn btn-primary">Claim Your Spot</a>
     </div>
 
     <section class="hero" id="home">
@@ -1767,7 +2787,7 @@
                                 <path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round" />
                             </svg>
                         </span>
-                        <div>Date<br><strong>8 September 2026</strong></div>
+                        <div>Date<br><strong>5 September 2026</strong></div>
                     </div>
                     <div class="info-field">
                         <span class="ic">
@@ -1778,35 +2798,103 @@
                         </span>
                         <div>Time<br><strong>10:00 AM - 5:00 PM</strong></div>
                     </div>
-                    <div class="info-field">
+                    <div class="info-field" id="venueField">
                         <span class="ic">
                             <svg viewBox="0 0 24 24">
                                 <path d="M3 11l18-7-7 18-2.5-7.5L3 11z" stroke-linejoin="round" />
                             </svg>
                         </span>
-                        <div>Venue<br><strong>Labh Mandapam<br>Indore-</strong></div>
+                        <div>Venue<br><strong id="venueText">Indore</strong></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <section class="pricing-sec" id="pricing">
+        <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
+        <img class="lg-glow lg-glow-beam" src="assets/images/8.png" alt="" aria-hidden="true">
 
-    <div class="info-bar">
-        <div class="info-inner">
-            <div class="price-tiers">
-                <div class="price-tier">
-                    <span class="tier-label">Non clients</span>
-                    <span class="price-old">₹999</span>
-                    <span class="price-new">Just - ₹599</span>
-                </div>
-                <div class="price-tier client">
-                    <span class="tier-label">For clients -</span>
+        <div class="section-head">
+            <h2>Choose Your Way To<br>Experience The Conclave</h2>
+            <p>Same Full-Day Experience, Same Takeaways — Just Special Pricing For Our Arihant Plus Family.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Arihant Users</h3>
+                <div class="price-row">
+                    <span class="price-old">₹599</span>
                     <span class="price-new">₹299</span>
                 </div>
+                <div class="price-gst">Incl 18% GST</div>
+                <hr class="price-divider">
+                <ul class="price-features">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Full day event access</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>All session included</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Complimentary meal during the event</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Free AI toolkit + partner subscription</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Certificate of participation</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Access to the Experience Zone</li>
+                </ul>
             </div>
-            <a href="/register" class="btn btn-primary">Claim your spot</a>
+
+            <div class="price-card">
+                <h3>Standard Entry</h3>
+                <div class="price-row">
+                    <span class="price-old">₹999</span>
+                    <span class="price-new">₹599</span>
+                </div>
+                <div class="price-gst">Incl 18% GST</div>
+                <hr class="price-divider">
+                <ul class="price-features">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Full day event access</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>All session included</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Complimentary meal during the event</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Free AI toolkit + partner subscription</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Certificate of participation</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>Access to the Experience Zone</li>
+                </ul>
+            </div>
         </div>
-    </div>
+
+        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+    </section>
 
     <div class="learn-get-wrap">
         <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
@@ -1818,109 +2906,134 @@
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <path d="M12 2l1.8 5.6L19 9l-5.2 1.4L12 16l-1.8-5.6L5 9l5.2-1.4L12 2z" />
-                        </svg></div>
-                    <h3>7 Ready-To-Use AI Prompts</h3>
-                    <p>Copy-paste prompts for research</p>
-                </div>
-                <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <path d="M4 6h16M4 12h10M4 18h16" stroke-linecap="round" />
-                        </svg></div>
-                    <h3>The 3-Check Rule for AI Picks</h3>
-                    <p>Verify any AI-generated stock</p>
-                </div>
-                <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path
-                                d="M14.7 6.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-2-2a1 1 0 011.4-1.4L7 12.6l6.3-6.3a1 1 0 011.4 0z" />
-                            <path d="M18 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2z" />
+                                d="M12 3l1.6 4.9a2 2 0 001.3 1.3L20 11l-5.1 1.6a2 2 0 00-1.3 1.3L12 19l-1.6-5.1a2 2 0 00-1.3-1.3L4 11l5.1-1.6a2 2 0 001.3-1.3L12 3z" />
+                            <path d="M19 3v2.4M18 4.2h2.4" />
                         </svg></div>
-                    <h3>Free AI Toolkit</h3>
-                    <p>Walk away with tools and a free trial</p>
+                    <h3>Prompt AI Like A Pro</h3>
+                    <p>Ask the right questions, get useful answers.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <rect x="4" y="4" width="16" height="4" rx="1" />
-                            <rect x="4" y="10" width="16" height="4" rx="1" />
-                            <rect x="4" y="16" width="10" height="4" rx="1" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 8h6" />
+                            <path d="M13 7.3l1.6 1.6 3-3.2" />
+                            <path d="M4 16h6" />
+                            <path d="M13.3 15l3.4 3.4M16.7 15l-3.4 3.4" />
                         </svg></div>
-                    <h3>A Live-Built Strategy Template</h3>
-                    <p>Take home the exact logic built</p>
+                    <h3>Verify Any AI Stock Pick</h3>
+                    <p>Fact-check AI advice before you act.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+                        </svg></div>
+                    <h3>Where AI Still Gets It Wrong</h3>
+                    <p>Spot the blind spots before they cost you.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="4" width="6" height="4.5" rx="1.4" fill="currentColor" stroke="none" />
+                            <rect x="4" y="10.5" width="6" height="9.5" rx="1.4" fill="currentColor" stroke="none"
+                                opacity=".45" />
+                            <path d="M13.5 6.2h6M13.5 11h6M13.5 15.8h6" />
+                        </svg></div>
+                    <h3>How A Strategy Comes Together</h3>
+                    <p>Watch the logic, live.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <rect x="9" y="3" width="6" height="11" rx="3" />
                             <path d="M5 11a7 7 0 0014 0M12 18v3" />
                         </svg></div>
-                    <h3>Real Answers From A Live Debate</h3>
-                    <p>Where AI, algos, and human judgment clash</p>
+                    <h3>Live Debate, Real Answers</h3>
+                    <p>AI, algos, and human judgment clash.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <circle cx="12" cy="8" r="3.2" />
-                            <path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="3.4" />
+                            <path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2" />
                         </svg></div>
-                    <h3>Direct Access To Industry Experts</h3>
-                    <p>Ask your questions and network with speakers</p>
+                    <h3>How Algo Traders Think</h3>
+                    <p>The mindset behind every trade.</p>
                 </div>
             </div>
         </section>
 
         <section class="get">
             <div class="section-head">
-                <h2>What You'll Get</h2>
+                <h2>What you'll get</h2>
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <path d="M9 3v18M15 3v18" stroke-linecap="round" />
-                            <circle cx="9" cy="9" r="1.4" fill="currentColor" stroke="none" />
-                            <circle cx="15" cy="15" r="1.4" fill="currentColor" stroke="none" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 20V11M8 7V3" />
+                            <path d="M16 20V13M16 9V3" />
+                            <rect x="5.3" y="8.6" width="5.4" height="5.4" rx="2.7" fill="currentColor" stroke="none" />
+                            <rect x="13.3" y="5.6" width="5.4" height="5.4" rx="2.7" fill="currentColor"
+                                stroke="none" />
                         </svg></div>
-                    <h3>Decode AI-Powered Trading</h3>
-                    <p>Learn how AI is reshaping trading decisions</p>
+                    <h3>Ready-To-Use AI Prompts</h3>
+                    <p>Prompts for smarter stock research.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <path d="M5 20V10M12 20V4M19 20v-7" stroke-linecap="round" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4.2" y="13" width="3.4" height="7" rx="1" fill="currentColor" stroke="none" />
+                            <rect x="10.3" y="7" width="3.4" height="13" rx="1" fill="currentColor" stroke="none" />
+                            <rect x="16.4" y="10.5" width="3.4" height="9.5" rx="1" fill="currentColor" stroke="none"
+                                opacity=".7" />
                         </svg></div>
-                    <h3>Algo Trading Simplified</h3>
-                    <p>See how algorithmic strategies work</p>
+                    <h3>The Checklist for AI Picks</h3>
+                    <p>Verify any AI-generated stock pick in seconds.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path
-                                d="M14.7 6.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-2-2a1 1 0 011.4-1.4L7 12.6l6.3-6.3a1 1 0 011.4 0z" />
-                            <path d="M18 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2z" />
+                                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
                         </svg></div>
                     <h3>Free AI Toolkit</h3>
-                    <p>Walk away with tools and a free trial</p>
+                    <p>Tools and a free trial, yours to keep.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <circle cx="12" cy="8" r="3.2" />
-                            <path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="3.4" />
+                            <path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2" />
                         </svg></div>
-                    <h3>Learn Directly From Experts</h3>
-                    <p>Hear from experienced traders and speakers</p>
+                    <h3>A Live-Built Strategy Template</h3>
+                    <p>Watch it built live, then take the logic home.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <rect x="3" y="5" width="14" height="11" rx="2" />
-                            <path d="M21 8v6M9 19h4" stroke-linecap="round" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3.5" y="5.5" width="14" height="13" rx="2.2" />
+                            <path d="M6 15.5l3.3-3.3 2.2 2.2 4.5-4.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <circle cx="8.3" cy="9.3" r="1.05" fill="currentColor" stroke="none" />
+                            <path d="M19 4l.7 1.6L21.3 6.3l-1.6.7L19 8.6l-.7-1.6L16.7 6.3l1.6-.7z" fill="currentColor"
+                                stroke="none" />
                         </svg></div>
-                    <h3>Build Your Own AI-Powered Strategy</h3>
-                    <p>Understand the future of trading and investing</p>
+                    <h3>Real Answers From A Live Panel</h3>
+                    <p>Where AI, algos, and human judgment clash.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-                            <path d="M4 20l5-1 10-10-4-4L5 15l-1 5z" />
-                            <path d="M18 4l2 2" stroke-linecap="round" />
+                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17.5 3.5l3 3-9.3 9.3-3.9 1 .9-4z" stroke-linejoin="round" />
+                            <path d="M6 4l.6 1.4L8 6l-1.4.6L6 8l-.6-1.4L4 6l1.4-.6z" fill="currentColor"
+                                stroke="none" />
                         </svg></div>
-                    <h3>Hands-On With Real AI Tools</h3>
-                    <p>Get exposure to AI tools traders use</p>
+                    <h3>Certificate of Participation</h3>
+                    <p>Get official recognition of your AI Training.</p>
                 </div>
             </div>
             <div class="center-btn left">
@@ -1929,7 +3042,7 @@
         </section>
     </div>
 
-    <section class="schedule" id="agenda">
+    {{-- <section class="schedule" id="agenda">
         <div class="schedule-glow"></div>
         <div class="section-head" style="position:relative;z-index:2;">
             <h2>Here's What's Happening</h2>
@@ -1946,14 +3059,68 @@
         </div>
 
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
-    </section>
+    </section> --}}
 
     <section class="panel-sec" id="speaker">
         <div class="section-head">
             <h2>Meet Our Panelist</h2>
         </div>
-        <div id="panelist-list"></div>
+
+        <div class="panelist-slider-wrap">
+            <div class="panelist-track" id="panelistTrack"></div>
+        </div>
+
+        <div class="panelist-nav">
+            <button type="button" class="panelist-arrow" id="panelistPrev" aria-label="Previous panelist">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <button type="button" class="panelist-arrow" id="panelistNext" aria-label="Next panelist">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+    </section>
+
+    <section class="gallery" id="gallery">
+        <img class="gallery-side-glow gallery-side-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
+        <img class="gallery-side-glow gallery-side-glow-beam" src="assets/images/8.png" alt="" aria-hidden="true">
+        <div class="section-head purple">
+            <h2>Event Gallery</h2>
+            <p>Moments from past ArihantPLUS conclaves, workshops and community meetups.</p>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid"></div>
+        <div class="gallery-more-wrap">
+            <button type="button" class="gallery-more-btn" id="galleryLoadMore">Load More</button>
+        </div>
+
+        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+    </section>
+
+    <section class="videos-sec" id="videos">
+        <div class="videos-glow videos-glow-1" aria-hidden="true"></div>
+        <div class="videos-glow videos-glow-2" aria-hidden="true"></div>
+        <div class="section-head purple">
+            <h2>Watch The Sessions</h2>
+            <p>Highlights, expert talks and strategy breakdowns from past ArihantPLUS conclaves.</p>
+        </div>
+
+        <div class="video-layout wrap">
+            <div class="video-main">
+                <div class="video-frame-wrap" id="videoFrameWrap"></div>
+                <div class="video-info">
+                    <span class="video-tag" id="videoTag">Featured</span>
+                    <h3 id="videoTitle"></h3>
+                </div>
+            </div>
+
+            <div class="video-playlist" id="videoPlaylist"></div>
+        </div>
     </section>
 
     <section class="invite">
@@ -1996,7 +3163,8 @@
         </div>
     </section>
 
-    <section class="faq">
+
+    <section class="faq" id="faq">
         <div class="faq-inner">
             <div class="faq-lead">
                 <h2>Frequently asked questions</h2>
@@ -2009,23 +3177,41 @@
     <footer>
         <div class="footer-glow"></div>
         <div class="footer-social">
-            <a class="social-ic" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none"
-                    stroke-width="1.8">
+            <a class="social-ic" target="_blank" href="https://www.instagram.com/arihant_plus/" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="5" />
                     <circle cx="12" cy="12" r="4" />
                     <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
-                </svg></a>
-            <a class="social-ic" href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                </svg>
+            </a>
+            <a class="social-ic" target="_blank" href="https://www.linkedin.com/company/arihant-capital-markets-ltd/about/?viewAsMember=true" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="3" />
                     <path d="M7 10v7M7 7v.01M11 17v-4.5a2 2 0 014-.2M15 17v-4.5" />
-                </svg></a>
-            <a class="social-ic" href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                </svg>
+            </a>
+            <a class="social-ic" target="_blank" href="https://x.com/ArihantPlus" aria-label="X">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
                     <path d="M4 4l16 16M20 4L4 20" />
-                </svg></a>
+                </svg>
+            </a>
+            <a class="social-ic" target="_blank" href="https://www.youtube.com/@arihant_plus" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                    <rect x="3" y="3" width="18" height="18" rx="4" />
+                    <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
+                </svg>
+            </a>
+            <a class="social-ic" target="_blank" href="https://www.facebook.com/arihantcapitalmarket" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                    <rect x="3" y="3" width="18" height="18" rx="4" />
+                    <path d="M13 10h2v-2h-2c-1.1 0-2 .9-2 2v2h-2v2h2v6h2v-6h2l1-2h-3v-2c0-.55.45-1 1-1z" />
+                </svg>
+            </a>
         </div>
+
         <div class="footer-bottom">
             <span>All copyrights are reserved @Arihantcapital</span>
-            <span>Made on earth with <span class="heart">♥</span> human</span>
+            <span>Made with <span class="heart">♥ </span>by <a href="https://intouchsoftware.co.in" target="_blank">InTouch Software Solutions</a></span>
         </div>
     </footer>
 
@@ -2048,7 +3234,57 @@
         </div>
     </div>
 
+    <div class="lightbox-overlay" id="galleryLightbox">
+        <div class="lightbox-inner">
+            <span class="lightbox-counter" id="lightboxCounter"></span>
+            <div class="lightbox-close" id="lightboxClose" role="button" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 4l16 16M20 4L4 20" />
+                </svg>
+            </div>
+            <div class="lightbox-nav lightbox-prev" id="lightboxPrev" role="button" aria-label="Previous image">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <div class="lightbox-media">
+                <img id="lightboxImg" src="" alt="">
+                <div class="lightbox-caption">
+                    <span class="gallery-cat" id="lightboxCat"></span>
+                    <h4 id="lightboxName"></h4>
+                </div>
+            </div>
+            <div class="lightbox-nav lightbox-next" id="lightboxNext" role="button" aria-label="Next image">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ---------- Reserve / Claim modal ----------
+        (function () {
+            var overlay = document.getElementById('reserveModal');
+            var closeBtn = document.getElementById('modalClose');
+            if (!overlay) return;
+            function openModal() {
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
         // ---------- Mobile menu toggle ----------
         (function () {
             var btn = document.getElementById('menuToggle');
@@ -2088,7 +3324,7 @@
 
         // ---------- Countdown ----------
         (function () {
-            var target = new Date(2026, 8, 8, 10, 0, 0); // 8 September 2026, 10:00 AM
+            var target = new Date(2026, 8, 5, 10, 0, 0); // 5 September 2026, 10:00 AM
             function tick() {
                 var now = new Date();
                 var diff = Math.max(0, target - now);
@@ -2101,6 +3337,20 @@
             }
             tick();
             setInterval(tick, 1000 * 30);
+        })();
+        // ---------- Venue hover swap ----------
+        (function () {
+            var field = document.getElementById('venueField');
+            var text = document.getElementById('venueText');
+            if (!field || !text) return;
+            var shortText = "Indore";
+            var fullText = "Labh Mandapam, Indore";
+            field.addEventListener('mouseenter', function () {
+                text.textContent = fullText;
+            });
+            field.addEventListener('mouseleave', function () {
+                text.textContent = shortText;
+            });
         })();
 
         // ---------- Agenda (repeatable data-driven list) ----------
@@ -2119,32 +3369,61 @@
                 '<div class="pill">' + a.tag + '</div>' +
                 '</div>';
         }).join('');
-        document.getElementById('agenda-list').innerHTML = agendaHTML;
+        var agendaListEl = document.getElementById('agenda-list');
+        if (agendaListEl) agendaListEl.innerHTML = agendaHTML;
 
-        var panelists = [
-            { group: "India's Lead Technical Analyst & Algo Trader", name: "Vishal Mehta", role: "Algo Trader | Market Educator", img: "assets/images/21.png" },
-            { group: "India's #1 Financial Astrology Expert", name: "Harshubh", role: "Financial Astrology", img: "assets/images/22.png" },
-            { group: "Co-Founder Quantify Capital | Algorithmic Trading", name: "Saurabh Sisodia", role: "Data Driven Trader", img: "assets/images/23.png" }
-        ];
-        var avatarSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#d8bfff" stroke-width="1.6"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2"/></svg>';
-        document.getElementById('panelist-list').innerHTML = panelists.map(function (p) {
-            var avatarContent = p.img ? '<img src="' + p.img + '" alt="' + p.name + '" style="width:100%;height:100%;object-fit:cover;">' : avatarSVG;
-            return '<div class="panelist-card">' +
-                '<h3>' + p.group + '</h3>' +
-                '<div class="panelist-person">' +
-                '<div class="avatar">' + avatarContent + '</div>' +
-                '<div><h4>' + p.name + '</h4><span>' + p.role + '</span></div>' +
-                '</div>' +
-                '</div>';
-        }).join('');
+        (function () {
+            var panelists = [
+                { name: "Vishal Mehta", role: "Algo Trader | Market Educator", img: "assets/images/21.png" },
+                { name: "Saurabh Sisodia", role: "Data Driven Trader", img: "assets/images/23.png" },
+                { name: "Santosh Pasi", role: "Option Trader", img: "assets/images/22.png" }
+            ];
+            var track = document.getElementById('panelistTrack');
+            if (!track) return;
+
+            track.innerHTML = panelists.map(function (p) {
+                return '<div class="panelist-slide">' +
+                    '<div class="panelist-photo-card"><div class="panelist-photo-mask"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></div></div>' +
+                    '<div class="panelist-info"><h4>' + p.name + '</h4><span>' + p.role + '</span></div>' +
+                    '</div>';
+            }).join('');
+
+            var prevBtn = document.getElementById('panelistPrev');
+            var nextBtn = document.getElementById('panelistNext');
+            if (!prevBtn || !nextBtn) return;
+
+            function cardStep() {
+                var slide = track.querySelector('.panelist-slide');
+                if (!slide) return 0;
+                var gap = parseFloat(getComputedStyle(track).gap) || 24;
+                return slide.getBoundingClientRect().width + gap;
+            }
+
+            function updateArrows() {
+                var max = track.scrollWidth - track.clientWidth - 2;
+                prevBtn.disabled = track.scrollLeft <= 2;
+                nextBtn.disabled = max <= 2 || track.scrollLeft >= max;
+            }
+
+            prevBtn.addEventListener('click', function () { track.scrollBy({ left: -cardStep(), behavior: 'smooth' }); });
+            nextBtn.addEventListener('click', function () { track.scrollBy({ left: cardStep(), behavior: 'smooth' }); });
+            track.addEventListener('scroll', updateArrows);
+            window.addEventListener('resize', updateArrows);
+            updateArrows();
+        })();
 
         // ---------- FAQ ----------
         var faqs = [
-            { q: "How do I open a trading and demat account?", a: "You can open both accounts online in a few minutes through the ArihantPLUS app or website by completing e-KYC and e-sign — no paperwork or branch visit required." },
-            { q: "What documents are required for account opening?", a: "ArihantPlus requires a PAN card, an Aadhaar card, bank proof, a signature and a photograph for account opening. Users opting for F&O trading must also submit proof of income, such as salary slips, bank statements, ITR acknowledgment or Form 16, during the verification process." },
-            { q: "How long does the account activation process take?", a: "Most accounts are verified and activated within 24–48 hours once all documents and e-sign steps are completed correctly." },
-            { q: "Is there any account opening fee or annual maintenance charge?", a: "Account opening is free for a limited period during this event; standard annual maintenance charges apply afterward as per the published fee schedule." },
-            { q: "What tools or charts are available for analysis?", a: "You'll get access to advanced charting, AI-assisted stock screeners, algo strategy builders and real-time market data as part of the ArihantPLUS toolkit." }
+            { q: "Who should attend this conclave?", a: "Anyone curious about how AI and algorithmic trading are changing the markets — whether you're a complete beginner or already trading. No prior coding or algo experience is required." },
+            { q: "Do I need any trading experience to attend?", a: "No. The sessions are designed to be followed by both beginners and experienced traders — from live, hands-on walkthroughs to deeper discussions for those already trading." },
+            { q: "Will this be practical, or just theory?", a: "Practical. You'll build a live AI research routine on your own phone, watch a trading strategy get built and back tested live on stage, and walk away with tools you can use the same evening." },
+            { q: "What exactly will I get after attending?", a: "A set of ready-to-use AI prompts, a strategy template from the live build session, access to a free AI toolkit and partner subscription, and a certificate of participation." },
+            { q: "Do I need to bring a laptop?", a: "No laptop needed — most hands-on sessions are designed to be followed along on your phone. We'll share specific instructions closer to the event date." },
+            { q: "Is there a certificate of participation?", a: "Yes, all attendees receive a certificate at the end of the day." },
+            { q: "Will there be food and breaks included?", a: "Yes, the ticket includes lunch and tea breaks throughout the day." },
+            { q: "Is there an entertainment/experience element, or is it only sessions?", a: "Yes — beyond the sessions, we've planned an experiential element to make this more than just a lecture-style event. Details will be shared closer to the date." },
+            { q: "Are there any partner/sponsor stalls at the event?", a: "Yes, you'll have access to an Experience Zone with partner stalls where you can explore tools and platforms relevant to AI and algo trading." },
+            { q: "What is the refund/cancellation policy?", a: "We follow a No Refund Policy." }
         ];
         document.getElementById('faq-list').innerHTML = faqs.map(function (f, i) {
             return '<div class="faq-item' + (i === 1 ? ' open' : '') + '">' +
@@ -2155,6 +3434,245 @@
                 '<div class="faq-a">' + f.a + '</div>' +
                 '</div>';
         }).join('');
+
+        // ---------- Video Sessions ----------
+        (function () {
+            var frameWrap = document.getElementById('videoFrameWrap');
+            var playlistHost = document.getElementById('videoPlaylist');
+            var tagEl = document.getElementById('videoTag');
+            var titleEl = document.getElementById('videoTitle');
+            if (!frameWrap || !playlistHost) return;
+
+            // Replace "id" with real YouTube video IDs (the part after ?v= in the URL).
+            var videos = [
+                { id: "YOUR_VIDEO_ID_1", title: "Opening Keynote — Why AI Is Changing Trading", tag: "Keynote", duration: "18:24" },
+                { id: "YOUR_VIDEO_ID_2", title: "Live AI Stock Screening Walkthrough", tag: "Demo", duration: "12:10" },
+                { id: "YOUR_VIDEO_ID_3", title: "Algo Trading 101 — Core Concepts", tag: "Session", duration: "15:47" },
+                { id: "YOUR_VIDEO_ID_4", title: "AI vs Algo vs Human — The Full Debate", tag: "Debate", duration: "24:02" },
+                { id: "YOUR_VIDEO_ID_5", title: "Attendee Q&A Highlights", tag: "Q&A", duration: "9:35" }
+            ];
+
+            var playSVG = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            var currentIndex = 0;
+
+            function thumbUrl(id) {
+                return 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+            }
+
+            function hasRealId(id) {
+                return !!id && id.indexOf('YOUR_VIDEO_ID') !== 0;
+            }
+
+            function renderFrame(index, autoplay) {
+                var v = videos[index];
+                if (!v) return;
+                currentIndex = index;
+                tagEl.textContent = v.tag;
+                titleEl.textContent = v.title;
+
+                if (autoplay && hasRealId(v.id)) {
+                    frameWrap.innerHTML = '<iframe src="https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0" ' +
+                        'title="' + v.title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+                        'allowfullscreen></iframe>';
+                } else if (hasRealId(v.id)) {
+                    frameWrap.innerHTML =
+                        '<img src="' + thumbUrl(v.id) + '" alt="' + v.title + '">' +
+                        '<div class="video-shade"></div>' +
+                        '<div class="video-play-btn">' + playSVG + '</div>';
+                } else {
+                    frameWrap.innerHTML =
+                        '<div class="video-shade"></div>' +
+                        '<div class="video-play-btn">' + playSVG + '</div>';
+                }
+
+                Array.prototype.forEach.call(playlistHost.querySelectorAll('.video-playlist-item'), function (el, i) {
+                    el.classList.toggle('active', i === index);
+                });
+            }
+
+            playlistHost.innerHTML = videos.map(function (v, i) {
+                var thumbImg = hasRealId(v.id) ? '<img src="' + thumbUrl(v.id) + '" alt="' + v.title + '" loading="lazy">' : '';
+                return '<div class="video-playlist-item' + (i === 0 ? ' active' : '') + '" data-index="' + i + '">' +
+                    '<div class="video-thumb">' +
+                    thumbImg +
+                    '<div class="video-thumb-play">' + playSVG + '</div>' +
+                    '</div>' +
+                    '<div class="video-meta">' +
+                    '<h4>' + v.title + '</h4>' +
+                    '<span>' + v.tag + ' · ' + v.duration + '</span>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            renderFrame(0, false);
+
+            frameWrap.addEventListener('click', function () {
+                renderFrame(currentIndex, true);
+            });
+
+            playlistHost.querySelectorAll('.video-playlist-item').forEach(function (el) {
+                el.addEventListener('click', function () {
+                    var idx = parseInt(el.getAttribute('data-index'), 10);
+                    renderFrame(idx, true);
+                });
+            });
+        })();
+
+        // ---------- Event Gallery ----------
+        (function () {
+            var grid = document.getElementById('gallery-grid');
+            var loadMoreBtn = document.getElementById('galleryLoadMore');
+            if (!grid) return;
+
+            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var BATCH_SIZE = 8;
+
+            // Data-driven gallery — swap the img paths for real event photos later.
+            var galleryItems = [
+                { img: "assets/images/gallery/1.jpg", name: "Opening Keynote — AI Trading Summit", label: "Conclave" },
+                { img: "assets/images/gallery/2.jpg", name: "Live AI Screening Demo", label: "Workshop" },
+                { img: "assets/images/gallery/3.jpg", name: "Networking Lounge", label: "Community" },
+                { img: "assets/images/gallery/4.jpg", name: "Panel Discussion On Algo Trading", label: "Conclave" },
+                { img: "assets/images/gallery/5.jpg", name: "Algo Trading Bootcamp", label: "Workshop" },
+                { img: "assets/images/gallery/6.jpg", name: "Trader Meetup Mixer", label: "Community" },
+                { img: "assets/images/gallery/7.jpg", name: "Award Ceremony", label: "Conclave" },
+                { img: "assets/images/gallery/8.jpg", name: "Hands-On Charting Session", label: "Workshop" },
+                { img: "assets/images/gallery/9.jpg", name: "Community Q&A", label: "Community" },
+                { img: "assets/images/gallery/10.jpg", name: "Expert Fireside Chat", label: "Conclave" },
+                { img: "assets/images/gallery/11.jpg", name: "Strategy Building Workshop", label: "Workshop" },
+                { img: "assets/images/gallery/12.jpg", name: "Closing Celebration", label: "Community" },
+                { img: "assets/images/gallery/13.jpg", name: "Behind The Scenes", label: "Community" },
+                { img: "assets/images/gallery/14.jpg", name: "Trading Floor Walkthrough", label: "Conclave" },
+                { img: "assets/images/gallery/15.jpg", name: "Speaker Meet & Greet", label: "Workshop" },
+                { img: "assets/images/gallery/16.jpg", name: "Attendee Highlights", label: "Community" },
+                { img: "assets/images/gallery/17.jpg", name: "Group Photo", label: "Conclave" }
+            ];
+
+            var zoomSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.35-4.35" stroke-linecap="round"/><path d="M10.5 8v5M8 10.5h5" stroke-linecap="round"/></svg>';
+
+            // Render grid — items past BATCH_SIZE start hidden
+            grid.innerHTML = galleryItems.map(function (item, i) {
+                return '<div class="gallery-item' + (i >= BATCH_SIZE ? ' hidden' : '') + '" data-index="' + i + '">' +
+                    '<img src="' + item.img + '" alt="' + item.name + '" loading="lazy">' +
+                    '<div class="gallery-shade"></div>' +
+                    '<div class="gallery-zoom-hint">' + zoomSVG + '</div>' +
+                    '<div class="gallery-overlay">' +
+                    '<span class="gallery-cat">' + item.label + '</span>' +
+                    '<h4>' + item.name + '</h4>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            var itemEls = Array.prototype.slice.call(grid.querySelectorAll('.gallery-item'));
+            var shownCount = Math.min(BATCH_SIZE, itemEls.length);
+
+            if (loadMoreBtn && shownCount >= itemEls.length) {
+                loadMoreBtn.classList.add('hidden');
+            }
+
+            // ---- Scroll reveal (only for the currently visible items) ----
+            if (reduceMotion || !('IntersectionObserver' in window)) {
+                itemEls.forEach(function (el) { if (!el.classList.contains('hidden')) el.classList.add('reveal'); });
+            } else {
+                var revealCount = 0;
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.style.transitionDelay = Math.min(revealCount * 70, 420) + 'ms';
+                            entry.target.classList.add('reveal');
+                            revealCount++;
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+                itemEls.forEach(function (el) { if (!el.classList.contains('hidden')) io.observe(el); });
+            }
+
+            // ---- Load more (replaces filtering) ----
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', function () {
+                    var next = itemEls.slice(shownCount, shownCount + BATCH_SIZE);
+                    next.forEach(function (el, i) {
+                        el.classList.remove('hidden');
+                        el.style.transitionDelay = Math.min(i * 70, 420) + 'ms';
+                        if (reduceMotion) { el.classList.add('reveal'); }
+                        else { setTimeout(function () { el.classList.add('reveal'); }, 20); }
+                    });
+                    shownCount += next.length;
+                    if (shownCount >= itemEls.length) {
+                        loadMoreBtn.classList.add('hidden');
+                    }
+                });
+            }
+
+            // ---- Lightbox (unchanged) ----
+            var lightbox = document.getElementById('galleryLightbox');
+            var lightboxImg = document.getElementById('lightboxImg');
+            var lightboxCat = document.getElementById('lightboxCat');
+            var lightboxName = document.getElementById('lightboxName');
+            var lightboxCounter = document.getElementById('lightboxCounter');
+            var lightboxClose = document.getElementById('lightboxClose');
+            var lightboxPrev = document.getElementById('lightboxPrev');
+            var lightboxNext = document.getElementById('lightboxNext');
+            var currentIndex = 0;
+
+            function visibleIndexes() {
+                var list = [];
+                itemEls.forEach(function (el, idx) {
+                    if (!el.classList.contains('hidden')) list.push(idx);
+                });
+                return list;
+            }
+
+            function showLightbox(dataIndex) {
+                var item = galleryItems[dataIndex];
+                if (!item) return;
+                currentIndex = dataIndex;
+                lightboxImg.src = item.img;
+                lightboxImg.alt = item.name;
+                lightboxCat.textContent = item.label;
+                lightboxName.textContent = item.name;
+                var vis = visibleIndexes();
+                var pos = vis.indexOf(dataIndex) + 1;
+                lightboxCounter.textContent = (pos > 0 ? pos : 1) + ' / ' + (vis.length || galleryItems.length);
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            function step(dir) {
+                var vis = visibleIndexes();
+                if (vis.length === 0) return;
+                var pos = vis.indexOf(currentIndex);
+                if (pos === -1) pos = 0;
+                var nextPos = (pos + dir + vis.length) % vis.length;
+                showLightbox(vis[nextPos]);
+            }
+
+            itemEls.forEach(function (el) {
+                el.addEventListener('click', function () {
+                    showLightbox(parseInt(el.getAttribute('data-index'), 10));
+                });
+            });
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightboxPrev.addEventListener('click', function () { step(-1); });
+            lightboxNext.addEventListener('click', function () { step(1); });
+            lightbox.addEventListener('click', function (e) {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (!lightbox.classList.contains('open')) return;
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') step(-1);
+                if (e.key === 'ArrowRight') step(1);
+            });
+
+        })();
     </script>
 </body>
 

@@ -229,7 +229,7 @@
                 </div>
 
                 <div class="price-box">
-                    <div class="price">₹999</div>
+                    <div class="price">₹599</div>
                     <div class="lbl">Standard Registration Fee</div>
                 </div>
 

@@ -122,21 +122,21 @@
         <p>Your registration for the AI & Algo Conclave is successful. Complete your payment to secure your spot.</p>
 
         <div class="details">
-            <div class="detail-row"><span class="label">Registration #</span><span
+            <div class="detail-row"><span class="label">Registration # &nbsp;&nbsp;&nbsp;&nbsp;</span><span
                     class="value">{{ $registration->registration_number }}</span></div>
-            <div class="detail-row"><span class="label">Name</span><span
+            <div class="detail-row"><span class="label">Name &nbsp;&nbsp;&nbsp;&nbsp;</span><span
                     class="value">{{ $registration->full_name }}</span></div>
-            <div class="detail-row"><span class="label">Email</span><span
+            <div class="detail-row"><span class="label">Email &nbsp;&nbsp;&nbsp;&nbsp;</span><span
                     class="value">{{ $registration->email }}</span></div>
-            <div class="detail-row"><span class="label">Phone</span><span class="value">+91
+            <div class="detail-row"><span class="label">Phone &nbsp;&nbsp;&nbsp;&nbsp;</span><span class="value">+91
                     {{ $registration->phone }}</span></div>
-            <div class="detail-row"><span class="label">City</span><span
+            <div class="detail-row"><span class="label">City &nbsp;&nbsp;&nbsp;&nbsp;</span><span
                     class="value">{{ $registration->city ?? '-' }}</span></div>
-            <div class="detail-row"><span class="label">Type</span><span
+            <div class="detail-row"><span class="label">Type &nbsp;&nbsp;&nbsp;&nbsp;</span><span
                     class="value">{{ ucfirst($registration->type) }}</span></div>
-            <div class="detail-row"><span class="label">Date</span><span class="value">{{ $eventDate }}</span></div>
-            <div class="detail-row"><span class="label">Time</span><span class="value">{{ $eventTime }}</span></div>
-            <div class="detail-row"><span class="label">Venue</span><span class="value">{{ $venue }}</span></div>
+            <div class="detail-row"><span class="label">Date &nbsp;&nbsp;&nbsp;&nbsp;</span><span class="value">{{ $eventDate }}</span></div>
+            <div class="detail-row"><span class="label">Time &nbsp;&nbsp;&nbsp;&nbsp;</span><span class="value">{{ $eventTime }}</span></div>
+            <div class="detail-row"><span class="label">Venue &nbsp;&nbsp;&nbsp;&nbsp;</span><span class="value">{{ $venue }}</span></div>
         </div>
 
         @if($password)

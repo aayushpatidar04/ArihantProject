@@ -33,7 +33,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
             view: 'emails.confirmation',
             with: [
                 'qrUrl' => asset('storage/' . $this->qrImagePath),
-                'eventDate' => '8 September 2026',
+                'eventDate' => '5 September 2026',
                 'eventTime' => '10:00 AM - 5:00 PM',
                 'venue' => 'Labh Mandapam, Indore',
             ],

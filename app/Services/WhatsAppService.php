@@ -31,7 +31,7 @@ class WhatsAppService
         }
         
         try {
-            $response = Http::post($this->apiUrl, [
+            $payload = [
                 'token' => $this->token,
                 'application' => $this->applicationId,
                 'template_id' => config('services.whatsapp.otp_template'),
@@ -42,8 +42,19 @@ class WhatsAppService
                         'template_message' => [$otp],
                     ]
                 ],
-            ]);
-            Log::info($response);
+            ];
+
+            $curl = sprintf(
+                "curl -X POST '%s' -H 'Content-Type: application/json' -d '%s'",
+                $this->apiUrl,
+                json_encode($payload)
+            );
+
+            Log::info("Outgoing WhatsApp OTP cURL: " . $curl);
+
+            $response = Http::post($this->apiUrl, $payload);
+            Log::info("API Response: ", $response->json());
+
 
             return $response->successful();
         } catch (\Exception $e) {

@@ -27,10 +27,10 @@
             <img src="{{ $qrUrl }}" alt="Entry QR Code">
         </div>
         <div class="details">
-            <div class="detail-row"><span class="label">Registration #</span><span class="value">{{ $registration->registration_number }}</span></div>
-            <div class="detail-row"><span class="label">Date</span><span class="value">{{ $eventDate }}</span></div>
-            <div class="detail-row"><span class="label">Time</span><span class="value">{{ $eventTime }}</span></div>
-            <div class="detail-row"><span class="label">Venue</span><span class="value">{{ $venue }}</span></div>
+            <div class="detail-row"><span class="label">Registration # &nbsp;&nbsp;</span><span class="value"> {{ $registration->registration_number }}</span></div>
+            <div class="detail-row"><span class="label">Date &nbsp;&nbsp;</span><span class="value"> {{ $eventDate }}</span></div>
+            <div class="detail-row"><span class="label">Time &nbsp;&nbsp;</span><span class="value"> {{ $eventTime }}</span></div>
+            <div class="detail-row"><span class="label">Venue &nbsp;&nbsp;</span><span class="value"> {{ $venue }}</span></div>
         </div>
         <p style="font-size:13px">Add this event to your calendar. We look forward to seeing you there!</p>
         <div class="footer">

@@ -58,9 +58,9 @@ class RegistrationController extends Controller
 
         // New user flow
         $otp = random_int(100000, 999999);
-        if ($phone == '9982414226') {
-            $otp = 998241;
-        }
+        // if ($phone == '9982414226') {
+        //     $otp = 998241;
+        // }
         Session::put('reg_phone', $phone);
         Session::put('reg_otp', $otp);
         Session::put('otp_expires', now()->addMinutes(10));
@@ -269,7 +269,7 @@ class RegistrationController extends Controller
        ============================================================ */
 
     /* ============================================================
-       STEP 5: Payment (Existing ₹299 | New ₹999) — ATOM
+       STEP 5: Payment (Existing ₹299 | New 599) — ATOM
        ============================================================ */
 
     public function showPayment()

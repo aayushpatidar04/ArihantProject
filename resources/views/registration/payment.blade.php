@@ -22,7 +22,7 @@
             <div class="client-badge">✓ Client Special Price</div>
         @endif
         <h1>Complete Payment</h1>
-        <div class="amount">₹{{ $reg->is_existing_client ? '299' : '999' }}</div>
+        <div class="amount">₹{{ $reg->is_existing_client ? '299' : '599' }}</div>
         <div class="detail">
             {{ $reg->is_existing_client ? 'Existing Client Rate' : 'Standard Registration' }}<br>
             {{ $reg->full_name }} • {{ $reg->email }}
