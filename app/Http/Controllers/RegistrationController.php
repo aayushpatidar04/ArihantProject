@@ -38,6 +38,9 @@ class RegistrationController extends Controller
 
     public function showForm()
     {
+        if(Auth::check()){
+            return redirect()->route('registration.success');
+        }
         return view('registration.form');
     }
 
