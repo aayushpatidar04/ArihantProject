@@ -14,6 +14,9 @@
     .phone-wrap input::placeholder{color:rgba(230,220,240,0.35)}
     .phone-wrap:focus-within{border-color:rgba(184,102,247,0.55)}
     .hint{color:var(--muted-2);font-size:12px;margin-top:16px}
+    .btn-loading{opacity:0.6;cursor:not-allowed;pointer-events:none}
+    .btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;vertical-align:middle}
+    @keyframes spin{to{transform:rotate(360deg)}}
     @media(max-width:480px){.reg-card{padding:32px 22px;border-radius:22px}}
 </style>
 @endpush
@@ -28,17 +31,38 @@
             <div class="alert alert-error" style="margin-bottom:20px">{{ $errors->first() }}</div>
         @endif
 
-        <form action="{{ route('registration.submit') }}" method="POST">
+        <form action="{{ route('registration.submit') }}" method="POST" id="phoneForm">
             @csrf
             <div class="phone-wrap">
                 <span class="phone-prefix">+91</span>
                 <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="10-digit mobile number" maxlength="10" inputmode="numeric" pattern="[0-9]{10}" required autofocus>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%">Continue</button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%">
+                <span class="btn-text">Continue</span>
+            </button>
         </form>
 
-        <p class="hint">We will verify your number via WhatsApp.</p>
+        <p class="hint" id="hintText">We will verify your number via WhatsApp & SMS.</p>
         <p class="hint">Already Registered? <a href="/login" style="color: white;">Login</a></p>
     </div>
 </div>
+
+<script>
+document.getElementById('phoneForm').addEventListener('submit', function(e) {
+    const btn = document.getElementById('submitBtn');
+    const btnText = btn.querySelector('.btn-text');
+    const hint = document.getElementById('hintText');
+
+    // Disable button and show loading state
+    btn.classList.add('btn-loading');
+    btnText.innerHTML = '<span class="btn-spinner"></span>Sending OTP...';
+
+    // Update hint
+    if (hint) {
+        hint.textContent = 'Please wait while we send your verification code...';
+    }
+
+    // Allow form to submit normally
+});
+</script>
 @endsection
