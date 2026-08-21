@@ -29,9 +29,9 @@
 
         /* Header & Nav */
         header{position:sticky;top:0;z-index:100;background:rgba(5,2,8,0.75);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.06)}
-        .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;max-width:var(--max);margin:0 auto}
+        .nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;margin:0 15px;}
         .logo{display:flex;align-items:center;gap:8px;font-family:'Sora',sans-serif;font-weight:700;font-size:20px}
-        .logo-img{height:32px;width:auto;display:block}
+        .logo-img{height:48px;width:auto;display:block}
         nav.links{display:flex;gap:38px;font-size:15px;color:#e9e4f0}
         nav.links a{opacity:.85;transition:opacity .2s}
         nav.links a:hover{opacity:1;color:var(--purple-1)}
@@ -101,17 +101,19 @@
 <body>
     <header>
         <div class="nav">
-            <a href="{{ route('index') }}" class="logo"><img src="{{ asset('assets/images/logo.png') }}" alt="ArihantPLUS" class="logo-img"></a>
-            <nav class="links">
-                <a href="{{ route('index') }}#home">Home</a>
-                <a href="{{ route('index') }}#speaker">Speaker</a>
-                {{-- <a href="{{ route('index') }}#agenda">Agenda</a> --}}
-                @auth
-                    @if(auth()->user()->eventRegistrations()->exists())
-                        <a href="{{ route('registration.success') }}">My Ticket</a>
-                    @endif
-                @endauth
-            </nav>
+            <div style="display: flex; align-items: center;">
+                <a href="{{ route('index') }}" class="logo" style="margin-right: 50px;"><img src="{{ asset('assets/images/logo.png') }}" alt="ArihantPLUS" class="logo-img"></a>
+                <nav class="links">
+                    <a href="{{ route('index') }}#home">Home</a>
+                    <a href="{{ route('index') }}#speaker">Speaker</a>
+                    {{-- <a href="{{ route('index') }}#agenda">Agenda</a> --}}
+                    @auth
+                        @if(auth()->user()->eventRegistrations()->exists())
+                            <a href="{{ route('registration.success') }}">My Ticket</a>
+                        @endif
+                    @endauth
+                </nav>
+            </div>
             @guest
                 <a href="{{ route('registration.form') }}" class="btn btn-primary nav-cta">Reserve Your Spot</a>
             @else

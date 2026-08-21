@@ -143,8 +143,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 18px 24px;
-            max-width: var(--max);
-            margin: 0 auto;
+            /* max-width: var(--max); */
+            margin: 0 15px;
         }
 
         .logo {
@@ -323,7 +323,7 @@
         }
 
         .logo-img {
-            height: 32px;
+            height: 48px;
             width: auto;
             display: block;
         }
@@ -3010,21 +3010,70 @@
             }
         }
     </style>
+    <style>
+        .quiz-banner {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .quiz-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #b866f7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .quiz-text {
+            font-size: 17px;
+            font-weight: 500;
+            color: #e9e4f0;
+            line-height: 1.6;
+        }
+
+        .quiz-text span {
+            color: #b866f7;
+            font-weight: 700;
+        }
+
+        .quiz-divider {
+            margin-top: 14px;
+            width: 48px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #b866f7, transparent);
+            border-radius: 2px;
+            display: inline-block;
+        }
+    </style>
 </head>
 
 <body>
 
     <header>
         <div class="nav">
-            <div class="logo"><img src="assets/images/logo.png" alt="ArihantPLUS" class="logo-img"></div>
-            <nav class="links">
-                <a href="#home">Home</a>
-                <a href="#speaker">Speaker</a>
-                {{-- <a href="#agenda">Agenda</a> --}}
-            </nav>
+            <div style="display: flex; align-items: center;">
+                <div class="logo" style="margin-right: 50px;"><img src="assets/images/logo.png" alt="ArihantPLUS"
+                        class="logo-img"></div>
+                <nav class="links">
+                    <a href="#home">Home</a>
+                    <a href="#speaker">Speaker</a>
+                    @auth
+                        <a href="/register/success">My Ticket</a>
+                    @endauth
+                    {{-- <a href="#agenda">Agenda</a> --}}
+                </nav>
+            </div>
             <div>
-                <a href="/login" class="btn btn-primary nav-cta">Login</a>
-                <a href="/register" class="btn btn-primary nav-cta">Claim Your Spot</a>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-ghost" style="width:100%;margin-top:10px">Logout</button>
+                    </form>
+                @else
+                    <a href="/login" class="btn btn-primary nav-cta">Login</a>
+                    <a href="/register" class="btn btn-primary nav-cta">Claim Your Spot</a>
+                @endauth
             </div>
             <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -3037,7 +3086,17 @@
         <a href="#home">Home</a>
         <a href="#speaker">Speaker</a>
         {{-- <a href="#agenda">Agenda</a> --}}
-        <a href="/register" class="btn btn-primary">Claim Your Spot</a>
+
+        @auth
+            <a href="/register/success">My Ticket</a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-ghost" style="width:100%;margin-top:10px">Logout</button>
+            </form>
+        @else
+            <a href="/login" class="btn btn-primary">Login</a>
+            <a href="/register" class="btn btn-primary">Claim Your Spot</a>
+        @endauth
     </div>
 
     <section class="hero" id="home">
@@ -3186,6 +3245,15 @@
             </div>
         </div>
 
+        <div class="quiz-banner">
+            <div class="quiz-label">🎁 Exclusive Giveaway</div>
+            <div class="quiz-text">
+                Participate in the Quiz and get a chance to win prizes like a <span>Mobile Phone</span> &
+                <span>Smartwatch</span>! 🎉🏆
+            </div>
+            <div class="quiz-divider"></div>
+        </div>
+
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
     </section>
 
@@ -3274,7 +3342,7 @@
                 </div>
             </div>
             <div class="center-btn left">
-                <a href="#" class="btn btn-primary">Claim your spot</a>
+                <a href="/register" class="btn btn-primary">Claim your spot</a>
             </div>
         </section>
     </div>
@@ -3300,7 +3368,7 @@
 
     <section class="panel-sec" id="speaker">
         <div class="section-head">
-            <h2>Meet Our Panelist</h2>
+            <h2>Meet Our Speakers</h2>
         </div>
 
         <div class="panelist-slider-wrap">

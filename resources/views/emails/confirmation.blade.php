@@ -1,42 +1,152 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Registration Confirmed</title>
     <style>
-        body{background:#060208;color:#f6f3fa;font-family:Arial,sans-serif;padding:40px 20px}
-        .container{max-width:560px;margin:0 auto;background:#0e0812;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:40px}
-        h1{color:#b866f7;font-size:24px;margin-bottom:16px}
-        p{line-height:1.6;color:#a79bb5}
-        .qr{text-align:center;margin:24px 0}
-        .qr img{max-width:200px;border-radius:12px}
-        .details{background:rgba(255,255,255,0.03);border-radius:12px;padding:20px;margin:20px 0}
-        .detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
-        .detail-row:last-child{border:none}
-        .label{color:#7c7188;font-size:13px}
-        .value{color:#f6f3fa;font-weight:600}
-        .footer{text-align:center;margin-top:32px;font-size:12px;color:#7c7188}
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: #6b21a8;
+            margin-bottom: 10px;
+        }
+
+        .qr {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr img {
+            max-width: 200px;
+            border-radius: 8px;
+            border: 1px solid #e5e5e5;
+        }
+
+        .calendar {
+            margin: 24px 0;
+            padding: 16px;
+            background: #faf5ff;
+            border-radius: 8px;
+            border: 1px solid #e9d5ff;
+        }
+
+        .calendar-title {
+            font-weight: bold;
+            color: #6b21a8;
+            margin-bottom: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-google {
+            background: #fff;
+            color: #ea4335;
+            border: 1px solid #ea4335;
+        }
+
+        .btn-outlook {
+            background: #fff;
+            color: #0078d4;
+            border: 1px solid #0078d4;
+        }
+
+        .btn-yahoo {
+            background: #fff;
+            color: #6001d2;
+            border: 1px solid #6001d2;
+        }
+
+        .btn-apple {
+            background: #fff;
+            color: #333;
+            border: 1px solid #333;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>You're registered for ArihantPLUS Conclave 2026!</h1>
         <p>Hi {{ $registration->full_name }},</p>
-        <p>Your registration is confirmed. Please find your entry QR code below. Show this at the venue entrance.</p>
+
+        <p>🎉 Your registration is confirmed!</p>
+
+        <p>Thank you for registering for Central India's Largest AI & Algo Conclave, presented by Arihant Capital.</p>
+
+        <p>Your registration and payment have been successfully completed.</p>
+
+        <p><strong>Event Details:</strong><br>
+            📅 {{ $eventDate }}<br>
+            📍 {{ $venue }}<br>
+            ⏰ {{ $eventTime }}</p>
+
+        <p>Get ready to explore the evolving world of AI, Algo Trading, Markets & Investing and hear from industry
+            experts shaping the future of finance.</p>
+
+        {{-- Add to Calendar --}}
+        <div class="calendar">
+            <div class="calendar-title">📆 Add to your calendar</div>
+            <p style="margin:0 0 8px 0; font-size:13px; color:#555;">Click your preferred calendar below or open the
+                attached .ics file.</p>
+            <div class="btn-group">
+                <a href="{{ $googleLink }}" target="_blank" class="btn btn-google">Google Calendar</a>
+                <a href="{{ $outlookLink }}" target="_blank" class="btn btn-outlook">Outlook</a>
+                <a href="{{ $yahooLink }}" target="_blank" class="btn btn-yahoo">Yahoo</a>
+                <a href="{{ $icsUrl }}" class="btn btn-apple">Apple / Download ICS</a>
+            </div>
+        </div>
+
         <div class="qr">
             <img src="{{ $qrUrl }}" alt="Entry QR Code">
         </div>
-        <div class="details">
-            <div class="detail-row"><span class="label">Registration # &nbsp;&nbsp;</span><span class="value"> {{ $registration->registration_number }}</span></div>
-            <div class="detail-row"><span class="label">Date &nbsp;&nbsp;</span><span class="value"> {{ $eventDate }}</span></div>
-            <div class="detail-row"><span class="label">Time &nbsp;&nbsp;</span><span class="value"> {{ $eventTime }}</span></div>
-            <div class="detail-row"><span class="label">Venue &nbsp;&nbsp;</span><span class="value"> {{ $venue }}</span></div>
-        </div>
-        <p style="font-size:13px">Add this event to your calendar. We look forward to seeing you there!</p>
+
+        <p>Please keep this QR code handy for entry at the venue.</p>
+
+        <p>We look forward to seeing you there!</p>
+
+        <p><strong>Arihant Capital</strong><br>
+            AI Powered. Algo Driven.</p>
+
         <div class="footer">
-            Arihant Capital Markets Ltd.<br>
-            All copyrights reserved @Arihantcapital
+            Arihant Capital Markets Ltd. &copy; {{ date('Y') }}<br>
+            All rights reserved.
         </div>
     </div>
 </body>
+
 </html>

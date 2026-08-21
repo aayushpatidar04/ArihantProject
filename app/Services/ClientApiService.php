@@ -57,4 +57,38 @@ class ClientApiService
             return null;
         }
     }
+
+    public function checkSubBroker(string $phone): bool
+    {
+        $url = 'https://inspection.arihantcapital.com/api/v1/CtC/branchValidationByMobileNo';
+        $auth = 'Basic c2FtcGFyay5hcmloYW50Y2FwaXRhbDpBcmloYW50QDEyMzQ1';
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $auth,
+            ])->post($url . '?MobileNumber=' . $phone);
+
+            Log::info('Sub-broker API response', [
+                'phone'  => $phone,
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+
+            if (!$response->successful()) {
+                return false;
+            }
+
+            $json = $response->json();
+
+            if (($json['success'] ?? false) === true && isset($json['result'])) {
+                return ($json['result']['IsArihantBranch'] ?? '') === 'Yes';
+            }
+
+            return false;
+
+        } catch (\Exception $e) {
+            Log::error('Sub-broker API exception: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

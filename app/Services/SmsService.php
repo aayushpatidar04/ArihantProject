@@ -22,7 +22,7 @@ class SmsService
     }
 
     /**
-     * Send OTP via Arihant SMS API.
+     * Send OTP via Arihant SMS API (Registration flow).
      */
     public function sendOtp(string $phone, string $otp): bool
     {
@@ -31,14 +31,33 @@ class SmsService
             return false;
         }
 
-        // Ensure 10-digit format
-        $phone = preg_replace('/\D/', '', $phone);
-        if (strlen($phone) === 12 && str_starts_with($phone, '91')) {
-            $phone = substr($phone, 2);
+        $phone = $this->normalizePhone($phone);
+
+        $message = "Your OTP for registering for ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Labh Mandapam, Abhay Prashal, Indore, is {$otp}. This OTP is valid for 5 minutes. By entering this OTP, you provide your consent to register for the event. Arihant Capital Markets Limited";
+
+        return $this->dispatch($phone, $message);
+    }
+
+    /**
+     * Send OTP via Arihant SMS API (Login flow).
+     * Template: {#num#} is your verification code...
+     */
+    public function sendLoginOtp(string $phone, string $otp): bool
+    {
+        if (empty($this->apiKey)) {
+            Log::warning('SMS API key not configured. Login OTP skipped.');
+            return false;
         }
 
-        $message = "Your OTP for Arihant Capital Markets Research Servicing Tracker login is {$otp}. Valid for 10 minutes. Do not share this OTP with anyone. - ARIHANT";
+        $phone = $this->normalizePhone($phone);
 
+        $message = "{$otp} is your verification code. For your security, do not share this code. This code expires in 2 minutes. Arihant";
+
+        return $this->dispatch($phone, $message);
+    }
+
+    protected function dispatch(string $phone, string $message): bool
+    {
         $payload = [
             [
                 'UserName' => $this->username,
@@ -70,27 +89,21 @@ class SmsService
             }
 
             Log::error('Arihant SMS API failed', ['body' => $response->body()]);
-            // $this->logCommunication($phone, $message, 'failed', $response->body());
             return false;
 
         } catch (\Exception $e) {
             Log::error('Arihant SMS API exception: ' . $e->getMessage());
-            // $this->logCommunication($phone, $message, 'failed', $e->getMessage());
             return false;
         }
     }
 
-    protected function logCommunication(string $phone, string $content, string $status, ?string $error = null): void
+    protected function normalizePhone(string $phone): string
     {
-        Communication::create([
-            'event_registration_id' => null,
-            'phone' => $phone,
-            'channel' => 'sms',
-            'type' => 'otp',
-            'content' => $content,
-            'status' => $status,
-            'error' => $error,
-            'sent_at' => now(),
-        ]);
+        $phone = preg_replace('/\D/', '', $phone);
+        if (strlen($phone) === 12 && str_starts_with($phone, '91')) {
+            $phone = substr($phone, 2);
+        }
+        return $phone;
     }
+
 }

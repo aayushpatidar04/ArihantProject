@@ -15,7 +15,7 @@ class EventRegistration extends Model
     protected $fillable = [
         'user_id', 'registration_number', 'full_name', 'email', 'phone', 'city',
         'type', 'is_existing_client', 'status', 'referral_code', 'referred_by',
-        'otp_verified_at', 'kyc_completed_at', 'paid_at', 'checked_in_at'
+        'otp_verified_at', 'kyc_completed_at', 'paid_at', 'checked_in_at', 'is_subbroker'
     ];
 
     protected $casts = [

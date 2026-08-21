@@ -77,6 +77,29 @@
             color: var(--purple-1);
             font-weight: 600
         }
+
+        .otp-hint {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .otp-hint strong {
+            color: #e9e4f0;
+            letter-spacing: 1px;
+        }
+
+        .resend-link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        .resend-link a {
+            color: var(--purple-1);
+            font-weight: 600;
+        }
     </style>
 @endpush
 
@@ -84,25 +107,49 @@
     <div class="login-page">
         <div class="login-card">
             <h1>Welcome Back</h1>
-            <p>Login to view your ticket, stalls, and referrals.</p>
-
+            @if(session('otp_sent'))
+            <p>Please authenticate using the OTP received via SMS and WhatsApp.</p>
+            @endif
             @if($errors->any())
                 <div class="alert alert-error" style="margin-bottom:20px">{{ $errors->first() }}</div>
             @endif
 
-            <form action="{{ route('login.post') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" placeholder="you@example.com" required
-                        autofocus>
+            {{-- STEP 1: Phone Number --}}
+            @if(!session('otp_sent'))
+                <form action="{{ route('login.otp.send') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" value="{{ old('phone') }}"
+                            placeholder="Enter your registered phone number" required autofocus
+                            maxlength="15" inputmode="tel">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%">Send OTP</button>
+                </form>
+            @else
+                {{-- STEP 2: OTP Verification --}}
+                <div class="otp-hint">
+                    OTP sent to <strong>+91 {{ session('login_phone') }}</strong>
                 </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Enter password" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width:100%">Login</button>
-            </form>
+
+                <form action="{{ route('login.otp.verify') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="phone" value="{{ session('login_phone') }}">
+
+                    <div class="form-group">
+                        <label>Enter 6-Digit OTP</label>
+                        <input type="text" name="otp" placeholder="------" required
+                            maxlength="6" inputmode="numeric" pattern="\d{6}" autofocus
+                            style="text-align:center; letter-spacing:12px; font-size:20px; font-weight:700;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%">Verify & Login</button>
+
+                    <div class="resend-link">
+                        <a href="{{ route('login') }}">Change phone number</a>
+                    </div>
+                </form>
+            @endif
 
             <div class="alt-link">
                 Don't have an account? <a href="{{ route('registration.form') }}">Register now</a>

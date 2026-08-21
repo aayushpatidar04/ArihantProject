@@ -11,16 +11,21 @@
     .otp-inputs{display:flex;gap:10px;justify-content:center;margin-bottom:28px}
     .otp-inputs input{width:52px;height:58px;text-align:center;font-size:24px;font-weight:700;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#fff;outline:none;transition:border-color .2s}
     .otp-inputs input:focus{border-color:var(--purple-1)}
-    .resend{color:var(--muted);font-size:13px;margin-top:16px}
-    .resend a{color:var(--purple-1);font-weight:600}
+    
+    .resend-wrap{margin-top:20px;font-size:13px}
+    .resend-wrap .countdown{color:#7c7188}
+    .resend-wrap .countdown span{font-variant-numeric:tabular-nums;color:#b866f7;font-weight:600}
+    .resend-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--purple-1);font-weight:600;cursor:pointer;font-size:13px;padding:0;text-decoration:none}
+    .resend-btn:disabled{color:#4a3f5c;cursor:not-allowed}
+    .resend-btn svg{width:14px;height:14px}
 </style>
 @endpush
 
 @section('content')
 <div class="otp-page">
     <div class="otp-card">
-        <h1>Verify WhatsApp</h1>
-        <p>We've sent a 6-digit OTP to your WhatsApp number. Enter it below to continue.</p>
+        <h1>Verify Number</h1>
+        <p>We've sent a 6-digit OTP to your number. Enter it below to continue.</p>
 
         @if(session('resent'))
             <div class="alert alert-success" style="margin-bottom:20px">OTP resent successfully!</div>
@@ -44,10 +49,17 @@
             <button type="submit" class="btn btn-primary" style="width:100%" onclick="combineOtp()">Verify & Continue</button>
         </form>
 
-        <form action="{{ route('registration.otp.resend') }}" method="POST" style="margin-top:16px">
+        <form action="{{ route('registration.otp.resend') }}" method="POST" id="resendForm" style="display:none">
             @csrf
-            <button type="submit" class="resend" style="background:none;border:none;cursor:pointer">Didn't receive? <a href="#" onclick="this.closest('form').submit();return false;">Resend OTP</a></button>
         </form>
+
+        <div class="resend-wrap" id="resendWrap">
+            <div class="countdown" id="countdown">Resend available in <span id="timer">00:40</span></div>
+            <button type="button" class="resend-btn" id="resendBtn" onclick="document.getElementById('resendForm').submit()" disabled style="display:none">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Resend OTP
+            </button>
+        </div>
     </div>
 </div>
 
@@ -66,5 +78,45 @@ function combineOtp() {
     document.getElementById('otpValue').value = otp;
 }
 inputs[0].focus();
+
+/* ---- Resend Countdown ---- */
+const COOLDOWN = 40; // seconds
+const STORAGE_KEY = 'otp_resend_until';
+
+function startTimer() {
+    const now = Math.floor(Date.now() / 1000);
+    let until = parseInt(sessionStorage.getItem(STORAGE_KEY)) || 0;
+
+    // If no timer stored (first load), start fresh
+    if (!until || until < now) {
+        until = now + COOLDOWN;
+        sessionStorage.setItem(STORAGE_KEY, until);
+    }
+
+    const timerEl = document.getElementById('timer');
+    const countdownEl = document.getElementById('countdown');
+    const resendBtn = document.getElementById('resendBtn');
+
+    function tick() {
+        const remaining = until - Math.floor(Date.now() / 1000);
+
+        if (remaining <= 0) {
+            sessionStorage.removeItem(STORAGE_KEY);
+            countdownEl.style.display = 'none';
+            resendBtn.style.display = 'inline-flex';
+            resendBtn.disabled = false;
+            return;
+        }
+
+        const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+        const s = String(remaining % 60).padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+        requestAnimationFrame(() => setTimeout(tick, 1000));
+    }
+
+    tick();
+}
+
+startTimer();
 </script>
 @endsection

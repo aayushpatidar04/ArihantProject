@@ -15,7 +15,8 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 
 Route::get('/login', [HomeController::class, 'showLogin'])->name('login');
-Route::post('/login', [HomeController::class, 'login'])->name('login.post');
+Route::post('/login/otp/send', [HomeController::class, 'sendOtp'])->middleware('throttle:5,1')->name('login.otp.send');
+Route::post('/login/otp/verify', [HomeController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('login.otp.verify');
 
 /* ---------- Registration Flow ---------- */
 

@@ -33,7 +33,7 @@ class RegistrationController extends Controller
     }
 
     /* ============================================================
-       STEP 1: Enter Phone Number → Check Existing Client
+       STEP 1: Enter Phone Number → Check Sub-Broker → Existing Client → New User
        ============================================================ */
 
     public function showForm()
@@ -49,13 +49,22 @@ class RegistrationController extends Controller
         $validated = $request->validate([
             'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:event_registrations,phone',
         ], [
-            'phone.unique' => 'This number is already registered. Try logging in or use another number. Your password has been sent to your email.',
+            'phone.unique' => 'This number is already registered. Try logging in or use another number.',
         ]);
 
-
         $phone = $validated['phone'];
-        $clientData = $this->clientApi->checkClient($phone);
 
+        // PRIORITY 1: Check if sub-broker (free registration, no payment)
+        $isSubBroker = $this->clientApi->checkSubBroker($phone);
+        if ($isSubBroker) {
+            Session::put('reg_phone', $phone);
+            Session::put('is_subbroker', true);
+            Session::put('is_existing_client', false);
+            return redirect()->route('registration.details');
+        }
+
+        // PRIORITY 2: Check if existing Arihant client
+        $clientData = $this->clientApi->checkClient($phone);
         if ($clientData) {
             Session::put('client_users', $clientData['users']);
             Session::put('reg_phone', $phone);
@@ -63,15 +72,13 @@ class RegistrationController extends Controller
             return redirect()->route('registration.client.confirm');
         }
 
-        // New user flow
+        // PRIORITY 3: New user flow (OTP + payment)
         $otp = random_int(100000, 999999);
-        // if ($phone == '9982414226') {
-        //     $otp = 998241;
-        // }
         Session::put('reg_phone', $phone);
         Session::put('reg_otp', $otp);
         Session::put('otp_expires', now()->addMinutes(10));
         Session::put('is_existing_client', false);
+        Session::put('is_subbroker', false);
 
         $this->whatsapp->sendOtpToPhone($phone, (string) $otp);
 
@@ -152,6 +159,7 @@ class RegistrationController extends Controller
 
         $plainPassword = $request->password;
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
+        // $this->whatsapp->sendRegistrationConfirmation($reg);
 
         return redirect()->route('registration.payment');
     }
@@ -162,7 +170,7 @@ class RegistrationController extends Controller
 
     public function showOtp()
     {
-        if (Session::get('is_existing_client') || !Session::has('reg_phone')) {
+        if (Session::get('is_existing_client') || Session::get('is_subbroker') || !Session::has('reg_phone')) {
             return redirect()->route('registration.form');
         }
         return view('registration.otp');
@@ -173,7 +181,7 @@ class RegistrationController extends Controller
         $request->validate(['otp' => 'required|digits:6']);
 
         $expires = Session::get('otp_expires');
-        if (Session::get('is_existing_client') || !Session::has('reg_phone') || now()->gt($expires)) {
+        if (Session::get('is_existing_client') || Session::get('is_subbroker') || !Session::has('reg_phone') || now()->gt($expires)) {
             return back()->withErrors(['otp' => 'OTP expired. Please start again.']);
         }
 
@@ -191,7 +199,7 @@ class RegistrationController extends Controller
     public function resendOtp()
     {
         $phone = Session::get('reg_phone');
-        if (!$phone || Session::get('is_existing_client')) {
+        if (!$phone || Session::get('is_existing_client') || Session::get('is_subbroker')) {
             return redirect()->route('registration.form');
         }
 
@@ -204,22 +212,41 @@ class RegistrationController extends Controller
     }
 
     /* ============================================================
-       STEP 3: New User — Fill Details (Name, City, Email, Type)
-       → NOW SKIPS KYC AND GOES STRAIGHT TO PAYMENT
+       STEP 3: Fill Details (New User + Sub-Broker)
        ============================================================ */
 
     public function showDetails()
     {
-        if (Session::get('is_existing_client') || !Session::get('phone_verified')) {
+        $isSubBroker = Session::get('is_subbroker');
+        $phoneVerified = Session::get('phone_verified');
+        $isExisting = Session::get('is_existing_client');
+
+        // Sub-brokers skip OTP — just need phone
+        if ($isSubBroker && Session::has('reg_phone')) {
+            return view('registration.details', ['is_subbroker' => true]);
+        }
+
+        // New users need OTP verified
+        if ($isExisting || !$phoneVerified) {
             return redirect()->route('registration.form');
         }
-        return view('registration.details');
+
+        return view('registration.details', ['is_subbroker' => false]);
     }
 
     public function submitDetails(Request $request)
     {
-        if (Session::get('is_existing_client') || !Session::get('phone_verified')) {
-            return redirect()->route('registration.form');
+        $isSubBroker = Session::get('is_subbroker');
+
+        // Validate access
+        if ($isSubBroker) {
+            if (!Session::has('reg_phone')) {
+                return redirect()->route('registration.form');
+            }
+        } else {
+            if (Session::get('is_existing_client') || !Session::get('phone_verified')) {
+                return redirect()->route('registration.form');
+            }
         }
 
         $validated = $request->validate([
@@ -227,7 +254,7 @@ class RegistrationController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'city' => 'required|string|max:100',
             'type' => 'required|in:investor,trader',
-            'password' => ['required', Password::defaults()],
+            'password' => 'required',
             'referred_by' => 'nullable|string|size:12',
         ]);
 
@@ -246,14 +273,14 @@ class RegistrationController extends Controller
             'city' => $validated['city'],
             'type' => $validated['type'],
             'is_existing_client' => false,
-            'status' => 'kyc_completed',              // ← CHANGED: skip KYC page
+            'status' => 'kyc_completed',
             'referral_code' => strtoupper(Str::random(12)),
             'referred_by' => $validated['referred_by'] ?? null,
             'otp_verified_at' => now(),
-            'kyc_completed_at' => now(),              // ← NEW
+            'kyc_completed_at' => now(),
+            'is_subbroker' => $isSubBroker,
         ]);
 
-        // Minimal KYC record — details page itself acts as KYC
         KycDetail::create([
             'event_registration_id' => $reg->id,
             'validation_status' => 'verified',
@@ -262,21 +289,42 @@ class RegistrationController extends Controller
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
-        // NEW: send registration email to new clients too
         $plainPassword = $validated['password'];
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
 
-        Session::forget(['reg_phone', 'phone_verified']);
+        // SUB-BROKER: Skip payment, mark paid, send both WhatsApp templates + Email
+        if ($isSubBroker) {
+            $reg->update(['status' => 'paid', 'paid_at' => now()]);
 
-        return redirect()->route('registration.payment'); // ← CHANGED: was registration.kyc
+            // AW20699204 — Complimentary registration confirmation
+            $this->whatsapp->sendRegistrationConfirmation(
+                $reg,
+                'SUB-' . strtoupper(Str::random(8)),
+                '0',
+                'Complimentary'
+            );
+
+            $qr = $this->qr->generateEntryQr($reg);
+            $qrUrl = asset('storage/' . $qr->image_path);
+
+            // GW20590908 — QR Ticket
+            $this->whatsapp->sendQrImage($reg, $qrUrl);
+            $this->email->sendConfirmation($reg, $qr->image_path);
+            $this->leadScore->calculateScore($reg);
+
+            Session::forget(['reg_phone', 'is_subbroker']);
+
+            return redirect()->route('registration.success');
+        }
+
+        // NEW USER: Send generic registration confirmation, then go to payment
+        $this->whatsapp->sendRegistrationConfirmation($reg);
+        Session::forget(['reg_phone', 'phone_verified']);
+        return redirect()->route('registration.payment');
     }
 
     /* ============================================================
-       STEP 4: KYC — REMOVED ENTIRELY
-       ============================================================ */
-
-    /* ============================================================
-       STEP 5: Payment (Existing ₹299 | New 599) — ATOM
+       STEP 4: Payment (Existing ₹299 | New ₹599) — ATOM
        ============================================================ */
 
     public function showPayment()
@@ -286,8 +334,9 @@ class RegistrationController extends Controller
             return redirect()->route('registration.form');
         }
 
-        $order = $this->payment->createOrder($reg);
+        Session::put('payment_registration_id', $reg->id);
 
+        $order = $this->payment->createOrder($reg);
         if (!$order) {
             return redirect()->route('registration.payment')->withErrors(['payment' => 'Unable to initialize payment gateway. Please try again.']);
         }
@@ -304,28 +353,21 @@ class RegistrationController extends Controller
         Log::info('Atom callback raw payload', $payload);
 
         $decrypted = $this->payment->decryptCallback($payload);
-
         if (!$decrypted) {
             return redirect()->route('registration.payment')->withErrors(['payment' => 'Invalid or corrupted payment response.']);
         }
 
         Log::info('Atom callback decrypted', $decrypted);
 
-        // Atom callback nests everything inside 'payInstrument'
         $payInstrument = $decrypted['payInstrument'] ?? $decrypted;
 
-        // Success check — responseDetails is inside payInstrument in callbacks
         $isSuccess = false;
         if (($payInstrument['f_code'] ?? '') === 'Ok') {
             $isSuccess = true;
         }
 
-        $statusCode = $payInstrument['responseDetails']['statusCode']
-            ?? $payInstrument['statusCode']
-            ?? null;
-        $message = $payInstrument['responseDetails']['message']
-            ?? $payInstrument['message']
-            ?? null;
+        $statusCode = $payInstrument['responseDetails']['statusCode'] ?? $payInstrument['statusCode'] ?? null;
+        $message = $payInstrument['responseDetails']['message'] ?? $payInstrument['message'] ?? null;
 
         if ($statusCode === 'OTS0000' || $message === 'SUCCESS') {
             $isSuccess = true;
@@ -336,7 +378,6 @@ class RegistrationController extends Controller
             return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment was not successful. Please try again.']);
         }
 
-        // Extract registration ID from extras inside payInstrument
         $regIdFromCallback = $payInstrument['extras']['udf2'] ?? Session::get('payment_registration_id');
         $reg = EventRegistration::find($regIdFromCallback);
 
@@ -345,10 +386,7 @@ class RegistrationController extends Controller
             return redirect()->route('registration.form');
         }
 
-        // merchTxnId is inside payInstrument.merchDetails
         $merchTxnId = $payInstrument['merchDetails']['merchTxnId'] ?? null;
-
-        // atomTxnId is inside payInstrument.payDetails
         $atomTxnId = $payInstrument['payDetails']['atomTxnId'] ?? null;
 
         $payment = Payment::where('merch_txn_id', $merchTxnId)
@@ -367,11 +405,20 @@ class RegistrationController extends Controller
         $reg->update(['status' => 'paid', 'paid_at' => now()]);
         Session::forget('payment_registration_id');
 
-        // Idempotent QR
+        // 1️⃣ Send Registration Confirmation (AW20699204)
+        $this->whatsapp->sendRegistrationConfirmation(
+            $reg,
+            $atomTxnId ?? $merchTxnId ?? 'TXN-' . $reg->registration_number,
+            '599',
+            'Bharat QR'
+        );
+
+        // 2️⃣ Generate & send QR Ticket (GW20590908) + Email
         $existingQr = $reg->qrCodes()->where('purpose', 'entry')->first();
         if (!$existingQr) {
             $qr = $this->qr->generateEntryQr($reg);
             $qrUrl = asset('storage/' . $qr->image_path);
+
             $this->whatsapp->sendQrImage($reg, $qrUrl);
             $this->email->sendConfirmation($reg, $qr->image_path);
         }
@@ -386,19 +433,30 @@ class RegistrationController extends Controller
     }
 
     /* ============================================================
-       STEP 6: Success
+       STEP 5: Success
        ============================================================ */
 
     public function success()
     {
         $reg = $this->getCurrentRegistration();
-        if ($reg->status == 'checked_in') {
+
+        // Fallback: find any paid/checked_in registration for this user
+        if (!$reg || ($reg->status !== 'paid' && $reg->status !== 'checked_in')) {
+            $reg = EventRegistration::where('user_id', Auth::id())
+                ->whereIn('status', ['paid', 'checked_in'])
+                ->latest()
+                ->first();
+        }
+
+        if (!$reg) {
+            return redirect()->route('registration.payment');
+        }
+
+        if ($reg->status === 'checked_in') {
             $seat = $reg->seat;
             return view('registration.success', compact('reg', 'seat'));
         }
-        if (!$reg || $reg->status !== 'paid') {
-            return redirect()->route('registration.payment');
-        }
+
         $qr = $reg->qrCodes()->where('purpose', 'entry')->first();
         return view('registration.success', compact('reg', 'qr'));
     }

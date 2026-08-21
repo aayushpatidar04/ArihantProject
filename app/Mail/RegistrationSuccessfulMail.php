@@ -31,10 +31,7 @@ class RegistrationSuccessfulMail extends Mailable implements ShouldQueue
         return new Content(
             view: 'emails.registration_successful',
             with: [
-                'eventDate' => '5 September 2026',
-                'eventTime' => '10:00 AM - 5:00 PM',
-                'venue' => 'Labh Mandapam, Indore',
-                'password' => $this->plainPassword,
+                'registration' => $this->registration,
             ],
         );
     }

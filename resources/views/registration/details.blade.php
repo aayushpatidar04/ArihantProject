@@ -66,6 +66,10 @@
             color: rgba(230, 220, 240, 0.35)
         }
 
+        .form-group input[type="password"] {
+            color-scheme: dark;
+        }
+
         .type-select {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -146,16 +150,26 @@
             margin-top: 4px
         }
 
-        .kyc-note {
-            display: flex;
+        .subbroker-badge {
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(40, 180, 100, 0.08);
-            border: 1px solid rgba(40, 180, 100, 0.2);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 24px;
+            gap: 8px;
+            background: rgba(40, 180, 100, 0.12);
+            border: 1px solid rgba(40, 180, 100, 0.3);
+            color: #8ff0b3;
+            padding: 8px 16px;
+            border-radius: 999px;
             font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px
+        }
+
+        .free-badge {
+            background: rgba(40, 180, 100, 0.08);
+            border: 1px solid rgba(40, 180, 100, 0.2)
+        }
+
+        .free-badge .price {
             color: #8ff0b3
         }
 
@@ -221,19 +235,15 @@
                     <input type="hidden" name="referred_by" value="{{ request('ref') }}">
                 @endif
 
-                {{-- <div class="kyc-note">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    Your profile details serve as KYC verification. No additional documents required.
-                </div> --}}
-
-                <div class="price-box">
-                    <div class="price">₹599</div>
-                    <div class="lbl">Standard Registration Fee</div>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width:100%">Proceed to Payment →</button>
+                @if($is_subbroker)
+                    <button type="submit" class="btn btn-primary" style="width:100%">Complete Registration →</button>
+                @else
+                    <div class="price-box">
+                        <div class="price">₹999</div>
+                        <div class="lbl">Standard Registration Fee</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%">Proceed to Payment →</button>
+                @endif
             </form>
         </div>
     </div>

@@ -427,7 +427,7 @@
 
             // Show loading state
             submitBtn.classList.add('btn-loading');
-            btnText.innerHTML = '<span class="btn-spinner"></span>Sending OTP...';
+            btnText.innerHTML = '<span class="btn-spinner"></span>loading...';
             if (hintText) {
                 hintText.textContent = 'Please wait while we send your verification code...';
             }

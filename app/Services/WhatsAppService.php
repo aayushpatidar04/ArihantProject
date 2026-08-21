@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Communication;
 use App\Models\EventRegistration;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -28,8 +27,6 @@ class WhatsAppService
     {
         $whatsappOk = $this->sendOtpViaWhatsApp($phone, $otp);
         $smsOk = $this->sms->sendOtp($phone, $otp);
-
-        // Return true if at least one channel succeeded
         return $whatsappOk || $smsOk;
     }
 
@@ -65,25 +62,122 @@ class WhatsAppService
 
             if (!$response->successful() || ($json['status'] ?? 0) != 100) {
                 Log::error('PickyAssist OTP failed', ['response' => $json]);
-                // $this->logRawCommunication($phone, 'otp', "OTP: {$otp}", 'failed', $reference, null, null, $json['message'] ?? 'API error');
                 return false;
             }
 
-            $pushId = $json['push_id'] ?? null;
-            $msgId = $json['data'][0]['msg_id'] ?? null;
-
-            // $this->logRawCommunication($phone, 'otp', "OTP: {$otp}", 'submitted', $reference, $pushId, $msgId);
             return true;
 
         } catch (\Exception $e) {
             Log::error('PickyAssist OTP exception: ' . $e->getMessage());
-            // $this->logRawCommunication($phone, 'otp', "OTP: {$otp}", 'failed', $reference, null, null, $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send Registration Confirmation template (AW20699204).
+     * Variables: Transaction ID, Amount, Payment Mode
+     */
+    public function sendRegistrationConfirmation(
+        EventRegistration $registration,
+        ?string $transactionId = null,
+        ?string $amount = null,
+        ?string $paymentMode = null
+    ): bool {
+        if (empty($this->token) || empty($this->applicationId)) {
+            Log::warning('PickyAssist not configured. Registration confirmation skipped.');
+            return false;
+        }
+
+        $reference = 'reg_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
+
+        $transactionId = $transactionId ?? $reference;
+        $amount = $amount ?? '599';
+        $paymentMode = $paymentMode ?? 'Bharat QR';
+
+        try {
+            $response = Http::post($this->apiUrl, [
+                'token' => $this->token,
+                'application' => $this->applicationId,
+                'template_id' => 'AW20699204',
+                'data' => [
+                    [
+                        'number' => $this->formatPhone($registration->phone),
+                        'language' => 'en',
+                        'template_message' => [$transactionId, $amount, $paymentMode],
+                    ]
+                ],
+            ]);
+
+            $json = $response->json();
+            Log::info('PickyAssist registration confirmation response', [
+                'response' => $json,
+                'reference' => $reference,
+                'reg_id' => $registration->id,
+            ]);
+
+            if (!$response->successful() || ($json['status'] ?? 0) != 100) {
+                Log::error('PickyAssist registration confirmation failed', ['response' => $json]);
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('PickyAssist registration confirmation exception: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Send QR Ticket template (GW20590908) with QR media via PickyAssist.
+     * Variables: {{1}} = Name
+     */
+    public function sendQrImage(EventRegistration $registration, string $imageUrl): bool
+    {
+        if (empty($this->token) || empty($this->applicationId)) {
+            Log::warning('PickyAssist not configured. QR ticket skipped.');
+            return false;
+        }
+
+        $reference = 'qr_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
+
+        try {
+            $response = Http::post($this->apiUrl, [
+                'token' => $this->token,
+                'application' => $this->applicationId,
+                'template_id' => 'GW20590908',
+                'data' => [
+                    [
+                        'number' => $this->formatPhone($registration->phone),
+                        'language' => 'en',
+                        'template_message' => [$registration->full_name],
+                        'media' => $imageUrl,
+                    ]
+                ],
+            ]);
+
+            $json = $response->json();
+            Log::info('PickyAssist QR ticket response', [
+                'response' => $json,
+                'reference' => $reference,
+                'reg_id' => $registration->id,
+            ]);
+
+            if (!$response->successful() || ($json['status'] ?? 0) != 100) {
+                Log::error('PickyAssist QR ticket failed', ['response' => $json]);
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('PickyAssist QR ticket exception: ' . $e->getMessage());
             return false;
         }
     }
 
     /* ============================================================
-       Meta/WhatsApp Cloud API methods (unchanged)
+       Meta/WhatsApp Cloud API methods (kept for backward compat)
        ============================================================ */
 
     public function sendOtp(EventRegistration $registration, string $otp): bool
@@ -112,79 +206,25 @@ class WhatsAppService
 
     protected function sendTextMessage(EventRegistration $registration, string $message, string $type): bool
     {
-        if (empty($this->token) || empty($this->phoneNumberId)) {
-            Log::warning('WhatsApp credentials not configured. Message queued.');
-            // $this->logCommunication($registration, $type, $message, 'queued');
+        $phoneNumberId = config('services.whatsapp.phone_number_id');
+        if (empty($this->token) || empty($phoneNumberId)) {
+            Log::warning('WhatsApp Cloud API credentials not configured. Message queued.');
             return false;
         }
 
         try {
-            $url = "{$this->apiUrl}/{$this->phoneNumberId}/messages";
+            $url = "https://graph.facebook.com/v18.0/{$phoneNumberId}/messages";
             $response = Http::withToken($this->token)->post($url, [
                 'messaging_product' => 'whatsapp',
                 'recipient_type' => 'individual',
                 'to' => $this->formatPhone($registration->phone),
-                'type' => 'text',
-                'text' => ['body' => $message],
-            ]);
-
-            $success = $response->successful();
-            // $this->logCommunication($registration, $type, $message, $success ? 'sent' : 'failed', $success ? null : $response->body());
-            return $success;
-        } catch (\Exception $e) {
-            Log::error('WhatsApp send failed: ' . $e->getMessage());
-            // $this->logCommunication($registration, $type, $message, 'failed', $e->getMessage());
-            return false;
-        }
-    }
-
-    protected function sendRawText(string $phone, string $message, string $type): bool
-    {
-        if (empty($this->token) || empty($this->phoneNumberId)) {
-            Log::warning('WhatsApp credentials not configured. OTP queued for ' . $phone);
-            return false;
-        }
-
-        try {
-            $url = "{$this->apiUrl}/{$this->phoneNumberId}/messages";
-            $response = Http::withToken($this->token)->post($url, [
-                'messaging_product' => 'whatsapp',
-                'recipient_type' => 'individual',
-                'to' => $this->formatPhone($phone),
                 'type' => 'text',
                 'text' => ['body' => $message],
             ]);
 
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error('WhatsApp raw send failed: ' . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function sendQrImage(EventRegistration $registration, string $imageUrl): bool
-    {
-        if (empty($this->token) || empty($this->phoneNumberId)) {
-            // $this->logCommunication($registration, 'qr_code', 'QR Image: ' . $imageUrl, 'queued');
-            return false;
-        }
-
-        try {
-            $url = "{$this->apiUrl}/{$this->phoneNumberId}/messages";
-            $response = Http::withToken($this->token)->post($url, [
-                'messaging_product' => 'whatsapp',
-                'recipient_type' => 'individual',
-                'to' => $this->formatPhone($registration->phone),
-                'type' => 'image',
-                'image' => ['link' => $imageUrl, 'caption' => 'Your ArihantPLUS Entry QR Code. Show this at the venue.'],
-            ]);
-
-            $success = $response->successful();
-            $this->logCommunication($registration, 'qr_code', $imageUrl, $success ? 'sent' : 'failed', $success ? null : $response->body());
-            return $success;
-        } catch (\Exception $e) {
-            Log::error('WhatsApp QR send failed: ' . $e->getMessage());
-            // $this->logCommunication($registration, 'qr_code', $imageUrl, 'failed', $e->getMessage());
+            Log::error('WhatsApp Cloud API send failed: ' . $e->getMessage());
             return false;
         }
     }
@@ -200,44 +240,5 @@ class WhatsAppService
             $phone = '91' . $phone;
         }
         return $phone;
-    }
-
-    protected function logCommunication(EventRegistration $registration, string $type, string $content, string $status, ?string $error = null): void
-    {
-        Communication::create([
-            'event_registration_id' => $registration->id,
-            'phone' => $registration->phone,
-            'channel' => 'whatsapp',
-            'type' => $type,
-            'content' => $content,
-            'status' => $status,
-            'error' => $error,
-            'sent_at' => $status === 'sent' ? now() : null,
-        ]);
-    }
-
-    protected function logRawCommunication(
-        string $phone,
-        string $type,
-        string $content,
-        string $status,
-        ?string $reference = null,
-        ?string $pushId = null,
-        ?string $msgId = null,
-        ?string $error = null
-    ): void {
-        Communication::create([
-            'event_registration_id' => null,
-            'phone' => $phone,
-            'channel' => 'whatsapp',
-            'type' => $type,
-            'content' => $content,
-            'status' => $status,
-            'reference_number' => $reference,
-            'provider_push_id' => $pushId,
-            'provider_msg_id' => $msgId,
-            'provider_error' => $error,
-            'sent_at' => now(),
-        ]);
     }
 }
