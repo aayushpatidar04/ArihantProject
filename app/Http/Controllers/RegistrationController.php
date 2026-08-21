@@ -292,8 +292,10 @@ class RegistrationController extends Controller
         return view('registration.payment', compact('reg', 'order'));
     }
 
-    public function paymentCallback(Request $request)
+    public function paymentCallback(Request $request, $id)
     {
+        $user = User::find($id);
+        Auth::login($user);
         $payload = $request->all();
         Log::info('Atom callback raw payload', $payload);
 
