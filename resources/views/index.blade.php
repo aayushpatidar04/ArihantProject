@@ -883,22 +883,18 @@
         .icon-circle {
             width: 64px;
             height: 64px;
-            border-radius: 50%;
             margin: 0 auto 16px;
-            border: 2px solid transparent;
-            background:
-                radial-gradient(circle at 32% 28%, rgba(150, 70, 220, 0.55), rgba(16, 8, 24, 0.9)) padding-box,
-                linear-gradient(135deg, var(--purple-1), var(--magenta)) border-box;
-            box-shadow: 0 0 26px rgba(184, 102, 247, 0.5), inset 0 0 18px rgba(184, 102, 247, 0.18);
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
-        .icon-circle svg {
-            width: 22px;
-            height: 22px;
-            stroke: #fff;
+        .icon-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         .card h3 {
@@ -2906,61 +2902,34 @@
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M12 3l1.6 4.9a2 2 0 001.3 1.3L20 11l-5.1 1.6a2 2 0 00-1.3 1.3L12 19l-1.6-5.1a2 2 0 00-1.3-1.3L4 11l5.1-1.6a2 2 0 001.3-1.3L12 3z" />
-                            <path d="M19 3v2.4M18 4.2h2.4" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/1.png" alt="Prompt AI Like A Pro"></div>
                     <h3>Prompt AI Like A Pro</h3>
                     <p>Ask the right questions, get useful answers.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 8h6" />
-                            <path d="M13 7.3l1.6 1.6 3-3.2" />
-                            <path d="M4 16h6" />
-                            <path d="M13.3 15l3.4 3.4M16.7 15l-3.4 3.4" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/10.png" alt="Verify Any AI Stock Pick"></div>
                     <h3>Verify Any AI Stock Pick</h3>
                     <p>Fact-check AI advice before you act.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/2.png" alt="Where AI Still Gets It Wrong">
+                    </div>
                     <h3>Where AI Still Gets It Wrong</h3>
                     <p>Spot the blind spots before they cost you.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="4" y="4" width="6" height="4.5" rx="1.4" fill="currentColor" stroke="none" />
-                            <rect x="4" y="10.5" width="6" height="9.5" rx="1.4" fill="currentColor" stroke="none"
-                                opacity=".45" />
-                            <path d="M13.5 6.2h6M13.5 11h6M13.5 15.8h6" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/3.png" alt="How A Strategy Comes Together">
+                    </div>
                     <h3>How A Strategy Comes Together</h3>
                     <p>Watch the logic, live.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="3" width="6" height="11" rx="3" />
-                            <path d="M5 11a7 7 0 0014 0M12 18v3" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/4.png" alt="Live Debate, Real Answers"></div>
                     <h3>Live Debate, Real Answers</h3>
                     <p>AI, algos, and human judgment clash.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="3.4" />
-                            <path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/5.png" alt="How Algo Traders Think"></div>
                     <h3>How Algo Traders Think</h3>
                     <p>The mindset behind every trade.</p>
                 </div>
@@ -2973,71 +2942,42 @@
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M8 20V11M8 7V3" />
-                            <path d="M16 20V13M16 9V3" />
-                            <rect x="5.3" y="8.6" width="5.4" height="5.4" rx="2.7" fill="currentColor" stroke="none" />
-                            <rect x="13.3" y="5.6" width="5.4" height="5.4" rx="2.7" fill="currentColor"
-                                stroke="none" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/6.png" alt="Ready-To-Use AI Prompts"></div>
                     <h3>Ready-To-Use AI Prompts</h3>
                     <p>Prompts for smarter stock research.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="4.2" y="13" width="3.4" height="7" rx="1" fill="currentColor" stroke="none" />
-                            <rect x="10.3" y="7" width="3.4" height="13" rx="1" fill="currentColor" stroke="none" />
-                            <rect x="16.4" y="10.5" width="3.4" height="9.5" rx="1" fill="currentColor" stroke="none"
-                                opacity=".7" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="The Checklist for AI Picks">
+                    </div>
                     <h3>The Checklist for AI Picks</h3>
                     <p>Verify any AI-generated stock pick in seconds.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/12.png" alt="Free AI Toolkit"></div>
                     <h3>Free AI Toolkit</h3>
                     <p>Tools and a free trial, yours to keep.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="3.4" />
-                            <path d="M5 20c0-3.6 3.1-6.2 7-6.2s7 2.6 7 6.2" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/11.png" alt="A Live-Built Strategy Template">
+                    </div>
                     <h3>A Live-Built Strategy Template</h3>
                     <p>Watch it built live, then take the logic home.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3.5" y="5.5" width="14" height="13" rx="2.2" />
-                            <path d="M6 15.5l3.3-3.3 2.2 2.2 4.5-4.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <circle cx="8.3" cy="9.3" r="1.05" fill="currentColor" stroke="none" />
-                            <path d="M19 4l.7 1.6L21.3 6.3l-1.6.7L19 8.6l-.7-1.6L16.7 6.3l1.6-.7z" fill="currentColor"
-                                stroke="none" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/8.png" alt="Real Answers From A Live Panel">
+                    </div>
                     <h3>Real Answers From A Live Panel</h3>
                     <p>Where AI, algos, and human judgment clash.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17.5 3.5l3 3-9.3 9.3-3.9 1 .9-4z" stroke-linejoin="round" />
-                            <path d="M6 4l.6 1.4L8 6l-1.4.6L6 8l-.6-1.4L4 6l1.4-.6z" fill="currentColor"
-                                stroke="none" />
-                        </svg></div>
+                    <div class="icon-circle"><img src="assets/images/icons/9.png" alt="Certificate of Participation">
+                    </div>
                     <h3>Certificate of Participation</h3>
                     <p>Get official recognition of your AI Training.</p>
                 </div>
             </div>
             <div class="center-btn left">
-                <a href="/register" class="btn btn-primary">Claim your spot</a>
+                <a href="#" class="btn btn-primary">Claim your spot</a>
             </div>
         </section>
     </div>
@@ -3184,7 +3124,9 @@
                     <circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none" />
                 </svg>
             </a>
-            <a class="social-ic" target="_blank" href="https://www.linkedin.com/company/arihant-capital-markets-ltd/about/?viewAsMember=true" aria-label="LinkedIn">
+            <a class="social-ic" target="_blank"
+                href="https://www.linkedin.com/company/arihant-capital-markets-ltd/about/?viewAsMember=true"
+                aria-label="LinkedIn">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="3" />
                     <path d="M7 10v7M7 7v.01M11 17v-4.5a2 2 0 014-.2M15 17v-4.5" />
@@ -3201,7 +3143,8 @@
                     <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none" />
                 </svg>
             </a>
-            <a class="social-ic" target="_blank" href="https://www.facebook.com/arihantcapitalmarket" aria-label="Facebook">
+            <a class="social-ic" target="_blank" href="https://www.facebook.com/arihantcapitalmarket"
+                aria-label="Facebook">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="4" />
                     <path d="M13 10h2v-2h-2c-1.1 0-2 .9-2 2v2h-2v2h2v6h2v-6h2l1-2h-3v-2c0-.55.45-1 1-1z" />
@@ -3211,7 +3154,8 @@
 
         <div class="footer-bottom">
             <span>All copyrights are reserved @Arihantcapital</span>
-            <span>Made with <span class="heart">♥ </span>by <a href="https://intouchsoftware.co.in" target="_blank">InTouch Software Solutions</a></span>
+            <span>Made with <span class="heart">♥ </span>by <a href="https://intouchsoftware.co.in"
+                    target="_blank">InTouch Software Solutions</a></span>
         </div>
     </footer>
 
@@ -3276,7 +3220,7 @@
                 overlay.classList.remove('open');
                 document.body.style.overflow = '';
             }
-            
+
             closeBtn.addEventListener('click', closeModal);
             overlay.addEventListener('click', function (e) {
                 if (e.target === overlay) closeModal();
@@ -3445,11 +3389,11 @@
 
             // Replace "id" with real YouTube video IDs (the part after ?v= in the URL).
             var videos = [
-                {id:"bY89Pvsefzc",  title:"SEBI's New Algo Trading Rules Explained",                                  tag:"Regulation", duration:"18:24"},
-                {id:"w_mtfEx-rCI",  title:"What If Your Next Investment Decision Had An AI Thinking With You?",        tag:"AI Insight",  duration:"12:10"},
-                {id:"ADQXJmZYFOc",  title:"अरिहंतप्लस MCP को AI चैटबॉट्स से कनेक्ट करना सीखें",                          tag:"Tutorial",    duration:"15:47"},
-                {id:"BKACdyjnx8w",  title:"Don't Miss Trades! Auto-Login To Stratzy Algo Via ArihantPlus",              tag:"Quick Tip",   duration:"24:02"},
-                {id:"rUTS-bKB5W4",  title:"How To Setup Algo Strategies Via Arihant Plus App",                          tag:"Tutorial",    duration:"9:35"}
+                { id: "bY89Pvsefzc", title: "SEBI's New Algo Trading Rules Explained", tag: "Regulation", duration: "18:24" },
+                { id: "w_mtfEx-rCI", title: "What If Your Next Investment Decision Had An AI Thinking With You?", tag: "AI Insight", duration: "12:10" },
+                { id: "ADQXJmZYFOc", title: "अरिहंतप्लस MCP को AI चैटबॉट्स से कनेक्ट करना सीखें", tag: "Tutorial", duration: "15:47" },
+                { id: "BKACdyjnx8w", title: "Don't Miss Trades! Auto-Login To Stratzy Algo Via ArihantPlus", tag: "Quick Tip", duration: "24:02" },
+                { id: "rUTS-bKB5W4", title: "How To Setup Algo Strategies Via Arihant Plus App", tag: "Tutorial", duration: "9:35" }
             ];
 
             var playSVG = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
