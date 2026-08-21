@@ -72,7 +72,7 @@ class PaymentGatewayService
                     'udf3' => $registration->is_existing_client ? 'existing' : 'new',
                 ],
                 "PayModeSpecificData" => [
-                    "subChannel" => "UP~BQ"
+                    "subChannel" => "BQ"
                 ],
             ],
         ];
