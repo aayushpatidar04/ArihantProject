@@ -2712,6 +2712,72 @@
         .pricing-sec .center-btn {
             margin-top: 44px;
         }
+
+        /* ---------- BENEFITS MODAL ---------- */
+        .benefits-modal .modal-card {
+            max-width: 360px;
+            padding: 40px 34px 36px;
+            background: linear-gradient(165deg, #1b0e2c 0%, #12081d 60%, #0c0616 100%);
+            border: 1px solid rgba(180, 120, 255, 0.35);
+            box-shadow:
+                0 0 0 1px rgba(184, 102, 247, 0.15),
+                0 30px 80px rgba(120, 40, 200, 0.4),
+                0 0 60px rgba(184, 102, 247, 0.3);
+        }
+
+        .benefits-list {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding-left: 6px;
+            margin-top: 4px;
+        }
+
+        .benefits-list::before {
+            content: "";
+            position: absolute;
+            left: 24px;
+            top: 18.5px;
+            bottom: 18.5px;
+            width: 0;
+            border-left: 2px dotted rgba(122, 230, 194, 0.6);
+            z-index: 0;
+            transform: translateX(-1px);
+        }
+
+        .benefit-row {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .benefit-num {
+            width: 37px;
+            height: 37px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background: rgba(18, 38, 32, 0.95);
+            border: 1.5px solid rgba(122, 230, 194, 0.75);
+            color: #7fe6c2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 14.5px;
+            box-shadow: 0 0 14px rgba(122, 230, 194, 0.35);
+        }
+
+        .benefit-text {
+            font-size: 15.5px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.3;
+        }
     </style>
 </head>
 
@@ -3070,8 +3136,10 @@
             <img class="sphere-img sphere-img-base" src="assets/images/16.png" alt="" aria-hidden="true">
             <h2>Invite &amp; Earn</h2>
             <p>The best traders don't learn alone. Bring your circle, get rewarded for it.</p>
-            <a href="#" class="btn btn-ghost">Benefits</a>
-            <a href="#" class="btn btn-primary">Refer a friend</a>
+            <a href="#" class="btn btn-ghost" id="benefitsBtn">Benefits</a>
+            @auth
+                <a href="/refer" class="btn btn-primary">Refer a friend</a>
+            @endauth
         </div>
     </section>
 
@@ -3206,6 +3274,30 @@
         </div>
     </div>
 
+    <div class="modal-overlay benefits-modal" id="benefitsModal">
+        <div class="modal-card">
+            <div class="modal-close" id="benefitsModalClose" role="button" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 4l16 16M20 4L4 20" />
+                </svg>
+            </div>
+            <div class="benefits-list">
+                <div class="benefit-row">
+                    <div class="benefit-num">1</div>
+                    <div class="benefit-text">15 referral - Free entry</div>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-num">2</div>
+                    <div class="benefit-text">10 referral - 50% off</div>
+                </div>
+                <div class="benefit-row">
+                    <div class="benefit-num">3</div>
+                    <div class="benefit-text">5 referral - Goodies</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ---------- Reserve / Claim modal ----------
         (function () {
@@ -3221,6 +3313,33 @@
                 document.body.style.overflow = '';
             }
 
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
+
+        // ---------- Benefits modal ----------
+        (function () {
+            var overlay = document.getElementById('benefitsModal');
+            var openBtn = document.getElementById('benefitsBtn');
+            var closeBtn = document.getElementById('benefitsModalClose');
+            if (!overlay || !openBtn || !closeBtn) return;
+            function openModal() {
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            openBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                openModal();
+            });
             closeBtn.addEventListener('click', closeModal);
             overlay.addEventListener('click', function (e) {
                 if (e.target === overlay) closeModal();

@@ -71,5 +71,11 @@ return [
         'aes_response_salt'   => env('ATOM_AES_RESPONSE_SALT'),
         'return_url' => env('ATOM_RETURN_URL', env('APP_URL') . '/payment/callback'),
     ],
+    'sms' => [
+        'url'           => env('SMS_URL', 'https://arihantapi.arihantcapital.com/V2/api/Media/sendSMS'),
+        'username'      => env('SMS_USERNAME', 'AI_Algo'),
+        'api_key'       => env('SMS_API_KEY'),
+        'auth_header'   => env('SMS_AUTH_HEADER', 'Basic QXJpaGFudDpBcmloYW50QDIwMjI='),
+    ],
 
 ];
