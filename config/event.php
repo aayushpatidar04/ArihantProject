@@ -5,7 +5,7 @@ return [
     'event_date' => '2026-09-05',
     'event_time' => '10:00 AM - 5:00 PM',
     'venue' => 'Labh Mandapam, Indore',
-    'existing_client_price' => 299,
+    'existing_client_price' => 1,
     'new_user_price' => 599,
     'currency' => 'INR',
     'venue_pin' => env('VENUE_PIN'),

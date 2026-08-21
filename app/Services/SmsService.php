@@ -37,7 +37,7 @@ class SmsService
             $phone = substr($phone, 2);
         }
 
-        $message = "Your ArihantPLUS verification code is: {$otp}. Valid for 10 minutes. Do not share it with anyone. - Arihant Capital";
+        $message = "Your OTP for Arihant Capital Markets Research Servicing Tracker login is {$otp}. Valid for 10 minutes. Do not share this OTP with anyone. - ARIHANT";
 
         $payload = [
             [
@@ -66,7 +66,6 @@ class SmsService
             ]);
 
             if ($response->successful()) {
-                // $this->logCommunication($phone, $message, 'sent');
                 return true;
             }
 

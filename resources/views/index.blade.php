@@ -2886,7 +2886,7 @@
                 <h3>Arihant Users</h3>
                 <div class="price-row">
                     <span class="price-old">₹599</span>
-                    <span class="price-new">₹299</span>
+                    <span class="price-new">₹1</span>
                 </div>
                 <div class="price-gst">Incl 18% GST</div>
                 <hr class="price-divider">

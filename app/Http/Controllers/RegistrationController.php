@@ -44,7 +44,10 @@ class RegistrationController extends Controller
     {
         $validated = $request->validate([
             'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:event_registrations,phone',
+        ], [
+            'phone.unique' => 'This number is already registered. Try logging in or use another number. Your password has been sent to your email.',
         ]);
+
 
         $phone = $validated['phone'];
         $clientData = $this->clientApi->checkClient($phone);

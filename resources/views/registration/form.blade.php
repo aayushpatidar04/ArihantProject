@@ -28,7 +28,7 @@
         <p class="subtitle">Enter your mobile number to check your eligibility</p>
 
         @if($errors->any())
-            <div class="alert alert-error" style="margin-bottom:20px">{{ $errors->first() }}</div>
+            <div class="alert alert-error" style="margin-bottom:20px">{{ $errors->first() }} <a href="/login" style="margin: 0 0 0 5px; font-style: italic;"><u>Click here to Login</u></a></div>
         @endif
 
         <form action="{{ route('registration.submit') }}" method="POST" id="phoneForm">

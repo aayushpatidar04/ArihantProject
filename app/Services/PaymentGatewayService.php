@@ -35,7 +35,7 @@ class PaymentGatewayService
 
     public function createOrder(EventRegistration $registration): ?array
     {
-        $amount     = $registration->is_existing_client ? '299.00' : '599.00';
+        $amount     = $registration->is_existing_client ? '1.00' : '599.00';
         $merchTxnId = 'ARI' . $registration->id . now()->format('His') . strtoupper(Str::random(3));
 
         // Format phone with 91 prefix for Atom
