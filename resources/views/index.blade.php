@@ -3795,7 +3795,7 @@
             { q: "What exactly will I get after attending?", a: "A set of ready-to-use AI prompts, a strategy template from the live build session, access to a free AI toolkit and partner subscription, and a certificate of participation." },
             { q: "Do I need to bring a laptop?", a: "No laptop needed — most hands-on sessions are designed to be followed along on your phone. We'll share specific instructions closer to the event date." },
             { q: "Is there a certificate of participation?", a: "Yes, all attendees receive a certificate at the end of the day." },
-            { q: "Will there be food and breaks included?", a: "Yes, the ticket includes lunch and tea breaks throughout the day." },
+            { q: "Will there be food and breaks included?", a: "Yes, the ticket includes complimentary meal and tea breaks throughout the day." },
             { q: "Is there an entertainment/experience element, or is it only sessions?", a: "Yes — beyond the sessions, we've planned an experiential element to make this more than just a lecture-style event. Details will be shared closer to the date." },
             { q: "Are there any partner/sponsor stalls at the event?", a: "Yes, you'll have access to an Experience Zone with partner stalls where you can explore tools and platforms relevant to AI and algo trading." },
             { q: "What is the refund/cancellation policy?", a: "We follow a No Refund Policy." }

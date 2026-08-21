@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\EventRegistration;
 use App\Models\Payment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -90,7 +91,7 @@ class PaymentGatewayService
             'status'                => 'created',
         ]);
 
-        $returnUrl = config('services.atom.return_url', config('app.url') . '/payment/callback');
+        $returnUrl = route('payment.callback', Auth::id());
 
         Log::info('Atom order created', [
             'merchTxnId'  => $merchTxnId,

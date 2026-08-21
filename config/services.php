@@ -69,7 +69,6 @@ return [
         'aes_request_salt'    => env('ATOM_AES_REQUEST_SALT'),
         'aes_response_key'    => env('ATOM_AES_RESPONSE_KEY'),
         'aes_response_salt'   => env('ATOM_AES_RESPONSE_SALT'),
-        'return_url' => env('ATOM_RETURN_URL', env('APP_URL') . '/payment/callback'),
     ],
     'sms' => [
         'url'           => env('SMS_URL', 'https://arihantapi.arihantcapital.com/V2/api/Media/sendSMS'),
