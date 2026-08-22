@@ -91,10 +91,10 @@
                 </div>
 
                 {{-- Password --}}
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label>Create Password</label>
                     <input type="password" name="password" placeholder="Min 8 characters" required>
-                </div>
+                </div> --}}
             </div>
 
             <div class="price-box">

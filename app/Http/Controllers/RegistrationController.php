@@ -115,7 +115,7 @@ class RegistrationController extends Controller
             'city' => 'required|string|max:100',
             'type' => 'required|in:investor,trader',
             'referred_by' => 'nullable|string|size:12',
-            'password' => 'required'
+            // 'password' => 'required'
         ]);
 
         $clientUsers = Session::get('client_users');
@@ -254,14 +254,14 @@ class RegistrationController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'city' => 'required|string|max:100',
             'type' => 'required|in:investor,trader',
-            'password' => 'required',
+            // 'password' => 'required',
             'referred_by' => 'nullable|string|size:12',
         ]);
 
         $user = User::create([
             'name' => $validated['full_name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make('ArihantCapitals'),
         ]);
 
         $reg = EventRegistration::create([

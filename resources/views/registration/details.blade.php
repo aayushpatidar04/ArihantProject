@@ -226,10 +226,10 @@
                 </div>
                 <input type="hidden" name="type" id="userType" value="investor">
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label>Create Password</label>
                     <input type="password" name="password" placeholder="Min 8 characters" required>
-                </div>
+                </div> --}}
 
                 @if(request('ref'))
                     <input type="hidden" name="referred_by" value="{{ request('ref') }}">
