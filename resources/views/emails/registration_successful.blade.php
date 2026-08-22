@@ -62,8 +62,7 @@
                                             Event Details</p>
                                         <p style="margin:0 0 8px;font-size:14px;color:#f6f3fa;line-height:1.6;">📅 5th
                                             September 2026</p>
-                                        <p style="margin:0 0 8px;font-size:14px;color:#f6f3fa;line-height:1.6;">📍 Labh
-                                            Mandapam, Indore</p>
+                                        <p style="margin:0 0 8px;font-size:14px;color:#f6f3fa;line-height:1.6;">📍 Mariott Hotel, Indore</p>
                                         <p style="margin:0;font-size:14px;color:#f6f3fa;line-height:1.6;">⏰ 10:00 AM
                                             onwards</p>
                                     </td>

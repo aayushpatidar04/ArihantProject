@@ -56,6 +56,24 @@ class SmsService
         return $this->dispatch($phone, $message);
     }
 
+    public function sendRegistrationConfirmation(
+        string $phone,
+        string $transactionId,
+        string $amount,
+        string $paymentMode
+    ): bool {
+        if (empty($this->apiKey)) {
+            Log::warning('SMS API key not configured. Confirmation SMS skipped.');
+            return false;
+        }
+
+        $phone = $this->normalizePhone($phone);
+
+        $message = "Thank you for registering at ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Labh Mandapam, Indore. Your registration is confirmed. Transaction ID: {$transactionId}, Amount: Rs.{$amount}, Payment Mode: {$paymentMode}. Arihant Capital Markets Limited";
+
+        return $this->dispatch($phone, $message);
+    }
+
     protected function dispatch(string $phone, string $message): bool
     {
         $payload = [

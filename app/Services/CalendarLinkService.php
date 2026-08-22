@@ -21,29 +21,29 @@ class CalendarLinkService
         $location    = str_replace(["\r\n", "\n", "\r"], ", ", $location);
 
         return <<<ICS
-BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Arihant Capital//ArihantPLUS Conclave//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-UID:{$uid}
-DTSTAMP:{$dtStamp}
-DTSTART:{$dtStart}
-DTEND:{$dtEnd}
-SUMMARY:{$title}
-DESCRIPTION:{$description}
-LOCATION:{$location}
-STATUS:CONFIRMED
-SEQUENCE:0
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Reminder
-TRIGGER:-PT1H
-END:VALARM
-END:VEVENT
-END:VCALENDAR
-ICS;
+            BEGIN:VCALENDAR
+            VERSION:2.0
+            PRODID:-//Arihant Capital//ArihantPLUS Conclave//EN
+            CALSCALE:GREGORIAN
+            METHOD:PUBLISH
+            BEGIN:VEVENT
+            UID:{$uid}
+            DTSTAMP:{$dtStamp}
+            DTSTART:{$dtStart}
+            DTEND:{$dtEnd}
+            SUMMARY:{$title}
+            DESCRIPTION:{$description}
+            LOCATION:{$location}
+            STATUS:CONFIRMED
+            SEQUENCE:0
+            BEGIN:VALARM
+            ACTION:DISPLAY
+            DESCRIPTION:Reminder
+            TRIGGER:-PT1H
+            END:VALARM
+            END:VEVENT
+            END:VCALENDAR
+            ICS;
     }
 
     public static function google(

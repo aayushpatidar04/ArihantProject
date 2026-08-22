@@ -9,9 +9,10 @@ use App\Models\User;
 use App\Services\ClientApiService;
 use App\Services\WhatsAppService;
 use App\Services\EmailService;
+use App\Services\LeadScoringService;
 use App\Services\PaymentGatewayService;
 use App\Services\QrCodeService;
-use App\Services\LeadScoringService;
+use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -29,6 +30,7 @@ class RegistrationController extends Controller
         protected PaymentGatewayService $payment,
         protected QrCodeService $qr,
         protected LeadScoringService $leadScore,
+        protected SmsService $sms,
     ) {
     }
 
@@ -402,7 +404,10 @@ class RegistrationController extends Controller
             ->where('event_registration_id', $reg->id)
             ->first();
 
-        $paymentMode = $payInstrument['payModeSpecificData']['subChannel'][0];
+        $paymentMode = 'Bharat QR';
+        if (!empty($payInstrument['payModeSpecificData']['subChannel']) && is_array($payInstrument['payModeSpecificData']['subChannel'])) {
+            $paymentMode = $payInstrument['payModeSpecificData']['subChannel'][0] ?? 'Bharat QR';
+        }
 
         if ($payment && $payment->status !== 'paid') {
             $payment->update([
@@ -416,6 +421,9 @@ class RegistrationController extends Controller
         $reg->update(['status' => 'paid', 'paid_at' => now()]);
         Session::forget('payment_registration_id');
 
+        $txnRef = $atomTxnId ?? $merchTxnId ?? 'TXN-' . $reg->registration_number;
+        $amount = $reg->is_existing_client ? '299' : '599';
+
         // 1️⃣ Send Registration Confirmation (AW20699204)
         $this->whatsapp->sendRegistrationConfirmation(
             $reg,
@@ -423,6 +431,8 @@ class RegistrationController extends Controller
             $reg->is_existing_client ? '299' : '599',
             $paymentMode ?? 'Bharat QR'
         );
+
+        $this->sms->sendRegistrationConfirmation($reg->phone, $txnRef, $amount, $paymentMode);
 
         // 2️⃣ Generate & send QR Ticket (GW20590908) + Email
         $existingQr = $reg->qrCodes()->where('purpose', 'entry')->first();
