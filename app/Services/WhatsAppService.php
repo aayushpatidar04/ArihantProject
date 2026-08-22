@@ -91,14 +91,14 @@ class WhatsAppService
         $reference = 'reg_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
 
         $transactionId = $transactionId ?? $reference;
-        $amount = $amount ?? '599';
+        $amount = $amount ?? ($registration->is_existing_client ? '399' : '599');
         $paymentMode = $paymentMode ?? 'Bharat QR';
 
         try {
             $response = Http::timeout(60)->post($this->apiUrl, [
                 'token' => $this->token,
                 'application' => $this->applicationId,
-                'template_id' => 'AW20699204',
+                'template_id' => 'WJ21349148',
                 'data' => [
                     [
                         'number' => $this->formatPhone($registration->phone),
@@ -145,7 +145,7 @@ class WhatsAppService
             $response = Http::timeout(60)->post($this->apiUrl, [
                 'token' => $this->token,
                 'application' => $this->applicationId,
-                'template_id' => 'GW20590908',
+                'template_id' => 'JJ21403323',
                 'data' => [
                     [
                         'number' => $this->formatPhone($registration->phone),
