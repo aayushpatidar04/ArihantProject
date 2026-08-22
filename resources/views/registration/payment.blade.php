@@ -192,12 +192,14 @@
             <div class="benefits-list">
                 <div class="benefits-title">What's Included</div>
                 <ul>
-                    <li>Research smarter with ready-to-use AI prompts.</li>
-                    <li>Verify AI-generated stock picks in seconds.</li>
-                    <li>Get practical AI tools and a trial to keep.</li>
-                    <li>Learn a strategy built live and take the logic home.</li>
-                    <li>Get real answers on AI, algos and trading from experts.</li>
-                    <li>Receive an official certificate of participation.</li>
+                    <li>🤖 AI + Algo Cheat Sheet</li>
+                    <li>⚡ Live AI & Algo Demos</li>
+                    <li>🎯 Actionable Trading Strategies</li>
+                    <li>💻 Stratzy Access at ₹99</li>
+                    <li>🎁 Exciting Rewards & Prizes</li>
+                    <li>🧰 Trader Toolkit</li>
+                    <li>📜 Certificate of Participation</li>
+                    <li>🍽️ Food & Refreshments</li>
                 </ul>
             </div>
             <div class="secure-badge">

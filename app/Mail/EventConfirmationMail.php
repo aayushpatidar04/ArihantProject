@@ -37,7 +37,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
         $this->yahooLink   = CalendarLinkService::yahoo($title, $start, $end, $location, $description);
 
         // Generate ICS file to storage
-        $icsContent = CalendarLinkService::generateIcs($title, $start, $end, $location, $description, $registration->registration_number);
+        $icsContent = CalendarLinkService::generateIcs($title, $start, $end, 'Mariott Hotel, Indore', $description, $registration->registration_number);
         $this->icsPath = 'calendar/arihantplus-' . $registration->registration_number . '.ics';
         Storage::disk('public')->put($this->icsPath, $icsContent);
     }

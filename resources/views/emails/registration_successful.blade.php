@@ -69,7 +69,7 @@
                     
                     <tr>
                         <td style="padding:0 32px 8px;">
-                            <p style="margin:0;font-size:14px;color:#a79bb5;line-height:1.7;">💳 Complete your payment to reserve your seat and confirm your participation at the event.</p>
+                            <p style="margin:0;font-size:14px;color:#a79bb5;line-height:1.7;">💳 Complete your payment of amount {{ $registration->is_existing_client ? '₹399' : '₹599' }} to reserve your seat and confirm your participation at the event.</p>
                         </td>
                     </tr>
 
@@ -78,7 +78,7 @@
                             <table role="presentation" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td align="center"
-                                        style="border-radius:999px;background:linear-gradient(135deg,#d43fe0,#7a1fc9);">
+                                        style="border-radius:999px;background:linear-gradient(135deg,#d43fe0,#7a1fc9); border: #b866f7 1px solid;">
                                         <a href="https://event.arihantplus.com/register/payment"
                                             style="display:inline-block;padding:14px 32px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:999px;">Complete
                                             Your Payment</a>
