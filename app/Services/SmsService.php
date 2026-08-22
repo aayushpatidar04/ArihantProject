@@ -33,11 +33,7 @@ class SmsService
 
         $phone = $this->normalizePhone($phone);
 
-        $message = "Your OTP for registering for ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Marriott Hotel, Indore, is {$otp}.
-
-This OTP is valid for 5 minutes. By entering this OTP, you provide your consent to register for the event.
-
-Arihant Capital Markets Limited";
+        $message = "Your OTP for registering for ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Marriott Hotel, Indore, is {$otp}.\n\nThis OTP is valid for 5 minutes. By entering this OTP, you provide your consent to register for the event.\n\nArihant Capital Markets Limited";
 
         return $this->dispatch($phone, $message);
     }
