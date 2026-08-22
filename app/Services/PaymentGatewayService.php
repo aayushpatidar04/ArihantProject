@@ -128,7 +128,7 @@ class PaymentGatewayService
             'payload' => $jsonData,
         ]);
 
-        $response = Http::asForm()->post($this->payUrl, [
+        $response = Http::asForm()->timeout(60)->post($this->payUrl, [
             'encData' => $encData,
             'merchId' => $this->merchantId,
         ]);

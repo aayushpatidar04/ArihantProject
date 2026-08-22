@@ -76,7 +76,10 @@ class SmsService
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'Authorization' => $this->authHeader,
-            ])->post($this->apiUrl, $payload);
+            ])
+            ->timeout(60)
+            ->connectTimeout(30)
+            ->post($this->apiUrl, $payload);
 
             Log::info('Arihant SMS API response', [
                 'phone' => $phone,

@@ -21,7 +21,10 @@ class ClientApiService
                 'Authorization' => $auth,
                 'X-ENCRYPT' => 'false',
                 'Content-Type' => 'application/json',
-            ])->post($url, [
+            ])
+            ->timeout(60)
+            ->connectTimeout(30)
+            ->post($url, [
                 'request' => [
                     'data' => [
                         'mobNo' => $phone,
@@ -66,7 +69,10 @@ class ClientApiService
         try {
             $response = Http::withHeaders([
                 'Authorization' => $auth,
-            ])->post($url . '?MobileNumber=' . $phone);
+            ])
+            ->timeout(60)
+            ->connectTimeout(30)
+            ->post($url . '?MobileNumber=' . $phone);
 
             Log::info('Sub-broker API response', [
                 'phone'  => $phone,

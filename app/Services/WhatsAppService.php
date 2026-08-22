@@ -43,7 +43,7 @@ class WhatsAppService
         $reference = 'otp_' . $phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
 
         try {
-            $response = Http::post($this->apiUrl, [
+            $response = Http::timeout(60)->post($this->apiUrl, [
                 'token' => $this->token,
                 'application' => $this->applicationId,
                 'template_id' => config('services.whatsapp.otp_template'),
@@ -95,7 +95,7 @@ class WhatsAppService
         $paymentMode = $paymentMode ?? 'Bharat QR';
 
         try {
-            $response = Http::post($this->apiUrl, [
+            $response = Http::timeout(60)->post($this->apiUrl, [
                 'token' => $this->token,
                 'application' => $this->applicationId,
                 'template_id' => 'AW20699204',
@@ -142,7 +142,7 @@ class WhatsAppService
         $reference = 'qr_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
 
         try {
-            $response = Http::post($this->apiUrl, [
+            $response = Http::timeout(60)->post($this->apiUrl, [
                 'token' => $this->token,
                 'application' => $this->applicationId,
                 'template_id' => 'GW20590908',
