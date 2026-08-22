@@ -91,6 +91,9 @@ class RegistrationController extends Controller
 
     public function showClientConfirm()
     {
+        if(Auth::check()){
+            return redirect()->route('registration.success');
+        }
         if (!Session::get('is_existing_client') || !Session::has('client_users')) {
             return redirect()->route('registration.form');
         }
@@ -170,6 +173,9 @@ class RegistrationController extends Controller
 
     public function showOtp()
     {
+        if(Auth::check()){
+            return redirect()->route('registration.success');
+        }
         if (Session::get('is_existing_client') || Session::get('is_subbroker') || !Session::has('reg_phone')) {
             return redirect()->route('registration.form');
         }
@@ -217,6 +223,9 @@ class RegistrationController extends Controller
 
     public function showDetails()
     {
+        if(Auth::check()){
+            return redirect()->route('registration.success');
+        }
         $isSubBroker = Session::get('is_subbroker');
         $phoneVerified = Session::get('phone_verified');
         $isExisting = Session::get('is_existing_client');
@@ -326,6 +335,9 @@ class RegistrationController extends Controller
 
     public function showPayment()
     {
+        if(!Auth::check()){
+            return redirect()->route('index');
+        }
         $reg = $this->getCurrentRegistration();
         if (!$reg || $reg->status !== 'kyc_completed') {
             return redirect()->route('registration.form');
@@ -435,6 +447,9 @@ class RegistrationController extends Controller
 
     public function success()
     {
+        if(!Auth::check()){
+            return redirect()->route('index');
+        }
         $reg = $this->getCurrentRegistration();
 
         // Fallback: find any paid/checked_in registration for this user
