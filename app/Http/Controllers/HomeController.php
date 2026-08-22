@@ -32,7 +32,6 @@ class HomeController extends Controller
             
             return view('index', compact('registration'));
         }
-        
         return view('index', ['registration' => null]);
     }
 

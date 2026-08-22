@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'venue' => \App\Http\Middleware\VenueStaffMiddleware::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [
@@ -23,5 +25,13 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Throwable $e, Request $request) {
+        if ($request->expectsJson() || config('app.debug')) {
+            return null;
+        }
+
+        $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+
+        return response()->view('errors.error', ['code' => $status]);
+    });
     })->create();

@@ -12,7 +12,7 @@ return [
 
     // Admin emails allowed to access dashboard
     'admin_emails' => [
-        env('ADMIN_EMAIL', 'admin@arihantcapital.com'),
+        env('ADMIN_EMAIL', 'admin@event.arihantcapital.com'),
     ],
 
     // Quiz correct answers (question_id => answer)

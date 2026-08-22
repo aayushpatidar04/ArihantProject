@@ -76,6 +76,15 @@ CRM_PUSH_URL=https://your-crm.com/api/leads
 CRM_API_KEY=your_crm_key
 ```
 
+Create the admin user with a hashed password before signing in at `/admin/login`:
+
+```bash
+php artisan tinker
+>>> \App\Models\User::updateOrCreate(['email' => env('ADMIN_EMAIL')], ['name' => 'Admin', 'password' => 'choose-a-strong-password']);
+```
+
+The admin email must match `ADMIN_EMAIL`. Admin pages redirect unauthenticated visitors to the admin login and return them to their originally requested admin page after successful authentication.
+
 Add to `config/services.php`:
 ```php
 'whatsapp' => [

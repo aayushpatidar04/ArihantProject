@@ -8,6 +8,7 @@ use App\Http\Controllers\StallController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\InfluencerController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminAuthController;
 use Illuminate\Support\Facades\Route;
 
 /* ---------- Public Routes ---------- */
@@ -81,7 +82,10 @@ Route::get('/checkin/confirmation', [CheckInController::class, 'mobileConfirmati
 Route::post('/stalls/checkin', [StallController::class, 'checkIn'])->name('stalls.checkin');
 
 /* ---------- Admin Routes ---------- */
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('admin.login.submit');
+
+Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
     Route::get('/checkins', [AdminController::class, 'checkIns'])->name('checkins');
