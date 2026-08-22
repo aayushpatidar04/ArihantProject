@@ -402,6 +402,8 @@ class RegistrationController extends Controller
             ->where('event_registration_id', $reg->id)
             ->first();
 
+        $paymentMode = $payInstrument['payModeSpecificData']['subChannel'][0];
+
         if ($payment && $payment->status !== 'paid') {
             $payment->update([
                 'gateway_payment_id' => $atomTxnId,
@@ -418,8 +420,8 @@ class RegistrationController extends Controller
         $this->whatsapp->sendRegistrationConfirmation(
             $reg,
             $atomTxnId ?? $merchTxnId ?? 'TXN-' . $reg->registration_number,
-            '599',
-            'Bharat QR'
+            $reg->is_existing_client ? '299' : '599',
+            $paymentMode ?? 'Bharat QR'
         );
 
         // 2️⃣ Generate & send QR Ticket (GW20590908) + Email

@@ -45,13 +45,22 @@
 
             <div style="margin-bottom:24px">
                 {{-- NEW: UID Selector --}}
+                @php
+                    $mask = fn($s) => mb_strlen($s) > 4 
+                        ? mb_substr($s, 0, 2) . '****' . mb_substr($s, -2) 
+                        : $s;
+
+                    $maskedPhone = mb_strlen($phone) > 4 
+                        ? mb_substr($phone, 0, 2) . '****' . mb_substr($phone, -2) 
+                        : $phone;
+                @endphp
                 <div class="form-group">
                     <label>Select Client ID</label>
                     <select name="selected_uid" id="uid-select" required>
                         <option value="">-- Select your Client ID --</option>
                         @foreach($client_users as $user)
                             <option value="{{ $user['uid'] }}" data-name="{{ $user['uName'] }}">
-                                {{ $user['uid'] }} — {{ $user['uName'] }}
+                                {{ $mask($user['uid']) }} — {{ $mask($user['uName']) }}
                             </option>
                         @endforeach
                     </select>
@@ -60,13 +69,18 @@
                 {{-- Name auto-fills from selected UID --}}
                 <div class="form-group">
                     <label>Full Name</label>
-                    <input type="text" name="full_name" id="full-name" placeholder="Select a Client ID above" readonly required>
+                    {{-- UI only: masked, does NOT submit --}}
+                    <input type="text" id="full-name-display" placeholder="Select a Client ID above" readonly>
+                    {{-- Actual value: submits with form --}}
+                    <input type="hidden" name="full_name" id="full-name" required readonly>
                 </div>
 
-                {{-- Phone (from session, read-only) --}}
                 <div class="form-group">
                     <label>Phone</label>
-                    <input type="text" name="phone" value="{{ $phone }}" required readonly>
+                    {{-- UI only: masked, does NOT submit --}}
+                    <input type="text" id="phone-display" value="{{ $maskedPhone }}" required readonly>
+                    {{-- Actual value: submits with form --}}
+                    <input type="hidden" name="phone" value="{{ $phone }}">
                 </div>
 
                 {{-- Email — now manual because API doesn't send it --}}
@@ -115,6 +129,9 @@
     document.getElementById('uid-select').addEventListener('change', function () {
         const option = this.options[this.selectedIndex];
         const name = option.dataset.name || '';
+        const mask = (s) => s && s.length > 4 ? s.slice(0, 2) + '****' + s.slice(-2) : s;
+
+        document.getElementById('full-name-display').value = mask(name);
         document.getElementById('full-name').value = name;
     });
 </script>
