@@ -6,11 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <link rel="icon" type="image/png" href="assets/images/favicon-2.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'AktivGrotesk';
+            src: url('assets/fonts/AktivGrotesk-Regular.woff2') format('woff2'),
+                url('assets/fonts/AktivGrotesk-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'AktivGrotesk';
+            src: url('assets/fonts/AktivGrotesk-Bold.woff2') format('woff2'),
+                url('assets/fonts/AktivGrotesk-Bold.woff') format('woff');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
     <style>
         :root {
             --bg: #060208;
@@ -42,7 +61,7 @@
         body {
             background: var(--bg);
             color: var(--ink);
-            font-family: 'Inter', sans-serif;
+            font-family: 'AktivGrotesk', sans-serif;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -51,7 +70,8 @@
         h2,
         h3,
         .font-display {
-            font-family: 'Sora', sans-serif;
+            font-family: 'AktivGrotesk', sans-serif;
+            font-weight: 700;
         }
 
         img {
@@ -275,6 +295,9 @@
             padding: 64px 24px 0;
             text-align: center;
             background:
+                radial-gradient(ellipse 620px 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
+                linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
+                url('assets/images/skyline.png') center bottom / cover no-repeat,
                 linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
             position: relative;
             overflow: hidden;
@@ -282,11 +305,17 @@
 
         @media(max-width:700px) {
             .hero {
-                padding-bottom: 40px;
                 background:
-                    linear-gradient(180deg, rgba(6, 2, 8, 1) 0%, rgba(6, 2, 8, 0.55) 42%, rgba(6, 2, 8, 0.25) 62%, rgba(6, 2, 8, 0.7) 100%),
+                    radial-gradient(ellipse 92% 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
+                    linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
                     url('assets/images/skyline.png') center bottom / cover no-repeat,
                     linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
+            }
+        }
+
+        @media(max-width:700px) {
+            .hero {
+                padding-bottom: 40px;
             }
         }
 
@@ -323,7 +352,7 @@
         }
 
         .logo-img {
-            height: 48px;
+            height: 32px;
             width: auto;
             display: block;
         }
@@ -331,12 +360,26 @@
         .hero-video {
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
+            right: 0;
+            width: 55%;
             height: 100%;
             object-fit: cover;
-            opacity: .55;
+            opacity: .25;
             mix-blend-mode: screen;
+            filter: blur(4px) saturate(.55) brightness(.85);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 40%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 40%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-video-veil {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center 35%,
+                    rgba(6, 2, 8, 0.35) 0%,
+                    rgba(6, 2, 8, 0.6) 55%,
+                    rgba(6, 2, 8, 0.85) 100%);
             pointer-events: none;
             z-index: 1;
         }
@@ -475,44 +518,84 @@
         .hero p.sub {
             max-width: 680px;
             margin: 22px auto 0;
-            color: var(--muted);
+            color: #D5D5D5;
             font-size: clamp(15px, 1.7vw, 18px);
             line-height: 1.6;
+            text-transform: capitalize;
+        }
+
+        .hero-tagline {
+            font-size: clamp(36px, 5.2vw, 52px);
+            font-weight: 700;
+            color: #F5CDFF;
+            text-shadow: 0 0 30px rgba(184, 102, 247, 0.45);
+            letter-spacing: -.01em;
+            margin-bottom: 6px;
+        }
+
+        .hero-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 26px;
+        }
+
+        .hero-pill {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--ink);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 999px;
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            white-space: nowrap;
+        }
+
+        @media(max-width:700px) {
+            .hero-pills {
+                gap: 8px;
+                margin-top: 20px;
+            }
+
+            .hero-pill {
+                font-size: 10.5px;
+                padding: 6px 14px;
+            }
+        }
+
+        .hero-pill-img {
+            height: 29px;
+            width: auto;
+            display: block;
+        }
+
+        @media(max-width:700px) {
+            .hero-pill-img {
+                height: 24px;
+            }
         }
 
         .hero-visual {
             position: relative;
             margin-top: 44px;
+            height: 420px;
         }
 
         .hero-visual img {
-            width: 100%;
-            height: 420px;
-            object-fit: cover;
-            object-position: top center;
-            filter: saturate(1.1);
+            display: none;
         }
 
         .hero-visual::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(6, 2, 8, 0) 55%, rgba(6, 2, 8, 0.55) 100%);
-            pointer-events: none;
+            display: none;
         }
 
         @media(max-width:700px) {
             .hero-visual {
-                position: relative;
                 margin-top: 28px;
-            }
-
-            .hero-visual img {
-                display: none;
-            }
-
-            .hero-visual::after {
-                display: none;
+                height: auto;
             }
         }
 
@@ -925,7 +1008,7 @@
         }
 
         .center-btn.left {
-            text-align: left;
+            text-align: center;
             max-width: var(--max);
             margin: 44px auto 0;
             padding: 0 24px;
@@ -1542,35 +1625,36 @@
         }
 
         .panelist-slide {
-            flex: 0 0 calc((100% - 48px)/3);
+            flex: 0 0 30%;
             scroll-snap-align: start;
         }
 
         @media(max-width:900px) {
             .panelist-slide {
-                flex: 0 0 calc((100% - 24px)/2);
+                flex: 0 0 46%;
             }
         }
 
         @media(max-width:600px) {
             .panelist-track {
                 padding: 14px 26px 18px;
-                gap: 24px;
-                justify-content: center;
+                gap: 20px;
                 scroll-padding: 0 26px;
             }
 
             .panelist-slide {
-                flex: 0 0 78%;
-                max-width: 280px;
-                scroll-snap-align: center;
-                margin: 0 auto;
+                flex: 0 0 88%;
+                scroll-snap-align: start;
             }
 
             .panelist-nav {
+                width: 100%;
                 justify-content: center;
+                margin: 22px 0 40px;
+                padding: 0 24px;
             }
         }
+
 
         .panelist-photo-card {
             position: relative;
@@ -1607,13 +1691,89 @@
             font-weight: 700;
             color: #fff;
             text-transform: capitalize;
+            margin: 0;
         }
 
         .panelist-info span {
             font-size: 13.5px;
             color: var(--muted);
-            margin-top: 4px;
             display: block;
+        }
+
+        .panelist-photo-shade {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(6, 2, 8, 0) 30%,
+                    rgba(6, 2, 8, 0.55) 62%,
+                    rgba(6, 2, 8, 0.92) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .panelist-info {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 18px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .panelist-social {
+            display: flex;
+            gap: 8px;
+        }
+
+        .panelist-social a {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #4D4D4D;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .panelist-social a:hover {
+            background: rgba(184, 102, 247, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .panelist-social svg {
+            width: 16px;
+            height: 16px;
+            stroke: #fff;
+            fill: none;
+        }
+
+        .panelist-know-btn {
+            margin-top: 2px;
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 22px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            background: rgba(6, 2, 8, 0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transition: background .2s ease, border-color .2s ease;
+        }
+
+        .panelist-know-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #fff;
         }
 
         .panelist-nav {
@@ -1658,6 +1818,49 @@
             stroke: #150a1e;
             stroke-width: 2;
             fill: none;
+        }
+
+        @media(max-width:600px) {
+            .panelist-nav {
+                width: 100%;
+                justify-content: center;
+                margin: 22px 0 40px;
+                padding: 0 24px;
+            }
+        }
+
+        @media(max-width:600px) {
+            .panelist-info {
+                gap: 5px;
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+            }
+
+            .panelist-social a {
+                width: 26px;
+                height: 26px;
+                border-radius: 8px;
+            }
+
+            .panelist-social svg {
+                width: 13px;
+                height: 13px;
+            }
+
+            .panelist-info h4 {
+                font-size: 14px;
+            }
+
+            .panelist-info span {
+                font-size: 11.5px;
+            }
+
+            .panelist-know-btn {
+                padding: 6px 16px;
+                font-size: 11.5px;
+                margin-top: 0;
+            }
         }
 
         /* ---------- INVITE & EARN (FIXED) ---------- */
@@ -3009,6 +3212,240 @@
                 gap: 6px;
             }
         }
+
+        /* ---------- VALUE BANNER (pricing cards + checklist) ---------- */
+        .value-banner {
+            padding: 100px 24px;
+            background: var(--bg);
+        }
+
+        .value-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            max-width: var(--max);
+            margin: 0 auto;
+        }
+
+        @media(max-width:900px) {
+            .value-inner {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .value-left h2 {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--ink);
+        }
+
+        .value-sub {
+            color: var(--muted);
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .value-checklist {
+            list-style: none;
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 0;
+        }
+
+        .value-checklist li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14.5px;
+            color: var(--ink);
+        }
+
+        .value-checklist .check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(184, 102, 247, 0.15);
+            color: var(--purple-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .value-right {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .value-card {
+            display: block;
+            background: #0d0712;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 20px 22px;
+            position: relative;
+            transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(184, 102, 247, 0.45);
+            box-shadow: 0 16px 34px rgba(140, 40, 200, 0.28);
+        }
+
+        .value-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .value-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .value-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .value-arrow {
+            width: 18px;
+            height: 18px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        .value-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .value-price-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .value-price-row .price-old {
+            color: var(--muted-2);
+            text-decoration: line-through;
+            font-size: 13px;
+        }
+
+        .value-price-row .price-new {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .value-gst {
+            color: var(--muted);
+            font-size: 11.5px;
+            margin-top: 6px;
+        }
+
+        .value-btn-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .btn-value-outline {
+            background: #fff;
+            color: #150a1e;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        @media(max-width:500px) {
+            .value-btn-row {
+                flex-direction: column;
+            }
+
+            .value-btn-row .btn {
+                width: 100%;
+            }
+        }
+
+        /* ---------- WIN BIG BANNER ---------- */
+        .winbig-banner {
+            padding: 60px 24px 90px;
+            background: var(--bg);
+        }
+
+        .winbig-inner {
+            max-width: var(--max);
+            margin: 0 auto;
+            background: #0d0712;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 56px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .winbig-inner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 55%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.2px, transparent 1.6px);
+            background-size: 11px 11px;
+            -webkit-mask-image: radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.9) 0%, transparent 70%);
+            mask-image: radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.9) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .winbig-inner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 500px 300px at 50% 100%, rgba(150, 50, 220, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .winbig-text,
+        .winbig-btn {
+            position: relative;
+            z-index: 1;
+        }
+
+        .winbig-text {
+            font-size: clamp(16px, 2.2vw, 20px);
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.55;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .winbig-btn {
+            margin-top: 26px;
+        }
     </style>
     <style>
         .quiz-banner {
@@ -3108,6 +3545,8 @@
         <video class="hero-video" autoplay muted loop playsinline>
             <source src="assets/images/fireworks.mp4" type="video/mp4">
         </video>
+        <div class="hero-video-veil" aria-hidden="true"></div>
+
 
         <span class="eyebrow">#Live Event</span>
         <div class="countdown">
@@ -3124,10 +3563,18 @@
                 <div class="lbl">Minutes</div>
             </div>
         </div>
-        <h1>Central India's Largest<br>AI &amp; Algo Conclave</h1>
+        <p class="hero-tagline">Central India's Largest</p>
+        <h1>AI &amp; Algo Trading Conclave</h1>
         <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the
             markets, manage risk and build smarter strategies.</p>
 
+        <div class="hero-pills">
+            <img src="assets/images/pill-1.png" alt="Learn" class="hero-pill-img">
+            <img src="assets/images/pill-2.png" alt="Experience" class="hero-pill-img">
+            <img src="assets/images/pill-3.png" alt="Connect" class="hero-pill-img">
+            <img src="assets/images/pill-4.png" alt="Compete" class="hero-pill-img">
+            <img src="assets/images/pill-5.png" alt="Win" class="hero-pill-img">
+        </div>
         <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
             <div class="info-card">
@@ -3162,13 +3609,13 @@
             </div>
         </div>
     </section>
-    <section class="pricing-sec" id="pricing">
+    {{-- <section class="pricing-sec" id="pricing">
         <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
         <img class="lg-glow lg-glow-beam" src="assets/images/8.png" alt="" aria-hidden="true">
 
         <div class="section-head">
             <h2>Choose Your Way To<br>Experience The Conclave</h2>
-            <p>Same Full-Day Experience, Same Takeaways — Just Special Pricing For Our Arihant Plus Family.</p>
+            <p>Same Full-Day Experience, Same Takeaways — Just Special Pricing For Our ArihantPlus Family.</p>
         </div>
 
         <div class="pricing-grid">
@@ -3176,7 +3623,7 @@
                 <h3>Arihant Users</h3>
                 <div class="price-row">
                     <span class="price-old">₹599</span>
-                    <span class="price-new">₹399</span>
+                    <span class="price-new">₹299</span>
                 </div>
                 <div class="price-gst">Incl 18% GST</div>
                 <hr class="price-divider">
@@ -3255,7 +3702,7 @@
         </div>
 
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
-    </section>
+    </section> --}}
 
     <div class="learn-get-wrap">
         <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
@@ -3263,40 +3710,38 @@
 
         <section class="learn" id="learn">
             <div class="section-head purple">
-                <h2>What You'll Learn</h2>
+                <h2>What You'll Experience</h2>
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/1.png" alt="Prompt AI Like A Pro"></div>
-                    <h3>Prompt AI Like A Pro</h3>
-                    <p>Ask the right questions, get useful answers.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/1.png" alt="AI In Action"></div>
+                    <h3>AI In Action</h3>
+                    <p>Discover how AI can help you research, analyse and make smarter market decisions.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/10.png" alt="Verify Any AI Stock Pick"></div>
-                    <h3>Verify Any AI Stock Pick</h3>
-                    <p>Fact-check AI advice before you act.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/10.png" alt="Live algo demos"></div>
+                    <h3>Live algo demos</h3>
+                    <p>Watch trading strategies being built, tested and demonstrated live.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/2.png" alt="Where AI Still Gets It Wrong">
-                    </div>
-                    <h3>Where AI Still Gets It Wrong</h3>
-                    <p>Spot the blind spots before they cost you.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/2.png" alt="Real trading experiences"></div>
+                    <h3>Real trading experiences</h3>
+                    <p>Learn actionable strategies and frameworks you can take back to the markets.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/3.png" alt="How A Strategy Comes Together">
-                    </div>
-                    <h3>How A Strategy Comes Together</h3>
-                    <p>Watch the logic, live.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/3.png" alt="Meet your trade circle"></div>
+                    <h3>Meet your trade circle</h3>
+                    <p>Network with fellow traders, algo enthusiasts, market experts and investing minds.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/4.png" alt="Live Debate, Real Answers"></div>
+                    <div class="icon-circle"><img src="assets/images/icons/4.png" alt="Compete and win"></div>
+                    <h3>Compete and win</h3>
+                    <p>Put your market knowledge to the test with live quizzes, challenges and lucky draws.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><img src="assets/images/icons/5.png" alt="Live Debate, Real Answers"></div>
                     <h3>Live Debate, Real Answers</h3>
                     <p>AI, algos, and human judgment clash.</p>
-                </div>
-                <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/5.png" alt="How Algo Traders Think"></div>
-                    <h3>How Algo Traders Think</h3>
-                    <p>The mindset behind every trade.</p>
                 </div>
             </div>
         </section>
@@ -3307,38 +3752,36 @@
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/6.png" alt="Ready-To-Use AI Prompts"></div>
-                    <h3>Ready-To-Use AI Prompts</h3>
-                    <p>Prompts for smarter stock research.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/6.png" alt="AI + Algo cheat sheet"></div>
+                    <h3>AI + Algo cheat sheet</h3>
+                    <p>Ready-to-use AI prompts, trading frameworks and practical takeaways.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="The Checklist for AI Picks">
+                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="₹4,000 strategy access at ₹99">
                     </div>
-                    <h3>The Checklist for AI Picks</h3>
-                    <p>Verify any AI-generated stock pick in seconds.</p>
+                    <h3>₹4,000 strategy access at ₹99</h3>
+                    <p>Unlock exclusive Conclave-only Stratzy pricing.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/12.png" alt="Free AI Toolkit"></div>
-                    <h3>Free AI Toolkit</h3>
-                    <p>Tools and a free trial, yours to keep.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/12.png" alt="Exciting rewards"></div>
+                    <h3>Exciting rewards</h3>
+                    <p>Win smartphones, smartwatches, goodies & more through quizzes and lucky draws.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/11.png" alt="A Live-Built Strategy Template">
+                    <div class="icon-circle"><img src="assets/images/icons/11.png" alt="Traders toolkit"></div>
+                    <h3>Traders toolkit</h3>
+                    <p>Take home useful tools, strategy templates and resources from the Conclave.</p>
+                </div>
+                <div class="card">
+                    <div class="icon-circle"><img src="assets/images/icons/8.png" alt="Certificate of participation">
                     </div>
-                    <h3>A Live-Built Strategy Template</h3>
-                    <p>Watch it built live, then take the logic home.</p>
+                    <h3>Certificate of participation</h3>
+                    <p>A certificate for being part of Central India's largest AI & Algo Conclave.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/8.png" alt="Real Answers From A Live Panel">
-                    </div>
-                    <h3>Real Answers From A Live Panel</h3>
-                    <p>Where AI, algos, and human judgment clash.</p>
-                </div>
-                <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/9.png" alt="Certificate of Participation">
-                    </div>
-                    <h3>Certificate of Participation</h3>
-                    <p>Get official recognition of your AI Training.</p>
+                    <div class="icon-circle"><img src="assets/images/icons/9.png" alt="Food & Refreshments"></div>
+                    <h3>Food & Refreshments</h3>
+                    <p>Enjoy a delicious lunch, high tea & snacks throughout the day.</p>
                 </div>
             </div>
             <div class="center-btn left">
@@ -3411,8 +3854,8 @@
         <div class="videos-glow videos-glow-1" aria-hidden="true"></div>
         <div class="videos-glow videos-glow-2" aria-hidden="true"></div>
         <div class="section-head purple">
-            <h2>Watch The Sessions</h2>
-            <p>Highlights, expert talks and strategy breakdowns from past ArihantPLUS conclaves.</p>
+            <h2>SEE ARIHANT PLUS IN ACTION</h2>
+            <p>Master AI, MCP, Algo tools and advanced features with quick, practical videos.</p>
         </div>
 
         <div class="video-layout wrap">
@@ -3467,6 +3910,68 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <section class="value-banner" id="value">
+        <div class="value-inner wrap">
+            <div class="value-left">
+                <h2>One Day.<br>Massive Value.</h2>
+                <p class="value-sub">Join account community link to kyc</p>
+                <ul class="value-checklist">
+                    <li><span class="check">✓</span> Live AI + Algo Demos</li>
+                    <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
+                    <li><span class="check">✓</span> ₹4,999 Stratzy Access @ ₹99*</li>
+                    <li><span class="check">✓</span> Trader Networking</li>
+                    <li><span class="check">✓</span> Expert Sessions</li>
+                    <li><span class="check">✓</span> Quizzes + Big Rewards</li>
+                </ul>
+            </div>
+
+            <div class="value-right">
+                <a href="/register" class="value-card">
+                    <div class="value-card-top">
+                        <span class="value-icon"><img src="assets/images/icon-1.png" alt="ArihantPlus users"></span>
+                        <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h3>ArihantPlus users</h3>
+                    <div class="value-price-row">
+                        <span class="price-old">₹599</span>
+                        <span class="price-new">₹399</span>
+                    </div>
+                    <div class="value-gst">Incl 18% GST</div>
+                </a>
+
+                <a href="/register" class="value-card">
+                    <div class="value-card-top">
+                        <span class="value-icon"><img src="assets/images/icon-2.png" alt="Standard Entry"></span>
+                        <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h3>Standard Entry</h3>
+                    <div class="value-price-row">
+                        <span class="price-old">₹999</span>
+                        <span class="price-new">₹599</span>
+                    </div>
+                    <div class="value-gst">Incl 18% GST</div>
+                </a>
+
+                <div class="value-btn-row">
+                    <a href="/register" class="btn btn-value-outline">Claim Your Spot</a>
+                    <a href="/open-account" class="btn btn-primary">Open a account</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="winbig-banner">
+        <div class="winbig-inner">
+            <p class="winbig-text">🎁 WIN BIG AT THE CONCLAVE! 📱⌚ Participate in the Live Quiz &amp; stand a chance to
+                win Smartphone, Smartwatch &amp; many more exciting prizes</p>
+            <a href="/register" class="btn btn-primary winbig-btn">Claim Your Spot</a>
         </div>
     </section>
 
@@ -3544,6 +4049,8 @@
             <div class="footer-col">
                 <h4>Contact</h4>
                 <ul>
+                    <li><a href="mailto:customersupport@arihantcapital.com">customersupport@arihantcapital.com</a></li>
+                    <li><a href="tel:07314217003">0731-4217003</a></li>
                     <li><a href="mailto:compliance@arihantcapital.com">compliance@arihantcapital.com</a></li>
                     <li><a href="mailto:depository@arihantcapital.com">depository@arihantcapital.com</a></li>
                     <li>601, Atlantis Tower, Plot No. 13A, Scheme No. 78, Indore – 452010</li>
@@ -3684,10 +4191,12 @@
             var overlay = document.getElementById('reserveModal');
             var closeBtn = document.getElementById('modalClose');
             if (!overlay) return;
+
             function openModal() {
                 overlay.classList.add('open');
                 document.body.style.overflow = 'hidden';
             }
+
             function closeModal() {
                 overlay.classList.remove('open');
                 document.body.style.overflow = '';
@@ -3708,10 +4217,12 @@
             var openBtn = document.getElementById('benefitsBtn');
             var closeBtn = document.getElementById('benefitsModalClose');
             if (!overlay || !openBtn || !closeBtn) return;
+
             function openModal() {
                 overlay.classList.add('open');
                 document.body.style.overflow = 'hidden';
             }
+
             function closeModal() {
                 overlay.classList.remove('open');
                 document.body.style.overflow = '';
@@ -3747,18 +4258,42 @@
             });
         })();
 
+        // ---------- Slow down fireworks playback ----------
+        (function () {
+            var v = document.querySelector('.hero-video');
+            if (v) v.playbackRate = 0.6;
+        })();
+
         // ---------- Hero sparkles ----------
         (function () {
             var host = document.getElementById('hero-sparkles');
             if (!host) return;
-            var positions = [
-                { top: '6%', left: '30%' }, { top: '3%', left: '42%' }, { top: '10%', left: '55%' },
-                { top: '2%', left: '66%' }, { top: '14%', left: '22%' }, { top: '8%', left: '75%' }
+            var positions = [{
+                top: '6%'
+                , left: '30%'
+            }, {
+                top: '3%'
+                , left: '42%'
+            }, {
+                top: '10%'
+                , left: '55%'
+            }
+                , {
+                top: '2%'
+                , left: '66%'
+            }, {
+                top: '14%'
+                , left: '22%'
+            }, {
+                top: '8%'
+                , left: '75%'
+            }
             ];
             positions.forEach(function (p, i) {
                 var s = document.createElement('span');
                 s.className = 'spark';
-                s.style.top = p.top; s.style.left = p.left;
+                s.style.top = p.top;
+                s.style.left = p.left;
                 s.style.animationDelay = (i * 0.5) + 's';
                 s.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6z"/></svg>';
                 host.appendChild(s);
@@ -3797,13 +4332,42 @@
         })();
 
         // ---------- Agenda (repeatable data-driven list) ----------
-        var agenda = [
-            { time: "1:45 PM – 2:00 PM", title: "WELCOME & NETWORKING", body: "Meet fellow traders, investors and market enthusiasts before the masterclass begins.", tag: "Opening" },
-            { time: "2:00 PM – 2:20 PM", title: "WHY AI IS CHANGING THE MARKET", body: "A grounded look at where AI genuinely helps traders, and where hype outruns reality.", tag: "Session" },
-            { time: "2:20 PM – 2:45 PM", title: "LIVE AI STOCK SCREENING", body: "Watch an AI-assisted screen built and stress-tested live, step by step.", tag: "Demo" },
-            { time: "2:45 PM – 3:05 PM", title: "ALGO TRADING 101", body: "The core logic behind rule-based strategies, explained without the jargon.", tag: "Session" },
-            { time: "3:05 PM – 3:30 PM", title: "AI VS ALGO VS HUMAN — A LIVE DEBATE", body: "Three approaches to the same trade, argued out loud by people who use them daily.", tag: "Debate" },
-            { time: "3:30 PM – 3:45 PM", title: "Q&A AND CLOSING NOTES", body: "Open floor for questions, plus how to keep building on what you learned today.", tag: "Closing" }
+        var agenda = [{
+            time: "1:45 PM – 2:00 PM"
+            , title: "WELCOME & NETWORKING"
+            , body: "Meet fellow traders, investors and market enthusiasts before the masterclass begins."
+            , tag: "Opening"
+        }
+            , {
+            time: "2:00 PM – 2:20 PM"
+            , title: "WHY AI IS CHANGING THE MARKET"
+            , body: "A grounded look at where AI genuinely helps traders, and where hype outruns reality."
+            , tag: "Session"
+        }
+            , {
+            time: "2:20 PM – 2:45 PM"
+            , title: "LIVE AI STOCK SCREENING"
+            , body: "Watch an AI-assisted screen built and stress-tested live, step by step."
+            , tag: "Demo"
+        }
+            , {
+            time: "2:45 PM – 3:05 PM"
+            , title: "ALGO TRADING 101"
+            , body: "The core logic behind rule-based strategies, explained without the jargon."
+            , tag: "Session"
+        }
+            , {
+            time: "3:05 PM – 3:30 PM"
+            , title: "AI VS ALGO VS HUMAN — A LIVE DEBATE"
+            , body: "Three approaches to the same trade, argued out loud by people who use them daily."
+            , tag: "Debate"
+        }
+            , {
+            time: "3:30 PM – 3:45 PM"
+            , title: "Q&A AND CLOSING NOTES"
+            , body: "Open floor for questions, plus how to keep building on what you learned today."
+            , tag: "Closing"
+        }
         ];
         var agendaHTML = agenda.map(function (a) {
             return '<div class="agenda-item">' +
@@ -3816,18 +4380,61 @@
         if (agendaListEl) agendaListEl.innerHTML = agendaHTML;
 
         (function () {
-            var panelists = [
-                { name: "Vishal Mehta", role: "Algo Trader | Market Educator", img: "assets/images/21.png" },
-                { name: "Saurabh Sisodia", role: "Data Driven Trader", img: "assets/images/23.png" },
-                { name: "Santosh Pasi", role: "Option Trader", img: "assets/images/22.png" }
-            ];
+            var panelists = [{
+                name: "Vishal Mehta"
+                , role: "Algo Trader | Market Educator"
+                , img: "assets/images/21.png"
+                , instagram: "#"
+                , x: "#"
+                , knowMore: "/vishal-mehta"
+            }
+                , {
+                name: "Saurabh Sisodia"
+                , role: "Data Driven Trader"
+                , img: "assets/images/23.png"
+                , instagram: "#"
+                , x: "#"
+                , knowMore: "/saurabh-sisodia"
+            }
+                , {
+                name: "Santosh Pasi"
+                , role: "Option Trader"
+                , img: "assets/images/22.png"
+                , instagram: "#"
+                , x: "#"
+                , knowMore: "/santosh-pasi"
+            }
+                , {
+                name: "Ankit Rai"
+                , role: "Derivatives Trader & Strategy Consultant"
+                , img: "assets/images/24.png"
+                , instagram: "#"
+                , x: "#"
+                , knowMore: "/ankit-rai"
+            }
+                ,];
             var track = document.getElementById('panelistTrack');
             if (!track) return;
 
+            var igSVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>';
+            var xSVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 4l16 16M20 4L4 20"/></svg>';
+
             track.innerHTML = panelists.map(function (p) {
                 return '<div class="panelist-slide">' +
-                    '<div class="panelist-photo-card"><div class="panelist-photo-mask"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"></div></div>' +
-                    '<div class="panelist-info"><h4>' + p.name + '</h4><span>' + p.role + '</span></div>' +
+                    '<div class="panelist-photo-card">' +
+                    '<div class="panelist-photo-mask">' +
+                    '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">' +
+                    '<div class="panelist-photo-shade"></div>' +
+                    '<div class="panelist-info">' +
+                    '<div class="panelist-social">' +
+                    '<a href="' + p.instagram + '" target="_blank" aria-label="' + p.name + ' Instagram">' + igSVG + '</a>' +
+                    '<a href="' + p.x + '" target="_blank" aria-label="' + p.name + ' X">' + xSVG + '</a>' +
+                    '</div>' +
+                    '<h4>' + p.name + '</h4><span>' + p.role + '</span>' +
+                    '<a href="' + p.knowMore + '" class="panelist-know-btn">Know More</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
                     '</div>';
             }).join('');
 
@@ -3848,25 +4455,68 @@
                 nextBtn.disabled = max <= 2 || track.scrollLeft >= max;
             }
 
-            prevBtn.addEventListener('click', function () { track.scrollBy({ left: -cardStep(), behavior: 'smooth' }); });
-            nextBtn.addEventListener('click', function () { track.scrollBy({ left: cardStep(), behavior: 'smooth' }); });
+            prevBtn.addEventListener('click', function () {
+                track.scrollBy({
+                    left: -cardStep()
+                    , behavior: 'smooth'
+                });
+            });
+            nextBtn.addEventListener('click', function () {
+                track.scrollBy({
+                    left: cardStep()
+                    , behavior: 'smooth'
+                });
+            });
             track.addEventListener('scroll', updateArrows);
             window.addEventListener('resize', updateArrows);
             updateArrows();
         })();
 
         // ---------- FAQ ----------
-        var faqs = [
-            { q: "Who should attend this conclave?", a: "Anyone curious about how AI and algorithmic trading are changing the markets — whether you're a complete beginner or already trading. No prior coding or algo experience is required." },
-            { q: "Do I need any trading experience to attend?", a: "No. The sessions are designed to be followed by both beginners and experienced traders — from live, hands-on walkthroughs to deeper discussions for those already trading." },
-            { q: "Will this be practical, or just theory?", a: "Practical. You'll build a live AI research routine on your own phone, watch a trading strategy get built and back tested live on stage, and walk away with tools you can use the same evening." },
-            { q: "What exactly will I get after attending?", a: "A set of ready-to-use AI prompts, a strategy template from the live build session, access to a free AI toolkit and partner subscription, and a certificate of participation." },
-            { q: "Do I need to bring a laptop?", a: "No laptop needed — most hands-on sessions are designed to be followed along on your phone. We'll share specific instructions closer to the event date." },
-            { q: "Is there a certificate of participation?", a: "Yes, all attendees receive a certificate at the end of the day." },
-            { q: "Will there be food and breaks included?", a: "Yes, the ticket includes complimentary meal and tea breaks throughout the day." },
-            { q: "Is there an entertainment/experience element, or is it only sessions?", a: "Yes — beyond the sessions, we've planned an experiential element to make this more than just a lecture-style event. Details will be shared closer to the date." },
-            { q: "Are there any partner/sponsor stalls at the event?", a: "Yes, you'll have access to an Experience Zone with partner stalls where you can explore tools and platforms relevant to AI and algo trading." },
-            { q: "What is the refund/cancellation policy?", a: "We follow a No Refund Policy." }
+        var faqs = [{
+            q: "Who should attend this conclave?"
+            , a: "Anyone curious about how AI and algorithmic trading are changing the markets — whether you're a complete beginner or already trading. No prior coding or algo experience is required."
+        }
+            , {
+            q: "Do I need any trading experience to attend?"
+            , a: "No. The sessions are designed to be followed by both beginners and experienced traders — from live, hands-on walkthroughs to deeper discussions for those already trading."
+        }
+            , {
+            q: "Will this be practical, or just theory?"
+            , a: "Practical. You'll build a live AI research routine on your own phone, watch a trading strategy get built and back tested live on stage, and walk away with tools you can use the same evening."
+        }
+            , {
+            q: "What exactly will I get after attending?"
+            , a: "A set of ready-to-use AI prompts, a strategy template from the live build session, access to a free AI toolkit and partner subscription, and a certificate of participation."
+        }
+            , {
+            q: "Do I need to bring a laptop?"
+            , a: "No laptop needed — most hands-on sessions are designed to be followed along on your phone. We'll share specific instructions closer to the event date."
+        }
+            , {
+            q: "Is there a certificate of participation?"
+            , a: "Yes, all attendees receive a certificate at the end of the day."
+        }
+            , {
+            q: "Will there be food and breaks included?"
+            , a: "Yes! Your ticket includes complimentary lunch, high tea, and snack breaks throughout the event."
+        }
+            , {
+            q: "Is there an entertainment/experience element, or is it only sessions?"
+            , a: "Yes — beyond the sessions, we've planned an experiential element to make this more than just a lecture-style event. Details will be shared closer to the date."
+        }
+            , {
+            q: "What is the difference between a client and a non-client?"
+            , a: "A Client is an individual who trades through Arihant Capital and enjoys the privileges and benefits associated with our events and financial offerings. A Non-Client is an individual who is eligible to avail of these privileges and benefits upon associating with Arihant Capital."
+        }
+            , {
+            q: "Are there any partner/sponsor stalls at the event?"
+            , a: "Yes, you'll have access to an Experience Zone with partner stalls where you can explore tools and platforms relevant to AI and algo trading."
+        }
+            , {
+            q: "What is the refund/cancellation policy?"
+            , a: "We follow a No Refund Policy."
+        }
         ];
         document.getElementById('faq-list').innerHTML = faqs.map(function (f, i) {
             return '<div class="faq-item' + (i === 1 ? ' open' : '') + '">' +
@@ -3887,12 +4537,36 @@
             if (!frameWrap || !playlistHost) return;
 
             // Replace "id" with real YouTube video IDs (the part after ?v= in the URL).
-            var videos = [
-                { id: "bY89Pvsefzc", title: "SEBI's New Algo Trading Rules Explained", tag: "Regulation", duration: "18:24" },
-                { id: "w_mtfEx-rCI", title: "What If Your Next Investment Decision Had An AI Thinking With You?", tag: "AI Insight", duration: "12:10" },
-                { id: "ADQXJmZYFOc", title: "अरिहंतप्लस MCP को AI चैटबॉट्स से कनेक्ट करना सीखें", tag: "Tutorial", duration: "15:47" },
-                { id: "BKACdyjnx8w", title: "Don't Miss Trades! Auto-Login To Stratzy Algo Via ArihantPlus", tag: "Quick Tip", duration: "24:02" },
-                { id: "rUTS-bKB5W4", title: "How To Setup Algo Strategies Via Arihant Plus App", tag: "Tutorial", duration: "9:35" }
+            var videos = [{
+                id: "bY89Pvsefzc"
+                , title: "SEBI's New Algo Trading Rules Explained"
+                , tag: "Regulation"
+                , duration: "18:24"
+            }
+                , {
+                id: "w_mtfEx-rCI"
+                , title: "What If Your Next Investment Decision Had An AI Thinking With You?"
+                , tag: "AI Insight"
+                , duration: "12:10"
+            }
+                , {
+                id: "ADQXJmZYFOc"
+                , title: "अरिहंतप्लस MCP को AI चैटबॉट्स से कनेक्ट करना सीखें"
+                , tag: "Tutorial"
+                , duration: "15:47"
+            }
+                , {
+                id: "BKACdyjnx8w"
+                , title: "Don't Miss Trades! Auto-Login To Stratzy Algo Via ArihantPlus"
+                , tag: "Quick Tip"
+                , duration: "24:02"
+            }
+                , {
+                id: "rUTS-bKB5W4"
+                , title: "How To Setup Algo Strategies Via ArihantPlus App"
+                , tag: "Tutorial"
+                , duration: "9:35"
+            }
             ];
 
             var playSVG = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
@@ -3971,24 +4645,91 @@
             var BATCH_SIZE = 8;
 
             // Data-driven gallery — swap the img paths for real event photos later.
-            var galleryItems = [
-                { img: "assets/images/gallery/1.jpg", name: "Opening Keynote — AI Trading Summit", label: "Conclave" },
-                { img: "assets/images/gallery/2.jpg", name: "Live AI Screening Demo", label: "Workshop" },
-                { img: "assets/images/gallery/3.jpg", name: "Networking Lounge", label: "Community" },
-                { img: "assets/images/gallery/4.jpg", name: "Panel Discussion On Algo Trading", label: "Conclave" },
-                { img: "assets/images/gallery/5.jpg", name: "Algo Trading Bootcamp", label: "Workshop" },
-                { img: "assets/images/gallery/6.jpg", name: "Trader Meetup Mixer", label: "Community" },
-                { img: "assets/images/gallery/7.jpg", name: "Award Ceremony", label: "Conclave" },
-                { img: "assets/images/gallery/8.jpg", name: "Hands-On Charting Session", label: "Workshop" },
-                { img: "assets/images/gallery/9.jpg", name: "Community Q&A", label: "Community" },
-                { img: "assets/images/gallery/10.jpg", name: "Expert Fireside Chat", label: "Conclave" },
-                { img: "assets/images/gallery/11.jpg", name: "Strategy Building Workshop", label: "Workshop" },
-                { img: "assets/images/gallery/12.jpg", name: "Closing Celebration", label: "Community" },
-                { img: "assets/images/gallery/13.jpg", name: "Behind The Scenes", label: "Community" },
-                { img: "assets/images/gallery/14.jpg", name: "Trading Floor Walkthrough", label: "Conclave" },
-                { img: "assets/images/gallery/15.jpg", name: "Speaker Meet & Greet", label: "Workshop" },
-                { img: "assets/images/gallery/16.jpg", name: "Attendee Highlights", label: "Community" },
-                { img: "assets/images/gallery/17.jpg", name: "Group Photo", label: "Conclave" }
+            var galleryItems = [{
+                img: "assets/images/gallery/1.jpg"
+                , name: "Opening Keynote — AI Trading Summit"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/2.jpg"
+                , name: "Live AI Screening Demo"
+                , label: "Workshop"
+            }
+                , {
+                img: "assets/images/gallery/3.jpg"
+                , name: "Networking Lounge"
+                , label: "Community"
+            }
+                , {
+                img: "assets/images/gallery/4.jpg"
+                , name: "Panel Discussion On Algo Trading"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/5.jpg"
+                , name: "Algo Trading Bootcamp"
+                , label: "Workshop"
+            }
+                , {
+                img: "assets/images/gallery/6.jpg"
+                , name: "Trader Meetup Mixer"
+                , label: "Community"
+            }
+                , {
+                img: "assets/images/gallery/7.jpg"
+                , name: "Award Ceremony"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/8.jpg"
+                , name: "Hands-On Charting Session"
+                , label: "Workshop"
+            }
+                , {
+                img: "assets/images/gallery/9.jpg"
+                , name: "Community Q&A"
+                , label: "Community"
+            }
+                , {
+                img: "assets/images/gallery/10.jpg"
+                , name: "Expert Fireside Chat"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/11.jpg"
+                , name: "Strategy Building Workshop"
+                , label: "Workshop"
+            }
+                , {
+                img: "assets/images/gallery/12.jpg"
+                , name: "Closing Celebration"
+                , label: "Community"
+            }
+                , {
+                img: "assets/images/gallery/13.jpg"
+                , name: "Behind The Scenes"
+                , label: "Community"
+            }
+                , {
+                img: "assets/images/gallery/14.jpg"
+                , name: "Trading Floor Walkthrough"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/15.jpg"
+                , name: "Speaker Meet & Greet"
+                , label: "Workshop"
+            }
+                , {
+                img: "assets/images/gallery/16.jpg"
+                , name: "Attendee Highlights"
+                , label: "Community"
+            }
+                , {
+                img: "assets/images/gallery/17.jpg"
+                , name: "Group Photo"
+                , label: "Conclave"
+            }
             ];
 
             var zoomSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.35-4.35" stroke-linecap="round"/><path d="M10.5 8v5M8 10.5h5" stroke-linecap="round"/></svg>';
@@ -4015,7 +4756,9 @@
 
             // ---- Scroll reveal (only for the currently visible items) ----
             if (reduceMotion || !('IntersectionObserver' in window)) {
-                itemEls.forEach(function (el) { if (!el.classList.contains('hidden')) el.classList.add('reveal'); });
+                itemEls.forEach(function (el) {
+                    if (!el.classList.contains('hidden')) el.classList.add('reveal');
+                });
             } else {
                 var revealCount = 0;
                 var io = new IntersectionObserver(function (entries) {
@@ -4027,8 +4770,13 @@
                             io.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-                itemEls.forEach(function (el) { if (!el.classList.contains('hidden')) io.observe(el); });
+                }, {
+                    threshold: 0.15
+                    , rootMargin: '0px 0px -40px 0px'
+                });
+                itemEls.forEach(function (el) {
+                    if (!el.classList.contains('hidden')) io.observe(el);
+                });
             }
 
             // ---- Load more (replaces filtering) ----
@@ -4038,8 +4786,13 @@
                     next.forEach(function (el, i) {
                         el.classList.remove('hidden');
                         el.style.transitionDelay = Math.min(i * 70, 420) + 'ms';
-                        if (reduceMotion) { el.classList.add('reveal'); }
-                        else { setTimeout(function () { el.classList.add('reveal'); }, 20); }
+                        if (reduceMotion) {
+                            el.classList.add('reveal');
+                        } else {
+                            setTimeout(function () {
+                                el.classList.add('reveal');
+                            }, 20);
+                        }
                     });
                     shownCount += next.length;
                     if (shownCount >= itemEls.length) {
@@ -4103,8 +4856,12 @@
             });
 
             lightboxClose.addEventListener('click', closeLightbox);
-            lightboxPrev.addEventListener('click', function () { step(-1); });
-            lightboxNext.addEventListener('click', function () { step(1); });
+            lightboxPrev.addEventListener('click', function () {
+                step(-1);
+            });
+            lightboxNext.addEventListener('click', function () {
+                step(1);
+            });
             lightbox.addEventListener('click', function (e) {
                 if (e.target === lightbox) closeLightbox();
             });
@@ -4116,6 +4873,7 @@
             });
 
         })();
+
     </script>
 </body>
 

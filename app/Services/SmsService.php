@@ -69,7 +69,7 @@ class SmsService
 
         $phone = $this->normalizePhone($phone);
 
-        $message = "Thank you for registering at ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Labh Mandapam, Indore. Your registration is confirmed. Transaction ID: {$transactionId}, Amount: Rs.{$amount}, Payment Mode: {$paymentMode}. Arihant Capital Markets Limited";
+        $message = "ARIHANT PLUS AI & ALGO CONCLAVE: Your registration has been successfully confirmed. Transaction ID: {$transactionId}. Amount paid: Rs {$amount}. Payment Mode: {$paymentMode}. - Arihant Capital Markets Limited";
 
         return $this->dispatch($phone, $message);
     }
