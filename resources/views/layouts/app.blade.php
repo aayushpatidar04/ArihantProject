@@ -102,7 +102,7 @@
     <header>
         <div class="nav">
             <div style="display: flex; align-items: center;">
-                <a href="{{ route('index') }}" class="logo" style="margin-right: 50px;"><img src="{{ asset('assets/images/logo.png') }}" alt="ArihantPLUS" class="logo-img"></a>
+                <a href="{{ route('index') }}" class="logo" style="margin-right: 50px;"><img src="{{ asset('assets/images/logo-2.png') }}" alt="ArihantPLUS" class="logo-img"></a>
                 <nav class="links">
                     <a href="{{ route('index') }}#home">Home</a>
                     <a href="{{ route('index') }}#speaker">Speaker</a>
@@ -163,7 +163,7 @@
         <div class="footer-main">
             <div class="footer-col brand-col">
                 <div class="footer-logo">
-                    <a href="{{ route('index') }}" class="logo"><img src="{{ asset('assets/images/logo.png') }}" alt="ArihantPLUS" class="logo-img"></a>
+                    <a href="{{ route('index') }}" class="logo"><img src="{{ asset('assets/images/logo-2.png') }}" alt="ArihantPLUS" class="logo-img"></a>
                 </div>
                 <p class="footer-desc">AI & Algo Conclave 2026 — Empowering investors and traders with cutting-edge technology.</p>
                 <div class="footer-social">

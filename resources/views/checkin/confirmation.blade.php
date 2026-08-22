@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="card">
-        <img src="{{ asset('assets/images/logo.png') }}" alt="ArihantPLUS" class="logo">
+        <img src="{{ asset('assets/images/logo-2.png') }}" alt="ArihantPLUS" class="logo">
         <h1>Welcome, {{ $reg->full_name }}!</h1>
         <p>Your seat has been allocated.</p>
         @if($seat)

@@ -393,60 +393,130 @@
         }
 
         /* ---------- RESPONSIVE ---------- */
-        @media (max-width: 900px) {
-            .speaker-grid {
-                grid-template-columns: 1fr;
-                gap: 36px;
-                text-align: center;
-            }
+       @media (max-width: 900px) {
+    .speaker-page {
+        padding: 56px 16px 70px;
+    }
 
-            .speaker-photo-card {
-                position: static;
-                max-width: 280px;
-                aspect-ratio: 0.85;
-                margin: 0 auto;
-            }
+    .speaker-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+        text-align: center;
+        background: linear-gradient(165deg, #170b22 0%, #0b0511 60%, #0a0410 100%);
+        border: 1px solid rgba(184, 102, 247, 0.35);
+        border-radius: 28px;
+        padding: 40px 24px 34px;
+        box-shadow:
+            0 0 0 1px rgba(184, 102, 247, 0.12),
+            0 30px 80px rgba(120, 40, 200, 0.35);
+    }
 
-            .speaker-bio p,
-            .highlight-grid {
-                margin-left: auto;
-                margin-right: auto;
-            }
+    /* was the bug: position:static removed the positioning context that
+       .speaker-photo-mask (position:absolute) relies on, causing it to
+       balloon to full page height. Fixed to position:relative, and
+       restyled as a small circular avatar to match the card design. */
+    .speaker-photo-card {
+        position: relative;
+        top: auto;
+        width: 96px;
+        height: 96px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        margin: 0 auto 6px;
+        border: 3px solid rgba(184, 102, 247, 0.55);
+        box-shadow: 0 0 0 6px rgba(184, 102, 247, 0.14);
+    }
 
-            .highlight-grid {
-                text-align: left;
-                grid-template-columns: 1fr;
-            }
+    .speaker-photo-card::before {
+        display: none;
+    }
 
-            .speaker-social,
-            .speaker-actions {
-                justify-content: center;
-            }
-        }
+    .speaker-photo-mask {
+        border-radius: 50%;
+    }
 
-        @media (max-width: 480px) {
-            .speaker-page {
-                padding: 60px 20px 80px;
-            }
+    .speaker-photo-shade {
+        display: none;
+    }
 
-            .speaker-photo-card {
-                max-width: 230px;
-            }
+    .speaker-content {
+        text-align: center;
+    }
 
-            .speaker-content h1 {
-                margin-top: 14px;
-            }
+    .speaker-content .eyebrow {
+        margin-top: 18px;
+    }
 
-            .speaker-bio p {
-                font-size: 14px;
-            }
+    .speaker-role {
+        max-width: 320px;
+        margin: 10px auto 0;
+    }
 
-            .speaker-social a {
-                width: 42px;
-                height: 42px;
-                border-radius: 12px;
-            }
-        }
+    .speaker-divider {
+        margin: 22px auto;
+    }
+
+    .speaker-bio {
+        text-align: left;
+    }
+
+    .speaker-bio p {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+    }
+
+    .highlight-grid {
+        text-align: left;
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        margin-top: 4px;
+    }
+
+    .speaker-social,
+    .speaker-actions {
+        justify-content: center;
+    }
+
+    .speaker-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .speaker-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .speaker-page {
+        padding: 44px 14px 60px;
+    }
+
+    .speaker-grid {
+        padding: 32px 18px 28px;
+        border-radius: 22px;
+    }
+
+    .speaker-photo-card {
+        width: 84px;
+        height: 84px;
+    }
+
+    .speaker-content h1 {
+        margin-top: 14px;
+    }
+
+    .speaker-bio p {
+        font-size: 14px;
+    }
+
+    .speaker-social a {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+}
 
         /* ---------- FOOTER ---------- */
         footer {

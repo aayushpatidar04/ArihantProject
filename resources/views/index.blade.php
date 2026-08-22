@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/png" href="assets/images/favicon-2.png">
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
@@ -3223,7 +3223,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
-            align-items: center;
+            align-items: stretch;
             max-width: var(--max);
             margin: 0 auto;
         }
@@ -3283,6 +3283,32 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            height: 100%;
+        }
+
+        .value-right .value-card {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .value-cta-row {
+            max-width: var(--max);
+            margin: 24px auto 0;
+            padding: 0 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        @media(max-width:900px) {
+            .value-cta-row {
+                justify-content: center;
+            }
+
+            .value-cta-row .btn {
+                width: 100%;
+            }
         }
 
         .value-card {
@@ -3363,88 +3389,98 @@
             margin-top: 6px;
         }
 
-        .value-btn-row {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-top: 6px;
-        }
-
-        .btn-value-outline {
-            background: #fff;
-            color: #150a1e;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-        }
-
-        @media(max-width:500px) {
-            .value-btn-row {
-                flex-direction: column;
-            }
-
-            .value-btn-row .btn {
-                width: 100%;
-            }
-        }
-
-        /* ---------- WIN BIG BANNER ---------- */
+        /* ---------- WIN BIG TICKER ---------- */
         .winbig-banner {
-            padding: 60px 24px 90px;
-            background: var(--bg);
-        }
-
-        .winbig-inner {
-            max-width: var(--max);
-            margin: 0 auto;
-            background: #0d0712;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 56px 40px;
-            text-align: center;
-            position: relative;
+            width: 100%;
             overflow: hidden;
+            padding: 18px 0;
+            background: var(--bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        .winbig-inner::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 55%;
-            height: 100%;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1.2px, transparent 1.6px);
-            background-size: 11px 11px;
-            -webkit-mask-image: radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.9) 0%, transparent 70%);
-            mask-image: radial-gradient(circle at 0% 50%, rgba(0, 0, 0, 0.9) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: tickerScroll 22s linear infinite;
         }
 
-        .winbig-inner::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse 500px 300px at 50% 100%, rgba(150, 50, 220, 0.25) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
+        .ticker-group {
+            display: flex;
+            flex-shrink: 0;
+            padding-right: 60px;
         }
 
-        .winbig-text,
-        .winbig-btn {
-            position: relative;
-            z-index: 1;
-        }
-
-        .winbig-text {
-            font-size: clamp(16px, 2.2vw, 20px);
+        .ticker-item {
+            font-size: clamp(14px, 1.6vw, 18px);
             font-weight: 600;
             color: var(--ink);
-            line-height: 1.55;
-            max-width: 760px;
-            margin: 0 auto;
+            white-space: nowrap;
+            letter-spacing: .01em;
         }
 
-        .winbig-btn {
-            margin-top: 26px;
+        @keyframes tickerScroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @media(max-width:700px) {
+            .winbig-banner {
+                padding: 14px 0;
+            }
+
+            .ticker-group {
+                padding-right: 40px;
+            }
+        }
+
+        .value-heading {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .value-heading h2 {
+            font-size: clamp(32px, 5.2vw, 52px);
+            font-weight: 800;
+            letter-spacing: -.01em;
+            color: var(--purple-1);
+            text-shadow: 0 0 40px rgba(184, 102, 247, 0.45);
+        }
+
+        @media(max-width:600px) {
+            .value-heading {
+                margin-bottom: 32px;
+            }
+        }
+
+        .value-left-card {
+            background: #0d0712;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px 34px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media(max-width:600px) {
+            .value-left-card {
+                padding: 26px 22px;
+            }
+        }
+
+        @media(max-width:900px) {
+
+            .value-left-card,
+            .value-right {
+                height: auto;
+            }
         }
     </style>
     <style>
@@ -3490,7 +3526,7 @@
     <header>
         <div class="nav">
             <div style="display: flex; align-items: center;">
-                <div class="logo" style="margin-right: 50px;"><img src="assets/images/logo.png" alt="ArihantPLUS"
+                <div class="logo" style="margin-right: 50px;"><img src="assets/images/logo-2.png" alt="ArihantPLUS"
                         class="logo-img"></div>
                 <nav class="links">
                     <a href="#home">Home</a>
@@ -3569,11 +3605,11 @@
             markets, manage risk and build smarter strategies.</p>
 
         <div class="hero-pills">
-            <img src="assets/images/pill-1.png" alt="Learn" class="hero-pill-img">
-            <img src="assets/images/pill-2.png" alt="Experience" class="hero-pill-img">
-            <img src="assets/images/pill-3.png" alt="Connect" class="hero-pill-img">
-            <img src="assets/images/pill-4.png" alt="Compete" class="hero-pill-img">
-            <img src="assets/images/pill-5.png" alt="Win" class="hero-pill-img">
+            <img src="assets/images/pill-2.png" alt="Learn" class="hero-pill-img">
+            <img src="assets/images/pill-3.png" alt="Experience" class="hero-pill-img">
+            <img src="assets/images/pill-4.png" alt="Connect" class="hero-pill-img">
+            <img src="assets/images/pill-5.png" alt="Compete" class="hero-pill-img">
+            <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
         </div>
         <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
@@ -3603,7 +3639,7 @@
                                 <path d="M3 11l18-7-7 18-2.5-7.5L3 11z" stroke-linejoin="round" />
                             </svg>
                         </span>
-                        <div>Venue<br><strong id="venueText">Indore</strong></div>
+                        <div>Venue<br><strong id="venueText">Marriott Hotel, Indore</strong></div>
                     </div>
                 </div>
             </div>
@@ -3692,15 +3728,6 @@
             </div>
         </div>
 
-        <div class="quiz-banner">
-            <div class="quiz-label">🎁 Exclusive Giveaway</div>
-            <div class="quiz-text">
-                Participate in the Quiz and get a chance to win prizes like a <span>Mobile Phone</span> &
-                <span>Smartwatch</span>! 🎉🏆
-            </div>
-            <div class="quiz-divider"></div>
-        </div>
-
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
     </section> --}}
 
@@ -3757,9 +3784,9 @@
                     <p>Ready-to-use AI prompts, trading frameworks and practical takeaways.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="₹4,000 strategy access at ₹99">
+                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="₹4,999 Stratzy access at ₹999">
                     </div>
-                    <h3>₹4,000 strategy access at ₹99</h3>
+                    <h3>₹4,999 Stratzy access at ₹99</h3>
                     <p>Unlock exclusive Conclave-only Stratzy pricing.</p>
                 </div>
                 <div class="card">
@@ -3832,6 +3859,77 @@
         </div>
 
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+    </section>
+
+    <section class="value-banner" id="value">
+        <div class="value-heading wrap">
+            <h2>Pricing</h2>
+        </div>
+        <div class="value-inner wrap">
+            <div class="value-left value-left-card">
+                <h2>One Day.<br>Massive Value.</h2>
+
+                <ul class="value-checklist">
+                    <li><span class="check">✓</span> Live AI + Algo Demos</li>
+                    <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
+                    <li><span class="check">✓</span> ₹4,999 Stratzy Access @ ₹99*</li>
+                    <li><span class="check">✓</span> Trader Networking</li>
+                    <li><span class="check">✓</span> Expert Sessions</li>
+                    <li><span class="check">✓</span> Quizzes + Big Rewards</li>
+                </ul>
+            </div>
+
+            <div class="value-right">
+                <a href="/register" class="value-card">
+                    <div class="value-card-top">
+                        <span class="value-icon"><img src="assets/images/icon-1.png" alt="ArihantPlus users"></span>
+                        <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h3>ArihantPlus users</h3>
+                    <div class="value-price-row">
+                        <span class="price-old">₹599</span>
+                        <span class="price-new">₹399</span>
+                    </div>
+                    <div class="value-gst">Incl 18% GST</div>
+                </a>
+
+                <a href="/register" class="value-card">
+                    <div class="value-card-top">
+                        <span class="value-icon"><img src="assets/images/icon-2.png" alt="Standard Entry"></span>
+                        <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h3>Regular Entry</h3> <br>
+                    <h3>For Non-Arihant users</h3>
+                    <div class="value-price-row">
+                        <span class="price-old">₹999</span>
+                        <span class="price-new">₹599</span>
+                    </div>
+                    <div class="value-gst">Incl 18% GST</div>
+                </a>
+
+            </div>
+        </div>
+
+        <div class="value-cta-row">
+            <a href="/register" class="btn btn-primary">Claim Your Spot</a>
+        </div>
+    </section>
+
+    <section class="winbig-banner">
+        <div class="ticker-track" id="tickerTrack">
+            <div class="ticker-group">
+                <span class="ticker-item">🎁 WIN BIG AT THE CONCLAVE! 📱⌚ Participate in the Live Quiz &amp; stand a
+                    chance to win Smartphone, Smartwatch &amp; many more exciting prizes</span>
+            </div>
+            <div class="ticker-group" aria-hidden="true">
+                <span class="ticker-item">🎁 WIN BIG AT THE CONCLAVE! 📱⌚ Participate in the Live Quiz &amp; stand a
+                    chance to win Smartphone, Smartwatch &amp; many more exciting prizes</span>
+            </div>
+        </div>
     </section>
 
     <section class="gallery" id="gallery">
@@ -3913,69 +4011,6 @@
         </div>
     </section>
 
-    <section class="value-banner" id="value">
-        <div class="value-inner wrap">
-            <div class="value-left">
-                <h2>One Day.<br>Massive Value.</h2>
-                <p class="value-sub">Join account community link to kyc</p>
-                <ul class="value-checklist">
-                    <li><span class="check">✓</span> Live AI + Algo Demos</li>
-                    <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
-                    <li><span class="check">✓</span> ₹4,999 Stratzy Access @ ₹99*</li>
-                    <li><span class="check">✓</span> Trader Networking</li>
-                    <li><span class="check">✓</span> Expert Sessions</li>
-                    <li><span class="check">✓</span> Quizzes + Big Rewards</li>
-                </ul>
-            </div>
-
-            <div class="value-right">
-                <a href="/register" class="value-card">
-                    <div class="value-card-top">
-                        <span class="value-icon"><img src="assets/images/icon-1.png" alt="ArihantPlus users"></span>
-                        <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>ArihantPlus users</h3>
-                    <div class="value-price-row">
-                        <span class="price-old">₹599</span>
-                        <span class="price-new">₹399</span>
-                    </div>
-                    <div class="value-gst">Incl 18% GST</div>
-                </a>
-
-                <a href="/register" class="value-card">
-                    <div class="value-card-top">
-                        <span class="value-icon"><img src="assets/images/icon-2.png" alt="Standard Entry"></span>
-                        <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </div>
-                    <h3>Standard Entry</h3>
-                    <div class="value-price-row">
-                        <span class="price-old">₹999</span>
-                        <span class="price-new">₹599</span>
-                    </div>
-                    <div class="value-gst">Incl 18% GST</div>
-                </a>
-
-                <div class="value-btn-row">
-                    <a href="/register" class="btn btn-value-outline">Claim Your Spot</a>
-                    <a href="/open-account" class="btn btn-primary">Open a account</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="winbig-banner">
-        <div class="winbig-inner">
-            <p class="winbig-text">🎁 WIN BIG AT THE CONCLAVE! 📱⌚ Participate in the Live Quiz &amp; stand a chance to
-                win Smartphone, Smartwatch &amp; many more exciting prizes</p>
-            <a href="/register" class="btn btn-primary winbig-btn">Claim Your Spot</a>
-        </div>
-    </section>
-
-
     <section class="faq" id="faq">
         <div class="faq-inner">
             <div class="faq-lead">
@@ -3992,7 +4027,7 @@
         <div class="footer-main">
             <div class="footer-col brand-col">
                 <div class="footer-logo">
-                    <div class="logo"><img src="assets/images/logo.png" alt="ArihantPLUS" class="logo-img"></div>
+                    <div class="logo"><img src="assets/images/logo-2.png" alt="ArihantPLUS" class="logo-img"></div>
                 </div>
                 <p class="footer-desc">AI & Algo Conclave 2026 — Empowering investors and traders with cutting-edge
                     technology.</p>
@@ -4038,10 +4073,10 @@
             <div class="footer-col">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="{{ route('event.policy') }}">Event Policy</a></li>
+                    {{-- <li><a href="{{ route('event.policy') }}">Event Policy</a></li>
                     <li><a href="{{ route('payment.terms') }}">Payment Terms</a></li>
                     <li><a href="{{ route('cookie.policy') }}">Cookie Policy</a></li>
-                    <li><a href="{{ route('disclaimer') }}">Disclaimer & Risk Disclosure</a></li>
+                    <li><a href="{{ route('disclaimer') }}">Disclaimer & Risk Disclosure</a></li> --}}
                     <li><a href="/login">Login</a></li>
                 </ul>
             </div>
@@ -4316,20 +4351,7 @@
             tick();
             setInterval(tick, 1000 * 30);
         })();
-        // ---------- Venue hover swap ----------
-        (function () {
-            var field = document.getElementById('venueField');
-            var text = document.getElementById('venueText');
-            if (!field || !text) return;
-            var shortText = "Indore";
-            var fullText = "Mariott Hotel, Indore";
-            field.addEventListener('mouseenter', function () {
-                text.textContent = fullText;
-            });
-            field.addEventListener('mouseleave', function () {
-                text.textContent = shortText;
-            });
-        })();
+
 
         // ---------- Agenda (repeatable data-driven list) ----------
         var agenda = [{
@@ -4384,42 +4406,61 @@
                 name: "Vishal Mehta"
                 , role: "Algo Trader | Market Educator"
                 , img: "assets/images/21.png"
-                , instagram: "#"
-                , x: "#"
+                , socials: [
+                    { type: "youtube", url: "https://www.youtube.com/@vishalmehta_cmt" },
+                    { type: "x", url: "https://x.com/vishalmehta29" },
+                    { type: "linkedin", url: "https://www.linkedin.com/in/vishalmehta-cmt/" },
+                    { type: "instagram", url: "https://www.instagram.com/vishal_mehta_cmt/" }
+                ]
                 , knowMore: "/vishal-mehta"
             }
                 , {
                 name: "Saurabh Sisodia"
                 , role: "Data Driven Trader"
                 , img: "assets/images/23.png"
-                , instagram: "#"
-                , x: "#"
+                , socials: [
+                    { type: "linkedin", url: "https://www.linkedin.com/in/sourabhsiso/" },
+                    { type: "x", url: "https://x.com/sourabhsiso19?lang=en" },
+                    { type: "instagram", url: "https://www.instagram.com/tradewithsourabhsisodiya/?hl=en" }
+                ]
                 , knowMore: "/saurabh-sisodia"
             }
                 , {
                 name: "Santosh Pasi"
                 , role: "Option Trader"
                 , img: "assets/images/22.png"
-                , instagram: "#"
-                , x: "#"
+                , socials: [
+                    { type: "x", url: "https://x.com/SantoshPasi?lang=ens" }
+                ]
                 , knowMore: "/santosh-pasi"
             }
                 , {
                 name: "Ankit Rai"
                 , role: "Derivatives Trader & Strategy Consultant"
                 , img: "assets/images/24.png"
-                , instagram: "#"
-                , x: "#"
+                , socials: [
+                    { type: "x", url: "https://x.com/AnkitRai259" }
+                ]
                 , knowMore: "/ankit-rai"
             }
                 ,];
             var track = document.getElementById('panelistTrack');
             if (!track) return;
 
-            var igSVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>';
-            var xSVG = '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 4l16 16M20 4L4 20"/></svg>';
+            var socialSVGs = {
+                instagram: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>',
+                x: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 4l16 16M20 4L4 20"/></svg>',
+                linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10v7M7 7v.01M11 17v-4.5a2 2 0 014-.2M15 17v-4.5"/></svg>',
+                youtube: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg>'
+            };
 
             track.innerHTML = panelists.map(function (p) {
+                var socialLinks = (p.socials || []).map(function (s) {
+                    var icon = socialSVGs[s.type];
+                    if (!icon) return '';
+                    return '<a href="' + s.url + '" target="_blank" aria-label="' + p.name + ' ' + s.type + '">' + icon + '</a>';
+                }).join('');
+
                 return '<div class="panelist-slide">' +
                     '<div class="panelist-photo-card">' +
                     '<div class="panelist-photo-mask">' +
@@ -4427,8 +4468,7 @@
                     '<div class="panelist-photo-shade"></div>' +
                     '<div class="panelist-info">' +
                     '<div class="panelist-social">' +
-                    '<a href="' + p.instagram + '" target="_blank" aria-label="' + p.name + ' Instagram">' + igSVG + '</a>' +
-                    '<a href="' + p.x + '" target="_blank" aria-label="' + p.name + ' X">' + xSVG + '</a>' +
+                    socialLinks +
                     '</div>' +
                     '<h4>' + p.name + '</h4><span>' + p.role + '</span>' +
                     '<a href="' + p.knowMore + '" class="panelist-know-btn">Know More</a>' +
@@ -4538,10 +4578,16 @@
 
             // Replace "id" with real YouTube video IDs (the part after ?v= in the URL).
             var videos = [{
-                id: "bY89Pvsefzc"
-                , title: "SEBI's New Algo Trading Rules Explained"
-                , tag: "Regulation"
-                , duration: "18:24"
+                id: "yqxc18lRPCo"
+                , title: "How to Research & Trade Using AI"
+                , tag: "Featured"
+                , duration: "0:00"
+            }
+                , {
+                id: "7KVdASoLPAs"
+                , title: "Connect Your Demat to AI"
+                , tag: "Featured"
+                , duration: "0:00"
             }
                 , {
                 id: "w_mtfEx-rCI"
