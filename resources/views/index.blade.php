@@ -3066,7 +3066,7 @@
             </div>
             <div>
                 @auth
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('logout') }}" class="nav-cta">
                         @csrf
                         <button type="submit" class="btn btn-ghost" style="width:100%;margin-top:10px">Logout</button>
                     </form>

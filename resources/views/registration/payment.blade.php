@@ -181,11 +181,8 @@
 
                     $maskedEmail = mb_substr($local, 0, $startLen)
                                 . str_repeat('*', $maskCount)
-                                . mb_substr($local, -$endLen);
+                                . mb_substr($local, -$endLen) . '@' . $domain;
                 }
-                // $maskedEmail = ($lLen > 2
-                //     ? substr($local, 0, 1) . str_repeat('*', $lLen - 2) . substr($local, -1)
-                //     : str_repeat('*', $lLen)) . $domain;
             @endphp
 
             <div class="detail">
