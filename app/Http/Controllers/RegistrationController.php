@@ -159,7 +159,7 @@ class RegistrationController extends Controller
 
         $plainPassword = $request->password;
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
-        // $this->whatsapp->sendRegistrationConfirmation($reg);
+        
 
         return redirect()->route('registration.payment');
     }
@@ -317,8 +317,6 @@ class RegistrationController extends Controller
             return redirect()->route('registration.success');
         }
 
-        // NEW USER: Send generic registration confirmation, then go to payment
-        $this->whatsapp->sendRegistrationConfirmation($reg);
         Session::forget(['reg_phone', 'phone_verified']);
         return redirect()->route('registration.payment');
     }
