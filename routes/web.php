@@ -97,3 +97,9 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::post('/influencer/{post}/reject', [AdminController::class, 'rejectPost'])->name('influencer.reject');
     Route::get('/communications', [AdminController::class, 'communications'])->name('communications');
 });
+
+Route::get('/vishal-mehta', [HomeController::class, 'vishal_mehta'])->name('vishal-mehta');
+Route::get('/saurabh-sisodia', [HomeController::class, 'saurabh_sisodia'])->name('saurabh-sisodia');
+Route::get('/santosh-pasi', [HomeController::class, 'santosh_pasi'])->name('santosh-pasi');
+Route::get('/ankit-rai', [HomeController::class, 'ankit_rai'])->name('ankit-rai');
+Route::get('/detail', [HomeController::class, 'detail'])->name('detail');

@@ -15,13 +15,14 @@ class HomeController extends Controller
 {
     public function __construct(
         protected SmsService $sms,
-    ) {}
+    ) {
+    }
 
     public function index()
     {
         if (Auth::check()) {
             $registration = EventRegistration::where('user_id', Auth::id())->latest()->first();
-            
+
             // if ($registration) {
             //     return match($registration->status) {
             //         'otp_verified' => redirect()->route('registration.kyc'),
@@ -31,7 +32,7 @@ class HomeController extends Controller
             //         default => view('index', compact('registration')),
             //     };
             // }
-            
+
             return view('index', compact('registration'));
         }
         return view('index', ['registration' => null]);
@@ -110,7 +111,7 @@ class HomeController extends Controller
     {
         $request->validate([
             'phone' => 'required|string',
-            'otp'   => 'required|string|size:6',
+            'otp' => 'required|string|size:6',
         ]);
 
         $phone = $this->normalizePhone($request->phone);
@@ -162,5 +163,26 @@ class HomeController extends Controller
             $phone = substr($phone, 2);
         }
         return $phone;
+    }
+
+    public function detail()
+    {
+        return view('detail');
+    }
+    public function vishal_mehta()
+    {
+        return view('vishal-mehta');
+    }
+    public function saurabh_sisodia()
+    {
+        return view('saurabh-sisodia');
+    }
+    public function santosh_pasi()
+    {
+        return view('santosh-pasi');
+    }
+    public function ankit_rai()
+    {
+        return view('ankit-rai');
     }
 }
