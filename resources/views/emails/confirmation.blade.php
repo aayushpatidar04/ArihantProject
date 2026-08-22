@@ -121,7 +121,7 @@
         @if($registration->is_subbroker)
             <p>Your registration have been successfully completed.</p>
         @else
-            <p>Your registration and payment of amount {{ $registration->is_existing_client ? '₹299' : '₹599' }} have been
+            <p>Your registration and payment of amount {{ $registration->is_existing_client ? '₹399' : '₹599' }} have been
                 successfully completed.</p>
         @endif
 

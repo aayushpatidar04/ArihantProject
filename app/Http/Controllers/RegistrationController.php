@@ -282,7 +282,7 @@ class RegistrationController extends Controller
             'phone' => Session::get('reg_phone'),
             'city' => $validated['city'],
             'type' => $validated['type'],
-            'is_existing_client' => false,
+            'is_existing_client' => $isSubBroker,
             'status' => 'kyc_completed',
             'referral_code' => strtoupper(Str::random(12)),
             'referred_by' => $validated['referred_by'] ?? null,
@@ -303,36 +303,36 @@ class RegistrationController extends Controller
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
 
         // SUB-BROKER: Skip payment, mark paid, send both WhatsApp templates + Email
-        if ($isSubBroker) {
-            $reg->update(['status' => 'paid', 'paid_at' => now()]);
+        // if ($isSubBroker) {
+        //     $reg->update(['status' => 'paid', 'paid_at' => now()]);
 
-            // AW20699204 — Complimentary registration confirmation
-            $this->whatsapp->sendRegistrationConfirmation(
-                $reg,
-                'SUB-' . strtoupper(Str::random(8)),
-                '0',
-                'Complimentary'
-            );
+        //     // AW20699204 — Complimentary registration confirmation
+        //     $this->whatsapp->sendRegistrationConfirmation(
+        //         $reg,
+        //         'SUB-' . strtoupper(Str::random(8)),
+        //         '0',
+        //         'Complimentary'
+        //     );
 
-            $qr = $this->qr->generateEntryQr($reg);
-            $qrUrl = asset('storage/' . $qr->image_path);
+        //     $qr = $this->qr->generateEntryQr($reg);
+        //     $qrUrl = asset('storage/' . $qr->image_path);
 
-            // GW20590908 — QR Ticket
-            $this->whatsapp->sendQrImage($reg, $qrUrl);
-            $this->email->sendConfirmation($reg, $qr->image_path);
-            $this->leadScore->calculateScore($reg);
+        //     // GW20590908 — QR Ticket
+        //     $this->whatsapp->sendQrImage($reg, $qrUrl);
+        //     $this->email->sendConfirmation($reg, $qr->image_path);
+        //     $this->leadScore->calculateScore($reg);
 
-            Session::forget(['reg_phone', 'is_subbroker']);
+        //     Session::forget(['reg_phone', 'is_subbroker']);
 
-            return redirect()->route('registration.success');
-        }
+        //     return redirect()->route('registration.success');
+        // }
 
         Session::forget(['reg_phone', 'phone_verified']);
         return redirect()->route('registration.payment');
     }
 
     /* ============================================================
-       STEP 4: Payment (Existing ₹299 | New ₹599) — ATOM
+       STEP 4: Payment (Existing ₹399 | New ₹599) — ATOM
        ============================================================ */
 
     public function showPayment()
@@ -422,13 +422,13 @@ class RegistrationController extends Controller
         Session::forget('payment_registration_id');
 
         $txnRef = $atomTxnId ?? $merchTxnId ?? 'TXN-' . $reg->registration_number;
-        $amount = $reg->is_existing_client ? '299' : '599';
+        $amount = $reg->is_existing_client ? '399' : '599';
 
         // 1️⃣ Send Registration Confirmation (AW20699204)
         $this->whatsapp->sendRegistrationConfirmation(
             $reg,
             $atomTxnId ?? $merchTxnId ?? 'TXN-' . $reg->registration_number,
-            $reg->is_existing_client ? '299' : '599',
+            $reg->is_existing_client ? '399' : '599',
             $paymentMode ?? 'Bharat QR'
         );
 

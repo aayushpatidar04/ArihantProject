@@ -149,7 +149,7 @@
                 <div class="client-badge">✓ Client Special Price</div>
             @endif
             <h1>Complete Payment</h1>
-            <div class="amount">₹{{ $reg->is_existing_client ? '299' : '599' }}</div>
+            <div class="amount">₹{{ $reg->is_existing_client ? '399' : '599' }}</div>
             @php
                 $name = $reg->full_name;
                 $nLen = mb_strlen($name);

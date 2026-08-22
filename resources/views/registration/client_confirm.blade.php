@@ -121,7 +121,7 @@
             </div>
 
             <div class="price-box">
-                <div class="price">₹299 <span>₹599</span></div>
+                <div class="price">₹399 <span>₹599</span></div>
                 <div class="lbl">Exclusive client price</div>
             </div>
 

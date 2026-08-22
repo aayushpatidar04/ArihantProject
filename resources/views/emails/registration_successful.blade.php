@@ -33,12 +33,7 @@
                     <!-- Confirmation -->
                     <tr>
                         <td style="padding:4px 32px 16px;">
-                            @if($registration->is_subbroker)
-                                <p style="margin:0;font-size:18px;color:#b866f7;font-weight:700;">🎉 Your registration is
-                                    confirmed!</p>
-                            @else
-                                <p style="margin:0;font-size:18px;color:#b866f7;font-weight:700;">🎉 Almost There! Your Registration Is successful , Payment Is Pending</p>
-                            @endif
+                            <p style="margin:0;font-size:18px;color:#b866f7;font-weight:700;">🎉 Almost There! Your Registration Is successful , Payment Is Pending</p>
                         </td>
                     </tr>
                     <!-- Intro -->
@@ -71,7 +66,7 @@
                         </td>
                     </tr>
                     <!-- Payment CTA -->
-                    @if(!$registration->is_subbroker)
+                    
                     <tr>
                         <td style="padding:0 32px 8px;">
                             <p style="margin:0;font-size:14px;color:#a79bb5;line-height:1.7;">💳 Complete your payment to reserve your seat and confirm your participation at the event.</p>
@@ -92,7 +87,7 @@
                             </table>
                         </td>
                     </tr>
-                    @endif
+                    
 
                     <tr>
                         <td style="padding:0 32px 8px;">
@@ -102,16 +97,10 @@
                     <!-- Ticket Info -->
                     <tr>
                         <td style="padding:0 32px 20px;">
-                            @if($registration->is_subbroker)
-                            <p style="margin:0;font-size:14px;color:#a79bb5;line-height:1.7;">
-                                🎟️ Your event ticket and QR code will be shared separately. Please keep the QR code handy for smooth entry at the venue.
-                            </p>
-                            @else
                             <p style="margin:0;font-size:14px;color:#a79bb5;line-height:1.7;">
                                 🎟️ Your event ticket and QR code will be shared separately after successful completion
                                 of the payment. Please keep the QR code handy for smooth entry at the venue.
                             </p>
-                            @endif
                         </td>
                     </tr>
                     <!-- Closing -->
