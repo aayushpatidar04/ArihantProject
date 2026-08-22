@@ -153,18 +153,39 @@
             @php
                 $name = $reg->full_name;
                 $nLen = mb_strlen($name);
-                $maskedName = $nLen > 2
-                    ? mb_substr($name, 0, 1) . str_repeat('*', $nLen - 2) . mb_substr($name, -1)
-                    : mb_substr($name, 0, 1) . str_repeat('*', max(0, $nLen - 1));
+                if ($nLen <= 2) {
+                    $maskedName = $name;
+                } else {
+                    $visible   = (int) round($nLen * 0.6);
+                    $maskCount = $nLen - $visible;
+                    $startLen  = (int) ceil($visible / 2);
+                    $endLen    = $visible - $startLen;
+
+                    $maskedName = mb_substr($name, 0, $startLen)
+                                . str_repeat('*', $maskCount)
+                                . mb_substr($name, -$endLen);
+                }
 
                 $email = $reg->email;
                 $at = strpos($email, '@');
                 $local = substr($email, 0, $at);
                 $domain = substr($email, $at);
                 $lLen = strlen($local);
-                $maskedEmail = ($lLen > 2
-                    ? substr($local, 0, 1) . str_repeat('*', $lLen - 2) . substr($local, -1)
-                    : str_repeat('*', $lLen)) . $domain;
+                if ($nLen <= 2) {
+                    $maskedEmail = $local;
+                } else {
+                    $visible   = (int) round($nLen * 0.6);
+                    $maskCount = $nLen - $visible;
+                    $startLen  = (int) ceil($visible / 2);
+                    $endLen    = $visible - $startLen;
+
+                    $maskedEmail = mb_substr($local, 0, $startLen)
+                                . str_repeat('*', $maskCount)
+                                . mb_substr($local, -$endLen);
+                }
+                // $maskedEmail = ($lLen > 2
+                //     ? substr($local, 0, 1) . str_repeat('*', $lLen - 2) . substr($local, -1)
+                //     : str_repeat('*', $lLen)) . $domain;
             @endphp
 
             <div class="detail">

@@ -46,13 +46,22 @@
             <div style="margin-bottom:24px">
                 {{-- NEW: UID Selector --}}
                 @php
-                    $mask = fn($s) => mb_strlen($s) > 4 
-                        ? mb_substr($s, 0, 2) . '****' . mb_substr($s, -2) 
-                        : $s;
+                    $mask40 = function ($s) {
+                        $len = mb_strlen($s);
+                        if ($len <= 2) return $s;
 
-                    $maskedPhone = mb_strlen($phone) > 4 
-                        ? mb_substr($phone, 0, 2) . '****' . mb_substr($phone, -2) 
-                        : $phone;
+                        $visible   = (int) round($len * 0.6);
+                        $maskCount = $len - $visible;
+                        $startLen  = (int) ceil($visible / 2);
+                        $endLen    = $visible - $startLen;
+
+                        return mb_substr($s, 0, $startLen)
+                            . str_repeat('*', $maskCount)
+                            . mb_substr($s, -$endLen);
+                    };
+
+                    $mask = $mask40;
+                    $maskedPhone = $mask40($phone);
                 @endphp
                 <div class="form-group">
                     <label>Select Client ID</label>
@@ -129,7 +138,16 @@
     document.getElementById('uid-select').addEventListener('change', function () {
         const option = this.options[this.selectedIndex];
         const name = option.dataset.name || '';
-        const mask = (s) => s && s.length > 4 ? s.slice(0, 2) + '****' + s.slice(-2) : s;
+
+        const mask = (s) => {
+            if (!s || s.length <= 2) return s;
+            const len = s.length;
+            const visible = Math.round(len * 0.6);
+            const maskCount = len - visible;
+            const startLen = Math.ceil(visible / 2);
+            const endLen = visible - startLen;
+            return s.slice(0, startLen) + '*'.repeat(maskCount) + s.slice(-endLen);
+        };
 
         document.getElementById('full-name-display').value = mask(name);
         document.getElementById('full-name').value = name;

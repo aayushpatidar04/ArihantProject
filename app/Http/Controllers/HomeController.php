@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\LoginOtpMail;
 use App\Models\EventRegistration;
 use App\Models\User;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -87,6 +89,7 @@ class HomeController extends Controller
         Cache::put('login_otp_attempts_' . $phone, $attempts + 1, now()->addMinutes(10));
 
         $sent = $this->sms->sendLoginOtp($phone, $otp);
+        Mail::to($reg->email)->send(new LoginOtpMail($reg, $otp));
 
         if (!$sent) {
             return back()

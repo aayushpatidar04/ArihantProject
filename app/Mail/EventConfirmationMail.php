@@ -45,7 +45,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'ArihantPLUS Conclave 2026 — Registration Confirmed',
+            subject: 'Registration Confirmed — ArihantPLUS Conclave 2026',
         );
     }
 

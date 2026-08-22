@@ -101,6 +101,16 @@
 </head>
 
 <body>
+    <table role="presentation" cellpadding="0" cellspacing="0" width="560"
+        style="max-width:560px;width:100%;background-color:#0e0812;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;">
+        <!-- Logo -->
+        <tr>
+            <td align="center" style="padding:32px 32px 16px;">
+                <img src="https://event.arihantplus.com/assets/images/logo-colored.png" alt="ArihantPLUS" width="160"
+                    style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;">
+            </td>
+        </tr>
+    </table>
     <div class="container">
         <p>Hi {{ $registration->full_name }},</p>
 
@@ -108,7 +118,12 @@
 
         <p>Thank you for registering for Central India's Largest AI & Algo Conclave, presented by Arihant Capital.</p>
 
-        <p>Your registration and payment have been successfully completed.</p>
+        @if($registration->is_subbroker)
+            <p>Your registration have been successfully completed.</p>
+        @else
+            <p>Your registration and payment of amount {{ $registration->is_existing_client ? '₹299' : '₹599' }} have been
+                successfully completed.</p>
+        @endif
 
         <p><strong>Event Details:</strong><br>
             📅 {{ $eventDate }}<br>
@@ -140,7 +155,8 @@
         <p>We look forward to seeing you there!</p>
 
         <p><strong>Arihant Capital</strong><br>
-            AI Powered. Algo Driven.</p>
+            <ii>AI Powered. Algo Driven.</ii>
+        </p>
 
         <div class="footer">
             Arihant Capital Markets Ltd. &copy; {{ date('Y') }}<br>
