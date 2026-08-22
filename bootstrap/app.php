@@ -25,13 +25,18 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // $exceptions->render(function (\Throwable $e, Request $request) {
-        //     if ($request->expectsJson() || config('app.debug')) {
-        //         return null;
-        //     }
+        $exceptions->render(function (\Throwable $e, Request $request) {
+            // Let Laravel handle validation errors normally (redirect back with errors)
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
+                return null;
+            }
 
-        //     $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+            if ($request->expectsJson() || config('app.debug')) {
+                return null;
+            }
 
-        //     return response()->view('errors.error', ['code' => $status]);
-        // });
+            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+
+            return response()->view('errors.error', ['code' => $status], $status);
+        });
     })->create();
