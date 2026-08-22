@@ -29,7 +29,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
         $title = 'ArihantPLUS AI & Algo Conclave 2026';
         $start = '2026-09-05 10:00:00'; // IST
         $end   = '2026-09-05 17:00:00'; // IST
-        $location = 'Labh Mandapam, Indore';
+        $location = 'Mariott Hotel, Indore';
         $description = "Central India's Largest AI & Algo Conclave, presented by Arihant Capital.\n\nRegistration #: {$registration->registration_number}";
 
         $this->googleLink  = CalendarLinkService::google($title, $start, $end, $location, $description);
@@ -57,7 +57,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
                 'qrUrl'       => asset('storage/' . $this->qrImagePath),
                 'eventDate'   => '5 September 2026',
                 'eventTime'   => '10:00 AM - 5:00 PM',
-                'venue'       => 'Labh Mandapam, Indore',
+                'venue'       => 'Mariott Hotel, Indore',
                 'googleLink'  => $this->googleLink,
                 'outlookLink' => $this->outlookLink,
                 'yahooLink'   => $this->yahooLink,

@@ -4,7 +4,7 @@ return [
     'event_name' => 'ArihantPLUS AI & Algo Conclave 2026',
     'event_date' => '2026-09-05',
     'event_time' => '10:00 AM - 5:00 PM',
-    'venue' => 'Labh Mandapam, Indore',
+    'venue' => 'Mariott Hotel, Indore',
     'existing_client_price' => 299,
     'new_user_price' => 599,
     'currency' => 'INR',

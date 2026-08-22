@@ -59,7 +59,7 @@
             </div>
             <div class="info-pill">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l18-7-7 18-2.5-7.5L3 11z" stroke-linejoin="round"/></svg>
-                Labh Mandapam, Indore
+                Mariott Hotel, Indore
             </div>
         </div>
 

@@ -194,7 +194,7 @@ class WhatsAppService
 
     public function sendReminder(EventRegistration $registration, string $daysLeft): bool
     {
-        $message = "Reminder: ArihantPLUS AI & Algo Conclave is in {$daysLeft}! Venue: Labh Mandapam, Indore. See you there!";
+        $message = "Reminder: ArihantPLUS AI & Algo Conclave is in {$daysLeft}! Venue: Mariott Hotel, Indore. See you there!";
         return $this->sendTextMessage($registration, $message, 'reminder');
     }
 

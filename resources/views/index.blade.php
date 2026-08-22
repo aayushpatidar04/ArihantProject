@@ -3787,7 +3787,7 @@
             var text = document.getElementById('venueText');
             if (!field || !text) return;
             var shortText = "Indore";
-            var fullText = "Labh Mandapam, Indore";
+            var fullText = "Mariott Hotel, Indore";
             field.addEventListener('mouseenter', function () {
                 text.textContent = fullText;
             });
