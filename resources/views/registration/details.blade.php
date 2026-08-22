@@ -239,7 +239,7 @@
                     <button type="submit" class="btn btn-primary" style="width:100%">Complete Registration →</button>
                 @else
                     <div class="price-box">
-                        <div class="price">₹999</div>
+                        <div class="price">₹599</div>
                         <div class="lbl">Standard Registration Fee</div>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%">Proceed to Payment →</button>
