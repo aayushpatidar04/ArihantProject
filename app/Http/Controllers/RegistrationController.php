@@ -254,7 +254,6 @@ class RegistrationController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'city' => 'required|string|max:100',
             'type' => 'required|in:investor,trader',
-            // 'password' => 'required',
             'referred_by' => 'nullable|string|size:12',
         ]);
 
@@ -289,7 +288,7 @@ class RegistrationController extends Controller
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
-        $plainPassword = $validated['password'];
+        $plainPassword = 'ArihantCapitals';
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
 
         // SUB-BROKER: Skip payment, mark paid, send both WhatsApp templates + Email
