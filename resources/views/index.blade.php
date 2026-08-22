@@ -4073,10 +4073,10 @@
             <div class="footer-col">
                 <h4>Quick Links</h4>
                 <ul>
-                    {{-- <li><a href="{{ route('event.policy') }}">Event Policy</a></li>
+                    <li><a href="{{ route('event.policy') }}">Event Policy</a></li>
                     <li><a href="{{ route('payment.terms') }}">Payment Terms</a></li>
                     <li><a href="{{ route('cookie.policy') }}">Cookie Policy</a></li>
-                    <li><a href="{{ route('disclaimer') }}">Disclaimer & Risk Disclosure</a></li> --}}
+                    <li><a href="{{ route('disclaimer') }}">Disclaimer & Risk Disclosure</a></li>
                     <li><a href="/login">Login</a></li>
                 </ul>
             </div>
