@@ -60,7 +60,7 @@
                         <td>{{ $r->phone }}</td>
                         <td>{{ ucfirst($r->type) }}</td>
                         <td><span class="badge badge-{{ $r->status }}">{{ str_replace('_', ' ', ucfirst($r->status)) }}</span></td>
-                        <td>{{ $r->payment?->status ?? 'N/A' }}<br>{{ $r->payment->gateway_order_id ? 'Order ID : ' . $r->payment->gateway_order_id : '' }}<br>{{ $r->payment->gateway_payment_id ? 'Payment ID : ' . $r->payment->gateway_payment_id : '' }}</td>
+                        <td>{{ $r->payment?->status ?? 'N/A' }}<br>{{ $r->payment?->gateway_order_id ? 'Order ID : ' . $r->payment?->gateway_order_id : '' }}<br>{{ $r->payment?->gateway_payment_id ? 'Payment ID : ' . $r->payment?->gateway_payment_id : '' }}</td>
                         <td>{{ $r->seat?->seat_number ?? '-' }}</td>
                         <td>{{ $r->created_at->format('M d') }}</td>
                     </tr>
