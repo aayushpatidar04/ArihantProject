@@ -11,6 +11,7 @@ use App\Services\WhatsAppService;
 use App\Services\EmailService;
 use App\Services\LeadScoringService;
 use App\Services\PaymentGatewayService;
+use App\Services\razorPaymentGatewayService;
 use App\Services\QrCodeService;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class RegistrationController extends Controller
         protected WhatsAppService $whatsapp,
         protected EmailService $email,
         protected PaymentGatewayService $payment,
+        protected razorPaymentGatewayService $razor_payment,
         protected QrCodeService $qr,
         protected LeadScoringService $leadScore,
         protected SmsService $sms,
@@ -347,7 +349,7 @@ class RegistrationController extends Controller
 
         Session::put('payment_registration_id', $reg->id);
 
-        $order = $this->payment->createOrder($reg);
+        $order = $this->razor_payment->createOrder($reg);
         if (!$order) {
             return redirect()->route('registration.payment')->withErrors(['payment' => 'Unable to initialize payment gateway. Please try again.']);
         }
@@ -443,6 +445,59 @@ class RegistrationController extends Controller
             $this->whatsapp->sendQrImage($reg, $qrUrl);
             $this->email->sendConfirmation($reg, $qr->image_path);
         }
+
+        $this->leadScore->calculateScore($reg);
+
+        if ($reg->referred_by) {
+            $this->awardReferralPoints($reg);
+        }
+
+        return redirect()->route('registration.success');
+    }
+
+    public function razorPaymentCallback(Request $request, $id)
+    {
+        $user = User::find($id);
+        Auth::login($user);
+        
+        $request->validate([
+            'razorpay_payment_id' => 'required|string',
+            'razorpay_order_id' => 'required|string',
+            'razorpay_signature' => 'required|string',
+            ]);
+            
+        $reg = $this->getCurrentRegistration();
+        if (!$reg) {
+            return redirect()->route('registration.form');
+        }
+
+        $isValid = $this->razor_payment->verifySignature([
+            'order_id' => $request->razorpay_order_id,
+            'payment_id' => $request->razorpay_payment_id,
+            'signature' => $request->razorpay_signature,
+        ]);
+
+        if (!$isValid) {
+            return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment verification failed.']);
+        }
+
+        $payment = $reg->payment;
+        if ($payment) {
+            $payment->update([
+                'gateway_payment_id' => $request->razorpay_payment_id,
+                'gateway_signature' => $request->razorpay_signature,
+                'status' => 'paid',
+                'paid_at' => now(),
+            ]);
+        }
+
+        $reg->update(['status' => 'paid', 'paid_at' => now()]);
+
+        $qr = $this->qr->generateEntryQr($reg);
+        $qrUrl = asset('storage/' . $qr->image_path);
+
+        $this->whatsapp->sendQrImage($reg, $qrUrl);
+        $this->email->sendConfirmation($reg, $qr->image_path);
 
         $this->leadScore->calculateScore($reg);
 

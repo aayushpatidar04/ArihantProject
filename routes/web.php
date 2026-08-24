@@ -75,6 +75,9 @@ Route::middleware(['venue'])->group(function () {
 Route::post('/payment/callback/{id}', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
 Route::post('/webhook/atom', [PaymentController::class, 'atomWebhook'])->name('webhook.atom');
 
+Route::post('/razor/payment/callback/{id}', [RegistrationController::class, 'razorPaymentCallback'])->name('razor.payment.callback');
+Route::post('/razor/payment/webhook', [PaymentController::class, 'razorWebhook'])->name('razor.payment.webhook');
+
 /* ---------- Check-In (Venue Staff) ---------- */
 Route::get('/checkin/confirmation', [CheckInController::class, 'mobileConfirmation'])->name('checkin.confirmation');
 

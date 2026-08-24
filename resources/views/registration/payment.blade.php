@@ -156,14 +156,14 @@
                 if ($nLen <= 2) {
                     $maskedName = $name;
                 } else {
-                    $visible   = (int) round($nLen * 0.6);
+                    $visible = (int) round($nLen * 0.6);
                     $maskCount = $nLen - $visible;
-                    $startLen  = (int) ceil($visible / 2);
-                    $endLen    = $visible - $startLen;
+                    $startLen = (int) ceil($visible / 2);
+                    $endLen = $visible - $startLen;
 
                     $maskedName = mb_substr($name, 0, $startLen)
-                                . str_repeat('*', $maskCount)
-                                . mb_substr($name, -$endLen);
+                        . str_repeat('*', $maskCount)
+                        . mb_substr($name, -$endLen);
                 }
 
                 $email = $reg->email;
@@ -174,14 +174,14 @@
                 if ($nLen <= 2) {
                     $maskedEmail = $local;
                 } else {
-                    $visible   = (int) round($nLen * 0.6);
+                    $visible = (int) round($nLen * 0.6);
                     $maskCount = $nLen - $visible;
-                    $startLen  = (int) ceil($visible / 2);
-                    $endLen    = $visible - $startLen;
+                    $startLen = (int) ceil($visible / 2);
+                    $endLen = $visible - $startLen;
 
                     $maskedEmail = mb_substr($local, 0, $startLen)
-                                . str_repeat('*', $maskCount)
-                                . mb_substr($local, -$endLen) . '@' . $domain;
+                        . str_repeat('*', $maskCount)
+                        . mb_substr($local, -$endLen) . '@' . $domain;
                 }
             @endphp
 
@@ -230,7 +230,8 @@
     </div>
 
     <script src="{{ config('services.atom.js_cdn') }}"></script>
-    <script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    {{-- <script>
         document.getElementById('payBtn').onclick = function () {
             const atomTokenId = '{{ $order["atomTokenId"] ?? "" }}';
             const merchId = '{{ $order["merchId"] ?? "" }}';
@@ -271,6 +272,40 @@
                     'Failed to load payment gateway. Please try again.';
                 document.getElementById('atomError').style.display = 'block';
             }
+        };
+    </script> --}}
+    <script>
+        const options = {
+            key: '{{ config("services.payment.key_id") }}',
+            amount: {{ $reg->is_existing_client ? '39900' : '59900' }},
+            currency: 'INR',
+            name: 'ArihantPLUS Conclave',
+            description: 'AI & Algo Conclave 2026 Registration',
+            image: 'https://event.arihantplus.com/assets/images/logo.png") }}',
+            order_id: '{{ $order["id"] ?? "" }}',
+            handler: function (response) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("razor.payment.callback", $reg->user_id) }}';
+                form.innerHTML = `
+                @csrf
+                <input type="hidden" name="razorpay_payment_id" value="${response.razorpay_payment_id}">
+                <input type="hidden" name="razorpay_order_id" value="${response.razorpay_order_id}">
+                <input type="hidden" name="razorpay_signature" value="${response.razorpay_signature}">
+            `;
+                document.body.appendChild(form);
+                form.submit();
+            },
+            prefill: {
+                name: '{{ $reg->full_name }}',
+                email: '{{ $reg->email }}',
+                contact: '{{ $reg->phone }}'
+            },
+            theme: { color: '#8b2fd9' }
+        };
+        document.getElementById('payBtn').onclick = function () {
+            const rzp = new Razorpay(options);
+            rzp.open();
         };
     </script>
 @endsection
