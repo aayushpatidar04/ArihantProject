@@ -80,7 +80,7 @@
             display: inline-block;
             padding: 14px 32px;
             background: linear-gradient(135deg, #8b2fd9, #b866f7);
-            color: #fff;
+            color: #fff !important;
             font-size: 15px;
             font-weight: 600;
             text-decoration: none;
@@ -125,7 +125,7 @@
                         <p>🚀 <strong>You’re Invited to Central India’s Largest AI & ALGO CONCLAVE!</strong></p>
 
                         <p><span class="highlight">{{ $referrer->full_name }}</span> has referred you to join the
-                            <strong>ARIhant PLUS AI & ALGO CONCLAVE</strong>, happening on <strong>5th September
+                            <strong>ARIHANT PLUS AI & ALGO CONCLAVE</strong>, happening on <strong>5th September
                                 2026</strong> at <strong>Marriott Hotel, Indore</strong>.</p>
 
                         <p>This is your opportunity to explore the future of Artificial Intelligence, Algorithmic
@@ -142,7 +142,7 @@
                             experiencing an exciting day of insights, innovation, networking, and learning.</p>
 
                         <div class="cta-wrap">
-                            <a href="{{ $referralLink }}" class="cta-btn">👉 Book Your Ticket</a>
+                            <a href="{{ $referralLink }}" class="cta-btn" style="color: white;">👉 Book Your Ticket</a>
                             <div class="cta-link">{{ $referralLink }}</div>
                         </div>
 
