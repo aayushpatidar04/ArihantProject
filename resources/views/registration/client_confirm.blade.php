@@ -125,8 +125,8 @@
                 <div class="lbl">Exclusive client price</div>
             </div>
 
-            @if(request('ref'))
-                <input type="hidden" name="referred_by" value="{{ request('ref') }}">
+            @if(session('reg_referred_by'))
+                <input type="hidden" name="referred_by" value="{{ session('reg_referred_by') }}">
             @endif
 
             <button type="submit" class="btn btn-primary" style="width:100%">Confirm & Proceed to Payment</button>

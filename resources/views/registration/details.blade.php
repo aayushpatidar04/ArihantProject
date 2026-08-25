@@ -231,8 +231,8 @@
                     <input type="password" name="password" placeholder="Min 8 characters" required>
                 </div> --}}
 
-                @if(request('ref'))
-                    <input type="hidden" name="referred_by" value="{{ request('ref') }}">
+                @if(session('reg_referred_by'))
+                    <input type="hidden" name="referred_by" value="{{ session('reg_referred_by') }}">
                 @endif
 
                 @if($is_subbroker)

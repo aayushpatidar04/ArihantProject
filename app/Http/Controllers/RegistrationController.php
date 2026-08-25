@@ -40,11 +40,19 @@ class RegistrationController extends Controller
        STEP 1: Enter Phone Number → Check Sub-Broker → Existing Client → New User
        ============================================================ */
 
-    public function showForm()
+    public function showForm(Request $request)
     {
         if(Auth::check()){
             return redirect()->route('registration.success');
         }
+
+        $referralCode = strtoupper((string) $request->query('ref', ''));
+        if (preg_match('/^[A-Z0-9]{12}$/', $referralCode)) {
+            Session::put('reg_referred_by', $referralCode);
+        } else {
+            Session::forget('reg_referred_by');
+        }
+
         return view('registration.form');
     }
 
@@ -149,7 +157,7 @@ class RegistrationController extends Controller
             'is_existing_client' => true,
             'status' => 'kyc_completed',
             'referral_code' => strtoupper(Str::random(12)),
-            'referred_by' => $request->referred_by ?? null,
+            'referred_by' => Session::get('reg_referred_by'),
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
         ]);
@@ -162,7 +170,7 @@ class RegistrationController extends Controller
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
-        Session::forget(['client_users', 'reg_phone', 'is_existing_client']);
+        Session::forget(['client_users', 'reg_phone', 'is_existing_client', 'reg_referred_by']);
 
         $plainPassword = $request->password;
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
@@ -287,7 +295,7 @@ class RegistrationController extends Controller
             'is_existing_client' => $isSubBroker,
             'status' => 'kyc_completed',
             'referral_code' => strtoupper(Str::random(12)),
-            'referred_by' => $validated['referred_by'] ?? null,
+            'referred_by' => Session::get('reg_referred_by'),
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
             'is_subbroker' => $isSubBroker,
@@ -329,7 +337,7 @@ class RegistrationController extends Controller
         //     return redirect()->route('registration.success');
         // }
 
-        Session::forget(['reg_phone', 'phone_verified']);
+        Session::forget(['reg_phone', 'phone_verified', 'reg_referred_by']);
         return redirect()->route('registration.payment');
     }
 
