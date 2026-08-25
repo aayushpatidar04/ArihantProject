@@ -12,6 +12,7 @@
     .stat-card{background:linear-gradient(160deg,rgba(22,12,30,0.9) 0%,rgba(8,4,12,0.96) 100%);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:24px;text-align:center}
     .stat-card .num{font-size:32px;font-weight:800;color:var(--purple-1);margin-bottom:4px}
     .stat-card .lbl{font-size:13px;color:var(--muted)}
+    .stat-card .sub {font-size: 12px;color: var(--ink);opacity: 0.75;line-height: 1.4;margin-top: 2px;}
     .admin-section{background:linear-gradient(160deg,rgba(22,12,30,0.9) 0%,rgba(8,4,12,0.96) 100%);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:24px;margin-bottom:24px}
     .admin-section h2{font-size:18px;font-weight:700;margin-bottom:16px}
     table{width:100%;border-collapse:collapse;font-size:13px}
@@ -44,18 +45,34 @@
             <a href="{{ route('admin.referrals') }}">Referrals</a>
             <a href="{{ route('admin.leaderboard') }}">Leaderboard</a>
             <a href="{{ route('admin.influencer') }}">Influencer</a>
-            <a href="{{ route('admin.communications') }}">Communications</a>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card"><div class="num">{{ $stats['total_registrations'] }}</div><div class="lbl">Total Registrations</div></div>
-            <div class="stat-card"><div class="num">{{ $stats['paid_registrations'] }}</div><div class="lbl">Paid</div></div>
+            <div class="stat-card">
+                <div class="num">{{ $stats['total_registrations'] }}</div>
+                <div class="lbl">Total Registrations</div>
+                <div class="sub">Existing: {{ $stats['registrations_existing_clients'] }}</div>
+                <div class="sub">Sub Brokers: {{ $stats['registrations_subbrokers'] }}</div>
+                <div class="sub">Non Clients: {{ $stats['registrations_non_clients'] }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="num">{{ $stats['paid_registrations'] }}</div>
+                <div class="lbl">Paid</div>
+                <div class="sub">Existing: {{ $stats['paid_existing_clients'] }}</div>
+                <div class="sub">Sub Brokers: {{ $stats['paid_subbrokers'] }}</div>
+                <div class="sub">Non Clients: {{ $stats['paid_non_clients'] }}</div>
+            </div>
             <div class="stat-card"><div class="num">{{ $stats['checked_in'] }}</div><div class="lbl">Checked In</div></div>
             <div class="stat-card"><div class="num">{{ $stats['allocated_seats'] }}/{{ $stats['total_seats'] }}</div><div class="lbl">Seats Allocated</div></div>
             <div class="stat-card"><div class="num">{{ $stats['total_stall_visits'] }}</div><div class="lbl">Stall Visits</div></div>
-            <div class="stat-card"><div class="num">{{ $stats['total_referrals'] }}</div><div class="lbl">Referrals</div></div>
+            <div class="stat-card">
+                <div class="num">{{ $stats['total_referrals'] }}</div>
+                <div class="lbl">Referrals</div>
+                <div class="sub">Invited: {{ $stats['referrals_invited'] }}</div>
+                <div class="sub">Registered: {{ $stats['referrals_registered'] }}</div>
+                <div class="sub">Paid: {{ $stats['referrals_paid'] }}</div>
+            </div>
             <div class="stat-card"><div class="num">{{ $stats['pending_posts'] }}</div><div class="lbl">Pending Posts</div></div>
-            <div class="stat-card"><div class="num">{{ $stats['total_communications'] }}</div><div class="lbl">Messages Sent</div></div>
         </div>
 
         <div class="admin-section">

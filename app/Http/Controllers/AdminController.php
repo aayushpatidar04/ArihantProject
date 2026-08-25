@@ -21,14 +21,26 @@ class AdminController extends Controller
     {
         $stats = [
             'total_registrations' => EventRegistration::count(),
+            'registrations_subbrokers' => EventRegistration::where('is_subbroker', true)->count(),
+            'registrations_existing_clients' => EventRegistration::where('is_existing_client', true)->where('is_subbroker', false)->count(),
+            'registrations_non_clients' => EventRegistration::where('is_existing_client', false)->where('is_subbroker', false)->count(),
+
             'paid_registrations' => EventRegistration::where('status', 'paid')->orWhere('status', 'checked_in')->count(),
+            'paid_subbrokers' => EventRegistration::whereIn('status', ['paid','checked_in'])->where('is_subbroker', true)->count(),
+            'paid_existing_clients' => EventRegistration::whereIn('status', ['paid','checked_in'])->where('is_existing_client', true)->where('is_subbroker', false)->count(),
+            'paid_non_clients' => EventRegistration::whereIn('status', ['paid','checked_in'])->where('is_existing_client', false)->where('is_subbroker', false)->count(),
+                                                
             'checked_in' => EventRegistration::where('status', 'checked_in')->count(),
             'total_seats' => Seat::count(),
             'allocated_seats' => Seat::where('status', 'allocated')->count(),
             'total_stall_visits' => StallVisit::count(),
-            'total_referrals' => Referral::where('status', 'paid')->count(),
+
+            'total_referrals' => Referral::count(),
+            'referrals_invited' => Referral::where('status', 'invited')->count(),
+            'referrals_registered' => Referral::where('status', 'registered')->count(),
+            'referrals_paid' => Referral::where('status', 'paid')->count(),
+
             'pending_posts' => InfluencerPost::where('status', 'pending')->count(),
-            'total_communications' => Communication::where('status', 'sent')->count(),
         ];
 
         $recentRegistrations = EventRegistration::with('payment')->latest()->limit(10)->get();
