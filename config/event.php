@@ -13,6 +13,9 @@ return [
     // Admin emails allowed to access dashboard
     'admin_emails' => [
         env('ADMIN_EMAIL', 'admin@event.arihantcapital.com'),
+        'dipak.rout@arihantcapital.com',
+        'varun.dave@arihantcapital.com',
+        'ayushb190458@gmail.com',
     ],
 
     // Quiz correct answers (question_id => answer)

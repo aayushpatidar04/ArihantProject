@@ -87,6 +87,8 @@ Route::post('/stalls/checkin', [StallController::class, 'checkIn'])->name('stall
 /* ---------- Admin Routes ---------- */
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('admin.login.submit');
+Route::get('/admin/2fa', [AdminAuthController::class, 'show2fa'])->name('admin.2fa');
+Route::post('/admin/2fa', [AdminAuthController::class, 'verify2fa'])->name('admin.2fa.submit');
 
 Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
