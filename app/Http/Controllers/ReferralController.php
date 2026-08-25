@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ReferralInviteMail;
 use App\Models\EventRegistration;
 use App\Models\Referral;
 use App\Services\LeadScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ReferralController extends Controller
@@ -23,16 +26,15 @@ class ReferralController extends Controller
             return redirect()->route('registration.form');
         }
 
-        $referrals = $reg->referralsMade()->with('referred')->latest()->get();
-        $totalPoints = $referrals->sum('points_awarded');
-        $leaderboard = EventRegistration::selectRaw('event_registrations.id, event_registrations.full_name, event_registrations.referral_code, SUM(referrals.points_awarded) as total_points')
-            ->leftJoin('referrals', 'event_registrations.id', '=', 'referrals.referrer_id')
-            ->groupBy('event_registrations.id')
-            ->orderByDesc('total_points')
-            ->limit(10)
-            ->get();
+        // Paginated list of your referrals
+        $referrals = $reg->referralsMade()->with('referred')->latest()->paginate(10);
 
-        return view('referral.index', compact('reg', 'referrals', 'totalPoints', 'leaderboard'));
+        // Stats (independent of pagination)
+        $totalInvited = $reg->referralsMade()->count();
+        $totalConverted = $reg->referralsMade()->where('status', 'paid')->count();
+        $totalPoints = $reg->referralsMade()->sum('points_awarded');
+
+        return view('referral.index', compact('reg', 'referrals', 'totalInvited', 'totalConverted', 'totalPoints'));
     }
 
     /**
@@ -67,17 +69,23 @@ class ReferralController extends Controller
             return back()->with('success', 'This person has already been referred. The original referrer was retained.');
         }
 
-        if (!$alreadyReferred) {
-            Referral::create([
+        Referral::create([
+            'referrer_id' => $reg->id,
+            'referred_email' => $email,
+            'referred_phone' => $phone,
+            'status' => 'invited',
+        ]);
+
+        // Send invite email
+        try {
+            $referralLink = route('registration.form', ['ref' => $reg->referral_code]);
+            Mail::to($email)->send(new ReferralInviteMail($reg, $request->name, $referralLink));
+        } catch (\Exception $e) {
+            Log::error('Referral invite email failed: ' . $e->getMessage(), [
                 'referrer_id' => $reg->id,
                 'referred_email' => $email,
-                'referred_phone' => $phone,
-                'status' => 'invited',
             ]);
         }
-
-        // TODO: Send invite email/WhatsApp with referral link
-        // link: route('registration.form') . '?ref=' . $reg->referral_code
 
         return back()->with('success', 'Invitation sent to ' . $request->email);
     }
