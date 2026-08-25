@@ -176,7 +176,7 @@ class RegistrationController extends Controller
                 'mobileNumber' => $reg->phone,
                 'email' => $reg->email,
                 'city' => $reg->city,
-                'sourceUrl' => route('registration.form'), // or your event landing page
+                'sourceUrl' => 'https://event.arihantplus.com', // or your event landing page
                 'source' => 'AI & Algo Conclave',
             ]);
 
@@ -340,7 +340,7 @@ class RegistrationController extends Controller
                 'mobileNumber' => $reg->phone,
                 'email' => $reg->email,
                 'city' => $reg->city,
-                'sourceUrl' => route('registration.form'), // or your event landing page
+                'sourceUrl' => 'https://event.arihantplus.com',
                 'source' => 'AI & Algo Conclave',
             ]);
 
