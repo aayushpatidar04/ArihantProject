@@ -55,7 +55,7 @@
                     @forelse($registrations as $r)
                     <tr>
                         <td>{{ $r->registration_number }}</td>
-                        <td>{{ $r->full_name }}</td>
+                        <td>{{ $r->full_name }}<br>{{ $r->is_subbroker ? 'Sub-broker' : ($r->is_existing_client ? 'Existing Client' : 'New Client') }}</td>
                         <td>{{ $r->email }}</td>
                         <td>{{ $r->phone }}</td>
                         <td>{{ ucfirst($r->type) }}</td>
