@@ -7,6 +7,7 @@ use App\Models\Referral;
 use App\Services\LeadScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ReferralController extends Controller
 {
@@ -50,12 +51,30 @@ class ReferralController extends Controller
             return redirect()->route('registration.form');
         }
 
-        Referral::create([
-            'referrer_id' => $reg->id,
-            'referred_email' => $request->email,
-            'referred_phone' => $request->phone,
-            'status' => 'invited',
-        ]);
+        $email = Str::lower(trim($request->email));
+        $phone = $request->filled('phone')
+            ? preg_replace('/\D+/', '', $request->phone)
+            : null;
+
+        $alreadyReferred = Referral::where('referred_email', $email)
+            ->orWhere(function ($query) use ($phone) {
+                $query->whereNotNull('referred_phone')
+                    ->where('referred_phone', $phone);
+            })
+            ->exists();
+
+        if ($alreadyReferred) {
+            return back()->with('success', 'This person has already been referred. The original referrer was retained.');
+        }
+
+        if (!$alreadyReferred) {
+            Referral::create([
+                'referrer_id' => $reg->id,
+                'referred_email' => $email,
+                'referred_phone' => $phone,
+                'status' => 'invited',
+            ]);
+        }
 
         // TODO: Send invite email/WhatsApp with referral link
         // link: route('registration.form') . '?ref=' . $reg->referral_code

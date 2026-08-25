@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EventRegistration;
 use App\Models\KycDetail;
 use App\Models\Payment;
+use App\Models\Referral;
 use App\Models\User;
 use App\Services\ClientApiService;
 use App\Services\WhatsAppService;
@@ -146,6 +147,9 @@ class RegistrationController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $referral = $this->findReferralForRegistration($request->email, $request->phone);
+        $referrer = $referral?->referrer ?? $this->findReferrerByCode(Session::get('reg_referred_by'));
+
         $reg = EventRegistration::create([
             'user_id' => $user->id,
             'registration_number' => 'ARI-' . now()->format('Y') . '-' . strtoupper(Str::random(6)),
@@ -157,7 +161,7 @@ class RegistrationController extends Controller
             'is_existing_client' => true,
             'status' => 'kyc_completed',
             'referral_code' => strtoupper(Str::random(12)),
-            'referred_by' => Session::get('reg_referred_by'),
+            'referred_by' => $referrer?->referral_code,
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
         ]);
@@ -166,6 +170,8 @@ class RegistrationController extends Controller
             'event_registration_id' => $reg->id,
             'validation_status' => 'verified',
         ]);
+
+        $this->attachReferral($referral, $referrer, $reg);
 
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
@@ -284,6 +290,9 @@ class RegistrationController extends Controller
             'password' => Hash::make('ArihantCapitals'),
         ]);
 
+        $referral = $this->findReferralForRegistration($validated['email'], Session::get('reg_phone'));
+        $referrer = $referral?->referrer ?? $this->findReferrerByCode(Session::get('reg_referred_by'));
+
         $reg = EventRegistration::create([
             'user_id' => $user->id,
             'registration_number' => 'ARI-' . now()->format('Y') . '-' . strtoupper(Str::random(6)),
@@ -295,7 +304,7 @@ class RegistrationController extends Controller
             'is_existing_client' => $isSubBroker,
             'status' => 'kyc_completed',
             'referral_code' => strtoupper(Str::random(12)),
-            'referred_by' => Session::get('reg_referred_by'),
+            'referred_by' => $referrer?->referral_code,
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
             'is_subbroker' => $isSubBroker,
@@ -306,36 +315,13 @@ class RegistrationController extends Controller
             'validation_status' => 'verified',
         ]);
 
+        $this->attachReferral($referral, $referrer, $reg);
+
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
         $plainPassword = 'ArihantCapitals';
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
-
-        // SUB-BROKER: Skip payment, mark paid, send both WhatsApp templates + Email
-        // if ($isSubBroker) {
-        //     $reg->update(['status' => 'paid', 'paid_at' => now()]);
-
-        //     // AW20699204 — Complimentary registration confirmation
-        //     $this->whatsapp->sendRegistrationConfirmation(
-        //         $reg,
-        //         'SUB-' . strtoupper(Str::random(8)),
-        //         '0',
-        //         'Complimentary'
-        //     );
-
-        //     $qr = $this->qr->generateEntryQr($reg);
-        //     $qrUrl = asset('storage/' . $qr->image_path);
-
-        //     // GW20590908 — QR Ticket
-        //     $this->whatsapp->sendQrImage($reg, $qrUrl);
-        //     $this->email->sendConfirmation($reg, $qr->image_path);
-        //     $this->leadScore->calculateScore($reg);
-
-        //     Session::forget(['reg_phone', 'is_subbroker']);
-
-        //     return redirect()->route('registration.success');
-        // }
 
         Session::forget(['reg_phone', 'phone_verified', 'reg_referred_by']);
         return redirect()->route('registration.payment');
@@ -561,12 +547,62 @@ class RegistrationController extends Controller
 
     protected function awardReferralPoints(EventRegistration $reg): void
     {
-        $referrer = EventRegistration::where('referral_code', $reg->referred_by)->first();
-        if ($referrer) {
-            $referrer->referralsMade()
-                ->where('referred_email', $reg->email)
-                ->update(['status' => 'paid', 'points_awarded' => 50]);
+        $referral = Referral::where('referred_id', $reg->id)
+            ->where('status', '!=', 'paid')
+            ->first();
+
+        if ($referral) {
+            $referral->update(['status' => 'paid', 'points_awarded' => 50]);
+            $referrer = $referral->referrer;
+            if ($referrer) {
             $this->leadScore->calculateScore($referrer);
+            }
+        }
+    }
+
+    protected function findReferralForRegistration(string $email, ?string $phone): ?Referral
+    {
+        $normalizedEmail = strtolower(trim($email));
+        $normalizedPhone = $phone ? preg_replace('/\D+/', '', $phone) : null;
+
+        return Referral::with('referrer')
+            ->where(function ($query) use ($normalizedEmail, $normalizedPhone) {
+                $query->where('referred_email', $normalizedEmail);
+                if ($normalizedPhone) {
+                    $query->orWhere('referred_phone', $normalizedPhone);
+                }
+            })
+            ->orderBy('id')
+            ->first();
+    }
+
+    protected function findReferrerByCode(?string $referralCode): ?EventRegistration
+    {
+        if (!$referralCode) {
+            return null;
+        }
+
+        return EventRegistration::where('referral_code', $referralCode)->first();
+    }
+
+    protected function attachReferral(?Referral $referral, ?EventRegistration $referrer, EventRegistration $reg): void
+    {
+        if ($referral) {
+            $referral->whereNull('referred_id')->update([
+                'referred_id' => $reg->id,
+                'status' => 'registered',
+            ]);
+            return;
+        }
+
+        if ($referrer && $referrer->id !== $reg->id) {
+            Referral::create([
+                'referrer_id' => $referrer->id,
+                'referred_id' => $reg->id,
+                'referred_email' => strtolower(trim($reg->email)),
+                'referred_phone' => preg_replace('/\D+/', '', $reg->phone),
+                'status' => 'registered',
+            ]);
         }
     }
 }
