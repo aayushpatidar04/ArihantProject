@@ -11,7 +11,7 @@ class Referral extends Model
     use HasFactory;
 
     protected $fillable = [
-        'referrer_id', 'referred_id', 'referred_email',
+        'referrer_id', 'referred_id', 'referred_email', 'referred_name',
         'referred_phone', 'status', 'points_awarded'
     ];
 

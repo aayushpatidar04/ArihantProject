@@ -471,6 +471,7 @@
                         <table class="ref-table">
                             <thead>
                                 <tr>
+                                    <th>Name</th>
                                     <th>Email</th>
                                     <th>Status</th>
                                     <th>Points</th>
@@ -480,6 +481,7 @@
                             <tbody>
                                 @foreach($referrals as $r)
                                     <tr>
+                                        <td>{{ $r->referred_name ?? '—' }}</td>
                                         <td>{{ $r->referred_email ?? '—' }}</td>
                                         <td>
                                             <span class="ref-status {{ $r->status }}">
