@@ -15,6 +15,8 @@ return [
         env('ADMIN_EMAIL', 'admin@event.arihantcapital.com'),
         'dipak.rout@arihantcapital.com',
         'varun.dave@arihantcapital.com',
+        'vinay.jain@arihantcapital.com',
+        'vedant.sharma@arihantcapital.com',
         'ayushb190458@gmail.com',
     ],
 
