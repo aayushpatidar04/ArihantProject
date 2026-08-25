@@ -367,6 +367,7 @@
 
             @php
                 $shareText = rawurlencode("🚀 You're Invited!\n\n" . $reg->full_name . " has referred you to ARIHANT PLUS AI & ALGO CONCLAVE — Central India's Largest AI & ALGO Conclave!\n\n📅 5th September 2026\n📍 Marriott Hotel, Indore\n⏰ 10:00 AM onwards\n\n🎟️ Book your ticket using the referral link shared by " . $reg->full_name . " and be a part of this exciting event!\n\n👉 Book Now: " . route('registration.form', ['ref' => $reg->referral_code]) . "\n\nDon't miss the opportunity to explore the future of AI, Algorithmic Trading & Financial Markets!\n\nArihant Capital Markets Limited");
+                $shareText2 = rawurlencode("You're Invited!\n\n" . $reg->full_name . " has referred you to ARIHANT PLUS AI & ALGO CONCLAVE — Central India's Largest AI & ALGO Conclave!\n\n5th September 2026\nMarriott Hotel, Indore\n10:00 AM onwards\n\nBook your ticket using the referral link shared by " . $reg->full_name . " and be a part of this exciting event!\n\nBook Now: " . route('registration.form', ['ref' => $reg->referral_code]) . "\n\nDon't miss the opportunity to explore the future of AI, Algorithmic Trading & Financial Markets!\n\nArihant Capital Markets Limited");
 
                 $shareUrl = route('registration.form', ['ref' => $reg->referral_code]);
             @endphp
@@ -380,7 +381,7 @@
                 <div class="share-label">Share via</div>
                 <div class="share-buttons">
                     {{-- WhatsApp --}}
-                    <a href="https://wa.me/?text={{ $shareText }}" target="_blank" class="share-btn wa"
+                    <a href="https://wa.me/?text={{ $shareText2 }}" target="_blank" class="share-btn wa"
                         aria-label="WhatsApp">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -479,7 +480,7 @@
                             <tbody>
                                 @foreach($referrals as $r)
                                     <tr>
-                                        <td>{{ $r->referred->referred_email ?? '—' }}</td>
+                                        <td>{{ $r->referred_email ?? '—' }}</td>
                                         <td>
                                             <span class="ref-status {{ $r->status }}">
                                                 {{ ucfirst($r->status) }}

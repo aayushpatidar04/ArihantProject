@@ -166,6 +166,26 @@ class RegistrationController extends Controller
             'kyc_completed_at' => now(),
         ]);
 
+        // Push lead to CRM (fire-and-forget)
+        try {
+            $crmResponse = \Illuminate\Support\Facades\Http::withHeaders([
+                'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
+                'Content-Type' => 'application/json',
+            ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
+                'name' => $reg->full_name,
+                'mobileNumber' => $reg->phone,
+                'email' => $reg->email,
+                'city' => $reg->city,
+                'sourceUrl' => route('registration.form'), // or your event landing page
+                'source' => 'AI & Algo Conclave',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('CRM lead push failed: ' . $e->getMessage(), [
+                'reg_id' => $reg->id,
+            ]);
+        }
+
         KycDetail::create([
             'event_registration_id' => $reg->id,
             'validation_status' => 'verified',
@@ -309,6 +329,26 @@ class RegistrationController extends Controller
             'kyc_completed_at' => now(),
             'is_subbroker' => $isSubBroker,
         ]);
+
+        // Push lead to CRM (fire-and-forget)
+        try {
+            $crmResponse = \Illuminate\Support\Facades\Http::withHeaders([
+                'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
+                'Content-Type' => 'application/json',
+            ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
+                'name' => $reg->full_name,
+                'mobileNumber' => $reg->phone,
+                'email' => $reg->email,
+                'city' => $reg->city,
+                'sourceUrl' => route('registration.form'), // or your event landing page
+                'source' => 'AI & Algo Conclave',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('CRM lead push failed: ' . $e->getMessage(), [
+                'reg_id' => $reg->id,
+            ]);
+        }
 
         KycDetail::create([
             'event_registration_id' => $reg->id,
@@ -599,6 +639,7 @@ class RegistrationController extends Controller
             Referral::create([
                 'referrer_id' => $referrer->id,
                 'referred_id' => $reg->id,
+                'referred_name' => $reg->full_name,
                 'referred_email' => strtolower(trim($reg->email)),
                 'referred_phone' => preg_replace('/\D+/', '', $reg->phone),
                 'status' => 'registered',

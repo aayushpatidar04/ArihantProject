@@ -73,6 +73,7 @@ class ReferralController extends Controller
             'referrer_id' => $reg->id,
             'referred_email' => $email,
             'referred_phone' => $phone,
+            'referred_name' => $request->name,
             'status' => 'invited',
         ]);
 
