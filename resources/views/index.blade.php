@@ -3875,10 +3875,10 @@
                     <p>Ready-to-use AI prompts, trading frameworks and practical takeaways.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="₹4,999 Stratzy access at ₹999">
+                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="₹14,997 Stratzy Access for Just ₹297">
                     </div>
-                    <h3>₹4,999 Stratzy access at ₹99</h3>
-                    <p>Unlock exclusive Conclave-only Stratzy pricing.</p>
+                    <h3>₹14,997 Stratzy Access for Just ₹297</h3>
+                    <p>Get 3 months of Stratzy at an exclusive Conclave-only price.</p>
                 </div>
                 <div class="card">
                     <div class="icon-circle"><img src="assets/images/icons/12.png" alt="Exciting rewards"></div>
@@ -3963,7 +3963,7 @@
                 <ul class="value-checklist">
                     <li><span class="check">✓</span> Live AI + Algo Demos</li>
                     <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
-                    <li><span class="check">✓</span> ₹4,999 Stratzy Access @ ₹99*</li>
+                    <li><span class="check">✓</span> ₹14,997 Stratzy Access for Just ₹297</li>
                     <li><span class="check">✓</span> Trader Networking</li>
                     <li><span class="check">✓</span> Expert Sessions</li>
                     <li><span class="check">✓</span> Quizzes + Big Rewards</li>

@@ -195,7 +195,7 @@
                     <li>🤖 AI + Algo Cheat Sheet</li>
                     <li>⚡ Live AI & Algo Demos</li>
                     <li>🎯 Actionable Trading Strategies</li>
-                    <li>💻 Stratzy Access at ₹99</li>
+                    <li>💻 Stratzy Access at ₹297</li>
                     <li>🎁 Exciting Rewards & Prizes</li>
                     <li>🧰 Trader Toolkit</li>
                     <li>📜 Certificate of Participation</li>
