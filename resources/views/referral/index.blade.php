@@ -271,7 +271,7 @@
             font-size: 13px;
             font-weight: 600;
             color: #fff;
-            background: #272727;
+            background: #4D4D4D;
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-decoration: none;
             cursor: pointer;
@@ -288,73 +288,73 @@
         }
 
         .share-btn.wa {
-            background: rgba(37, 211, 102, 0.12);
+            background: #4D4D4D;
             border-color: rgba(37, 211, 102, 0.3);
             color: #25d366;
         }
 
         .share-btn.wa:hover {
-            background: rgba(37, 211, 102, 0.2);
+            background: #4D4D4D;
         }
 
         .share-btn.tg {
-            background: rgba(0, 136, 204, 0.12);
+            background: #4D4D4D;
             border-color: rgba(0, 136, 204, 0.3);
             color: #08c;
         }
 
         .share-btn.tg:hover {
-            background: rgba(0, 136, 204, 0.2);
+            background: #4D4D4D;
         }
 
         .share-btn.tw {
-            background: rgba(255, 255, 255, 0.08);
+            background: #4D4D4D;
             border-color: rgba(255, 255, 255, 0.2);
             color: #fff;
         }
 
         .share-btn.tw:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: #4D4D4D;
         }
 
         .share-btn.li {
-            background: rgba(10, 102, 194, 0.12);
+            background: #4D4D4D;
             border-color: rgba(10, 102, 194, 0.3);
             color: #0a66c2;
         }
 
         .share-btn.li:hover {
-            background: rgba(10, 102, 194, 0.2);
+            background: #4D4D4D;
         }
 
         .share-btn.em {
-            background: rgba(234, 67, 53, 0.12);
+            background: #4D4D4D;
             border-color: rgba(234, 67, 53, 0.3);
             color: #ea4335;
         }
 
         .share-btn.em:hover {
-            background: rgba(234, 67, 53, 0.2);
+            background: #4D4D4D;
         }
 
         .share-btn.ig {
-            background: rgba(225, 48, 108, 0.12);
+            background: #4D4D4D;
             border-color: rgba(225, 48, 108, 0.3);
             color: #e1306c;
         }
 
         .share-btn.ig:hover {
-            background: rgba(225, 48, 108, 0.2);
+            background: #4D4D4D;
         }
 
         .share-btn.more {
-            background: rgba(184, 102, 247, 0.12);
+            background: #4D4D4D;
             border-color: rgba(184, 102, 247, 0.3);
             color: var(--purple-1);
         }
 
         .share-btn.more:hover {
-            background: rgba(184, 102, 247, 0.2);
+            background: #4D4D4D;
         }
     </style>
 @endpush
@@ -381,7 +381,7 @@
                 <div class="share-label">Share via</div>
                 <div class="share-buttons">
                     {{-- WhatsApp --}}
-                    <a href="https://wa.me/?text={{ $shareText2 }}" target="_blank" class="share-btn wa"
+                    <a href="https://wa.me/?text={{ $shareText2 }}" target="_blank"
                         aria-label="WhatsApp">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -400,7 +400,7 @@
                     </a>
 
                     {{-- Twitter / X --}}
-                    <a href="https://twitter.com/intent/tweet?text={{ $shareText }}" target="_blank" class="share-btn tw"
+                    <a href="https://twitter.com/intent/tweet?text={{ $shareText }}" target="_blank"
                         aria-label="X">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -410,7 +410,7 @@
 
                     {{-- LinkedIn --}}
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ rawurlencode($shareUrl) }}"
-                        target="_blank" class="share-btn li" aria-label="LinkedIn">
+                        target="_blank" aria-label="LinkedIn">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -418,7 +418,7 @@
                     </a>
 
                     {{-- Instagram: Copy text (Instagram web doesn't support pre-filled DMs) --}}
-                    <button type="button" class="share-btn ig" onclick="copyForInstagram()" aria-label="Instagram">
+                    <button type="button" onclick="copyForInstagram()" aria-label="Instagram">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -428,7 +428,7 @@
                     </button>
 
                     {{-- Native Share (mobile) --}}
-                    <button type="button" class="share-btn more" onclick="nativeShare()" aria-label="More">
+                    <button type="button" onclick="nativeShare()" aria-label="More">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round">
                             <circle cx="18" cy="5" r="3" />
