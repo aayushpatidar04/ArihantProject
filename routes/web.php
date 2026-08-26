@@ -47,7 +47,7 @@ Route::get('/disclaimer', function () {return view('registration.disclaimer'); }
 Route::middleware(['auth'])->group(function () {
     // Step 5: Payment
     Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
-
+    Route::get('/register/thank-you', [RegistrationController::class, 'thankYou'])->name('registration.thankyou');
     // Step 6: Success
     Route::get('/register/success', [RegistrationController::class, 'success'])->name('registration.success');
 

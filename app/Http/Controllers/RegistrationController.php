@@ -486,7 +486,7 @@ class RegistrationController extends Controller
             $this->awardReferralPoints($reg);
         }
 
-        return redirect()->route('registration.success');
+        return redirect()->route('registration.thankyou');
     }
 
     public function razorPaymentCallback(Request $request, $id)
@@ -539,7 +539,18 @@ class RegistrationController extends Controller
             $this->awardReferralPoints($reg);
         }
 
-        return redirect()->route('registration.success');
+        return redirect()->route('registration.thankyou');
+    }
+
+    public function thankYou()
+    {
+        $reg = auth()->user()?->eventRegistrations()->latest()->first();
+
+        if (!$reg || $reg->status !== 'paid') {
+            return redirect()->route('registration.payment');
+        }
+
+        return view('registration.thankyou', compact('reg'));
     }
 
     /* ============================================================

@@ -3531,49 +3531,75 @@
         }
 
         .mobile-sticky-cta {
-            display: none; /* hidden on desktop */
+            display: none; /* desktop hidden */
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 999;
-            padding: 12px 16px 16px;
-            background: linear-gradient(to top, rgba(6, 2, 8, 0.95), rgba(6, 2, 8, 0));
-            pointer-events: none; /* let clicks pass through the gradient area */
+            padding: 10px 16px;
+            background: rgba(14, 8, 18, 0.98);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-sticky-inner {
+            max-width: var(--max);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .mobile-sticky-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .mobile-sticky-text span {
+            font-size: 11px;
+            color: #a9a9a9;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .mobile-sticky-text strong {
+            font-size: 14px;
+            color: #fff;
+            font-weight: 700;
         }
 
         .mobile-sticky-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 14px 20px;
+            flex-shrink: 0;
+            padding: 10px 18px;
             background: var(--btn-grad);
             color: #fff;
             font-family: 'Inter', sans-serif;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 700;
             text-decoration: none;
-            border-radius: 14px;
-            box-shadow: 0 -4px 20px rgba(160, 40, 200, 0.35);
-            pointer-events: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(160, 40, 200, 0.4);
+            white-space: nowrap;
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .mobile-sticky-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 -6px 28px rgba(190, 50, 230, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(190, 50, 230, 0.55);
         }
 
-        /* Show only on mobile */
+        /* Show on mobile only */
         @media (max-width: 819px) {
             .mobile-sticky-cta {
                 display: block;
             }
             
-            /* Add bottom padding to main so content isn't hidden behind the sticky bar */
+            /* Prevent footer content from hiding behind the bar */
             footer {
-                padding-bottom: 80px;
+                padding-bottom: 72px;
             }
         }
     </style>
@@ -4216,9 +4242,15 @@
 
     {{-- Sticky Mobile CTA --}}
     <div class="mobile-sticky-cta">
-        <a href="{{ route('registration.form') }}" class="mobile-sticky-btn">
-            Claim your spot
-        </a>
+        <div class="mobile-sticky-inner">
+            <div class="mobile-sticky-text">
+                <span>Limited Seats.</span>
+                <strong>Book Yours Now.</strong>
+            </div>
+            <a href="{{ route('registration.form') }}" class="mobile-sticky-btn">
+                Claim your spot
+            </a>
+        </div>
     </div>
 
     <div class="modal-overlay" id="reserveModal">
