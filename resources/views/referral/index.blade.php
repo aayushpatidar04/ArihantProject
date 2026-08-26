@@ -258,7 +258,7 @@
         .share-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 7px;
             justify-content: center;
         }
 
@@ -266,7 +266,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 10px 16px;
+            padding: 8px 13px;
             border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
@@ -381,7 +381,7 @@
                 <div class="share-label">Share via</div>
                 <div class="share-buttons">
                     {{-- WhatsApp --}}
-                    <a href="https://wa.me/?text={{ $shareText2 }}" target="_blank"
+                    <a href="https://wa.me/?text={{ $shareText2 }}" target="_blank" class="share-btn wa"
                         aria-label="WhatsApp">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -400,7 +400,7 @@
                     </a>
 
                     {{-- Twitter / X --}}
-                    <a href="https://twitter.com/intent/tweet?text={{ $shareText }}" target="_blank"
+                    <a href="https://twitter.com/intent/tweet?text={{ $shareText }}" target="_blank" class="share-btn tw"
                         aria-label="X">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -410,7 +410,7 @@
 
                     {{-- LinkedIn --}}
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ rawurlencode($shareUrl) }}"
-                        target="_blank" aria-label="LinkedIn">
+                        target="_blank" class="share-btn li" aria-label="LinkedIn">
                         <svg viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -418,7 +418,7 @@
                     </a>
 
                     {{-- Instagram: Copy text (Instagram web doesn't support pre-filled DMs) --}}
-                    <button type="button" onclick="copyForInstagram()" aria-label="Instagram">
+                    <button type="button" class="share-btn ig" onclick="copyForInstagram()" aria-label="Instagram">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -428,7 +428,7 @@
                     </button>
 
                     {{-- Native Share (mobile) --}}
-                    <button type="button" onclick="nativeShare()" aria-label="More">
+                    <button type="button" class="share-btn more" onclick="nativeShare()" aria-label="More">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round">
                             <circle cx="18" cy="5" r="3" />
