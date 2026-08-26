@@ -178,6 +178,7 @@ class RegistrationController extends Controller
                 'city' => $reg->city,
                 'sourceUrl' => 'https://event.arihantplus.com', // or your event landing page
                 'source' => 'AI & Algo Conclave',
+                'type' => $reg->is_subbroker ? 'Sub-broker' : ($reg->is_existing_client ? 'Existing Client' : 'New Client'),
             ]);
 
         } catch (\Exception $e) {
@@ -342,6 +343,7 @@ class RegistrationController extends Controller
                 'city' => $reg->city,
                 'sourceUrl' => 'https://event.arihantplus.com',
                 'source' => 'AI & Algo Conclave',
+                'type' => $reg->is_subbroker ? 'Sub-broker' : ($reg->is_existing_client ? 'Existing Client' : 'New Client'),
             ]);
 
         } catch (\Exception $e) {
