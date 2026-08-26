@@ -2,6 +2,19 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+
+    })(window,document,'script','dataLayer','GTM-NL23JDKS');</script>
+
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
@@ -3517,11 +3530,64 @@
             display: inline-block;
         }
 
+        .mobile-sticky-cta {
+            display: none; /* hidden on desktop */
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            padding: 12px 16px 16px;
+            background: linear-gradient(to top, rgba(6, 2, 8, 0.95), rgba(6, 2, 8, 0));
+            pointer-events: none; /* let clicks pass through the gradient area */
+        }
+
+        .mobile-sticky-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--btn-grad);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 14px;
+            box-shadow: 0 -4px 20px rgba(160, 40, 200, 0.35);
+            pointer-events: auto;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .mobile-sticky-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 -6px 28px rgba(190, 50, 230, 0.5);
+        }
+
+        /* Show only on mobile */
+        @media (max-width: 819px) {
+            .mobile-sticky-cta {
+                display: block;
+            }
+            
+            /* Add bottom padding to main so content isn't hidden behind the sticky bar */
+            footer {
+                padding-bottom: 80px;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
 
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NL23JDKS"
+
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+    <!-- End Google Tag Manager (noscript) -->
+    
     <header>
         <div class="nav">
             <div style="display: flex; align-items: center;">
@@ -4147,6 +4213,13 @@
             <span>All copyrights are reserved © Arihant Capital Markets Limited</span>
         </div>
     </footer>
+
+    {{-- Sticky Mobile CTA --}}
+    <div class="mobile-sticky-cta">
+        <a href="{{ route('registration.form') }}" class="mobile-sticky-btn">
+            Claim your spot
+        </a>
+    </div>
 
     <div class="modal-overlay" id="reserveModal">
         <div class="modal-card">
