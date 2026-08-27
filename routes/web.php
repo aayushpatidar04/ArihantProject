@@ -119,8 +119,8 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
         Route::put('/feedback/questions/{question}', [StallFeedbackController::class, 'update'])->name('feedback.questions.update');
         Route::delete('/feedback/questions/{question}', [StallFeedbackController::class, 'destroy'])->name('feedback.questions.destroy');
 
-        Route::get('/visits', [AdminStallVisitController::class, 'index'])->name('admin.stalls.visits.index');
-        Route::get('/visits/{visit}', [AdminStallVisitController::class, 'show'])->name('admin.stalls.visits.show');
+        Route::get('/visits', [AdminStallVisitController::class, 'index'])->name('visits.index');
+        Route::get('/visits/{visit}', [AdminStallVisitController::class, 'show'])->name('visits.show');
     });
 
 });

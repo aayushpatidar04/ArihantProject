@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Stall;
 use App\Models\StallVisit;
 
-class StallVisitController extends Controller
+class AdminStallVisitController extends Controller
 {
+    
     /**
      * List all participant visits for a specific stall.
      */
