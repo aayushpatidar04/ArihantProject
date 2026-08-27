@@ -51,7 +51,7 @@ class RegistrationController extends Controller
         if (preg_match('/^[A-Z0-9]{12}$/', $referralCode)) {
             Session::put('reg_referred_by', $referralCode);
         } else {
-            Session::forget('reg_referred_by');
+            Session::forget(['reg_referred_by']);
         }
 
         return view('registration.form');
@@ -164,6 +164,7 @@ class RegistrationController extends Controller
             'referred_by' => $referrer?->referral_code,
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
+            'platform' => Session::get('registration_platform'),
         ]);
 
         // Push lead to CRM (fire-and-forget)
@@ -197,7 +198,7 @@ class RegistrationController extends Controller
         Auth::login($user);
         $this->leadScore->calculateScore($reg);
 
-        Session::forget(['client_users', 'reg_phone', 'is_existing_client', 'reg_referred_by']);
+        Session::forget(['client_users', 'reg_phone', 'is_existing_client', 'reg_referred_by', 'registration_platform']);
 
         $plainPassword = $request->password;
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
@@ -329,6 +330,7 @@ class RegistrationController extends Controller
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
             'is_subbroker' => $isSubBroker,
+            'platform' => Session::get('registration_platform'),
         ]);
 
         // Push lead to CRM (fire-and-forget)
@@ -365,7 +367,7 @@ class RegistrationController extends Controller
         $plainPassword = 'ArihantCapitals';
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
 
-        Session::forget(['reg_phone', 'phone_verified', 'reg_referred_by']);
+        Session::forget(['reg_phone', 'phone_verified', 'reg_referred_by', 'registration_platform']);
         return redirect()->route('registration.payment');
     }
 

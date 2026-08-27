@@ -20,12 +20,4 @@ return [
         'ayushb190458@gmail.com',
     ],
 
-    // Quiz correct answers (question_id => answer)
-    'quiz_answers' => [
-        'q1' => 'a',
-        'q2' => 'b',
-        'q3' => 'c',
-        'q4' => 'd',
-        'q5' => 'a',
-    ],
 ];

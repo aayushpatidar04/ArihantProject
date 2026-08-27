@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Stall;
+use App\Services\QrCodeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -44,7 +45,10 @@ class StallController extends Controller
         $validated['slug'] = $this->generateUniqueSlug($validated['name']);
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        Stall::create($validated);
+        $stall = Stall::create($validated);
+
+        $service = new QrCodeService();
+        $service->generateStallQr($stall);
 
         return redirect()
             ->route('admin.stalls.index')
@@ -56,7 +60,10 @@ class StallController extends Controller
      */
     public function show(Stall $stall)
     {
-        $stall->loadCount('visits');
+        $stall->load([
+            'quizzes.questions.options',
+            'feedbackQuestions.options',
+        ]);
 
         return view('admin.stalls.show', compact('stall'));
     }

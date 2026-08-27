@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Stall extends Model
@@ -52,5 +53,29 @@ class Stall extends Model
         $this->update([
             'qr_token' => static::generateQrToken(),
         ]);
+    }
+
+    public function quizzes(): HasMany
+    {
+        return $this->hasMany(StallQuiz::class);
+    }
+
+    public function activeQuiz(): HasOne
+    {
+        return $this->hasOne(StallQuiz::class)
+            ->where('is_active', true);
+    }
+
+    public function feedbackQuestions(): HasMany
+    {
+        return $this->hasMany(StallFeedbackQuestion::class)
+            ->orderBy('sort_order');
+    }
+
+    public function activeFeedbackQuestions(): HasMany
+    {
+        return $this->hasMany(StallFeedbackQuestion::class)
+            ->where('is_active', true)
+            ->orderBy('sort_order');
     }
 }

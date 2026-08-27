@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StallVisit extends Model
 {
@@ -12,7 +13,7 @@ class StallVisit extends Model
 
     protected $fillable = [
         'event_registration_id', 'stall_id', 'visited_at',
-        'rating', 'feedback', 'quiz_answers', 'quiz_score', 'engagement_points'
+        'quiz_score', 'engagement_points'
     ];
 
     protected $casts = [
@@ -28,5 +29,21 @@ class StallVisit extends Model
     public function stall(): BelongsTo
     {
         return $this->belongsTo(Stall::class);
+    }
+
+    public function quizAnswers(): HasMany
+    {
+        return $this->hasMany(
+            StallVisitQuizAnswer::class,
+            'stall_visit_id'
+        );
+    }
+
+    public function feedbackResponses(): HasMany
+    {
+        return $this->hasMany(
+            StallVisitFeedback::class,
+            'stall_visit_id'
+        );
     }
 }

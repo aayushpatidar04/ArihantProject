@@ -23,16 +23,6 @@ class HomeController extends Controller
         if (Auth::check()) {
             $registration = EventRegistration::where('user_id', Auth::id())->latest()->first();
 
-            // if ($registration) {
-            //     return match($registration->status) {
-            //         'otp_verified' => redirect()->route('registration.kyc'),
-            //         'kyc_completed' => redirect()->route('registration.payment'),
-            //         'payment_pending' => redirect()->route('registration.payment'),
-            //         'paid', 'checked_in' => redirect()->route('registration.success'),
-            //         default => view('index', compact('registration')),
-            //     };
-            // }
-
             return view('index', compact('registration'));
         }
         return view('index', ['registration' => null]);
@@ -84,6 +74,7 @@ class HomeController extends Controller
         }
 
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        \Log::info($otp);
 
         // Store OTP in cache for 2 minutes
         Cache::put('login_otp_' . $phone, $otp, now()->addMinutes(2));

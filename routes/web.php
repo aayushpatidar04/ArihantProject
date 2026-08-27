@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\StallController as AdminStallController;
+use App\Http\Controllers\Admin\StallQuizController;
+use App\Http\Controllers\Admin\StallFeedbackController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\PaymentController;
@@ -54,7 +56,10 @@ Route::middleware(['auth'])->group(function () {
 
     /* ---------- Stalls ---------- */
     Route::get('/stalls', [StallController::class, 'index'])->name('stalls.index');
-    Route::post('/stalls/feedback', [StallController::class, 'submitFeedback'])->name('stalls.feedback');
+    Route::get('/stalls/scanner', [StallController::class, 'scanner'])->name('stalls.scanner');
+    Route::get('/stalls/scan/{qr_token}', [StallController::class, 'scan'])->name('stalls.scan');
+    Route::get('/stalls/{stall}', [StallController::class, 'show'])->name('stalls.show');
+    Route::post('/stalls/{stall}/submit', [StallController::class, 'submitFeedback'])->name('stalls.submit');
 
     /* ---------- Referral ---------- */
     Route::get('/refer', [ReferralController::class, 'index'])->name('referral.index');
@@ -82,9 +87,6 @@ Route::post('/razor/payment/webhook', [PaymentController::class, 'razorWebhook']
 /* ---------- Check-In (Venue Staff) ---------- */
 Route::get('/checkin/confirmation', [CheckInController::class, 'mobileConfirmation'])->name('checkin.confirmation');
 
-/* ---------- Stall API (for QR scanning at stalls) ---------- */
-Route::post('/stalls/checkin', [StallController::class, 'checkIn'])->name('stalls.checkin');
-
 /* ---------- Admin Routes ---------- */
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->middleware('throttle:5,1')->name('admin.login.submit');
@@ -104,7 +106,18 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/communications', [AdminController::class, 'communications'])->name('communications');
 
     Route::resource('stalls', AdminStallController::class);
-    Route::get('stalls/{stall}/qr', [AdminStallController::class, 'qr'])->name('stalls.qr');
+    Route::prefix('stalls/{stall}')->name('stalls.')->group(function () {
+        // Quiz
+        Route::post('/quiz', [StallQuizController::class, 'store'])->name('quiz.store');
+        Route::put('/quiz', [StallQuizController::class, 'update'])->name('quiz.update');
+        Route::post('/quiz/questions', [StallQuizController::class, 'storeQuestion'])->name('quiz.questions.store');
+        Route::put('/quiz/questions/{question}', [StallQuizController::class, 'updateQuestion'])->name('quiz.questions.update');
+        Route::delete('/quiz/questions/{question}', [StallQuizController::class, 'destroyQuestion'])->name('quiz.questions.destroy');
+        // Feedback
+        Route::post('/feedback/questions', [StallFeedbackController::class, 'store'])->name('feedback.questions.store');
+        Route::put('/feedback/questions/{question}', [StallFeedbackController::class, 'update'])->name('feedback.questions.update');
+        Route::delete('/feedback/questions/{question}', [StallFeedbackController::class, 'destroy'])->name('feedback.questions.destroy');
+    });
 
 });
 
