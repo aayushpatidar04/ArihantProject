@@ -31,7 +31,7 @@
                         <td>{{ $s->name }}</td>
                         <td>{{ $s->location ?? '-' }}</td>
                         <td>{{ $s->visits_count }}</td>
-                        <td>{{ $s->visits->first()?->avg_rating ? number_format($s->visits->first()->avg_rating, 1) : '-' }}</td>
+                        <td>{{ $s->avg_rating !== null ? number_format($s->avg_rating, 1) : '-' }}</td>
                     </tr>
                     @empty
                     <tr><td colspan="4" style="text-align:center;color:var(--muted);padding:40px">No stall data.</td></tr>

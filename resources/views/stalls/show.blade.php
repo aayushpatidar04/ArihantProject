@@ -353,9 +353,9 @@
                         Answer the questions below to earn additional engagement points.
                     </div>
 
-                    @if($stall->active_quiz && $stall->active_quiz->is_active)
+                    @if($stall->activeQuiz && $stall->activeQuiz->is_active)
 
-                        @foreach($stall->active_quiz->questions as $question)
+                        @foreach($stall->activeQuiz->questions as $question)
 
                             <div class="question">
 
@@ -374,9 +374,10 @@
                                     <label class="option">
 
                                         <input type="radio" name="quiz_answers[{{ $question->id }}]" value="{{ $option->id }}" @if(
-                                            is_array($visit->quiz_answers)
-                                            && isset($visit->quiz_answers[$question->id])
-                                            && $visit->quiz_answers[$question->id] == $option->id
+                                            $visit->quizAnswers->contains(fn($answer) =>
+                                                $answer->stall_quiz_question_id == $question->id
+                                                && $answer->stall_quiz_option_id == $option->id
+                                            )
                                         ) checked @endif>
 
                                         <span>
@@ -415,44 +416,40 @@
                     <div class="feedback-grid">
 
                         {{-- Rating --}}
-                        <div>
+                        @forelse($stall->activeFeedbackQuestions as $question)
+                            @php
+                                $response = $visit->feedbackResponses->firstWhere('stall_feedback_question_id', $question->id);
+                                $answer = $response?->answer;
+                                $selectedAnswers = is_string($answer) ? json_decode($answer, true) : $answer;
+                            @endphp
+                            <div>
+                                <label class="field-label">
+                                    {{ $question->question }}{{ $question->is_required ? ' *' : '' }}
+                                </label>
 
-                            <label class="field-label">
-                                How would you rate this stall?
-                            </label>
-
-                            <div class="rating-options">
-
-                                @for($rating = 1; $rating <= 5; $rating++)
-
-                                    <div class="rating-option">
-
-                                        <input type="radio" id="rating-{{ $rating }}" name="rating" value="{{ $rating }}"
-                                            required @if((int) $visit->rating === $rating) checked @endif>
-
-                                        <label for="rating-{{ $rating }}">
-                                            {{ $rating }}
-                                        </label>
-
+                                @if($question->type === 'text')
+                                    <textarea name="feedback_answers[{{ $question->id }}]" class="feedback-textarea" maxlength="1000">{{ $answer }}</textarea>
+                                @elseif($question->type === 'rating')
+                                    <div class="rating-options">
+                                        @for($rating = 1; $rating <= 5; $rating++)
+                                            <div class="rating-option">
+                                                <input type="radio" id="feedback-{{ $question->id }}-{{ $rating }}" name="feedback_answers[{{ $question->id }}]" value="{{ $rating }}" @checked((string) $answer === (string) $rating)>
+                                                <label for="feedback-{{ $question->id }}-{{ $rating }}">{{ $rating }}</label>
+                                            </div>
+                                        @endfor
                                     </div>
-
-                                @endfor
-
+                                @else
+                                    @foreach($question->options as $option)
+                                        <label class="option">
+                                            <input type="{{ $question->type === 'multiple_choice' ? 'checkbox' : 'radio' }}" name="feedback_answers[{{ $question->id }}]{{ $question->type === 'multiple_choice' ? '[]' : '' }}" value="{{ $option->id }}" @checked($question->type === 'multiple_choice' ? is_array($selectedAnswers) && in_array($option->id, $selectedAnswers) : (string) $answer === (string) $option->id)>
+                                            <span>{{ $option->option_text }}</span>
+                                        </label>
+                                    @endforeach
+                                @endif
                             </div>
-
-                        </div>
-
-                        {{-- Feedback --}}
-                        <div>
-
-                            <label for="feedback" class="field-label">
-                                Additional Feedback
-                            </label>
-
-                            <textarea id="feedback" name="feedback" class="feedback-textarea" maxlength="1000"
-                                placeholder="Tell us what you liked or what we can improve...">{{ $visit->feedback }}</textarea>
-
-                        </div>
+                        @empty
+                            <div class="no-quiz">No feedback questions are available for this stall.</div>
+                        @endforelse
 
                     </div>
 

@@ -6,6 +6,7 @@ use App\Models\EventRegistration;
 use App\Models\Stall;
 use App\Models\StallVisit;
 use App\Services\LeadScoringService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -181,8 +182,10 @@ class StallController extends Controller
          */
         $stall->load([
             'activeQuiz.questions.options',
-            'feedbackQuestions.options',
+            'activeFeedbackQuestions.options',
         ]);
+
+        $visit->load('quizAnswers', 'feedbackResponses');
 
         return view('stalls.show', compact(
             'stall',
@@ -216,25 +219,70 @@ class StallController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'feedback' => 'nullable|string|max:1000',
             'quiz_answers' => 'nullable|array',
+            'feedback_answers' => 'nullable|array',
         ]);
 
         $answers = $request->input('quiz_answers', []);
+        $feedbackAnswers = $request->input('feedback_answers', []);
+
+        $stall->load([
+            'activeQuiz.questions.options',
+            'activeFeedbackQuestions.options',
+        ]);
+
+        foreach ($stall->activeFeedbackQuestions as $question) {
+            if ($question->is_required && !filled($feedbackAnswers[$question->id] ?? null)) {
+                return back()
+                    ->withErrors([
+                        "feedback_answers.{$question->id}" => 'This feedback question is required.',
+                    ])
+                    ->withInput();
+            }
+        }
 
         $quizScore = $this->calculateQuizScore(
             $stall,
             $answers
         );
 
-        $visit->update([
-            'rating' => $request->rating,
-            'feedback' => $request->feedback,
-            'quiz_answers' => json_encode($answers),
-            'quiz_score' => $quizScore,
-            'engagement_points' => 10 + $quizScore,
-        ]);
+        DB::transaction(function () use ($visit, $stall, $answers, $feedbackAnswers, $quizScore) {
+            $visit->quizAnswers()->delete();
+            foreach ($stall->activeQuiz?->questions ?? [] as $question) {
+                $selectedOptionId = $answers[$question->id] ?? null;
+                if (!$selectedOptionId) {
+                    continue;
+                }
+
+                $option = $question->options->firstWhere('id', (int) $selectedOptionId);
+                if (!$option) {
+                    continue;
+                }
+
+                $isCorrect = (bool) $option->is_correct;
+                $visit->quizAnswers()->create([
+                    'stall_quiz_question_id' => $question->id,
+                    'stall_quiz_option_id' => $option->id,
+                    'is_correct' => $isCorrect,
+                    'points_earned' => $isCorrect ? $question->points : 0,
+                ]);
+            }
+
+            $visit->feedbackResponses()->delete();
+            foreach ($feedbackAnswers as $questionId => $answer) {
+                if (filled($answer) && $stall->activeFeedbackQuestions->contains('id', $questionId)) {
+                    $visit->feedbackResponses()->create([
+                        'stall_feedback_question_id' => $questionId,
+                        'answer' => is_array($answer) ? json_encode($answer) : $answer,
+                    ]);
+                }
+            }
+
+            $visit->update([
+                'quiz_score' => $quizScore,
+                'engagement_points' => 10 + $quizScore,
+            ]);
+        });
 
         $this->leadScore->calculateScore($reg);
 
@@ -248,14 +296,11 @@ class StallController extends Controller
      * Calculate quiz score from database questions/options.
      */
     protected function calculateQuizScore(
-        StallVisit $visit,
+        Stall $stall,
         array $answers
     ): int {
-        $visit->load([
-            'stall.active_quiz.questions.options',
-        ]);
-
-        $quiz = $visit->stall->active_quiz;
+        $stall->loadMissing('activeQuiz.questions.options');
+        $quiz = $stall->activeQuiz;
 
         if (!$quiz || !$quiz->is_active) {
             return 0;

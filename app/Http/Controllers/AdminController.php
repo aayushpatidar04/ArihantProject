@@ -166,9 +166,15 @@ class AdminController extends Controller
     protected function getStallStats()
     {
         return \App\Models\Stall::withCount('visits')
-            ->with(['visits' => function ($q) {
-                $q->selectRaw('stall_id, AVG(rating) as avg_rating')->groupBy('stall_id');
-            }])
+            ->select('stalls.*')
+            ->selectSub(function ($query) {
+                $query->from('stall_visit_feedback as svf')
+                    ->join('stall_feedback_questions as sfq', 'sfq.id', '=', 'svf.stall_feedback_question_id')
+                    ->join('stall_visits as sv', 'sv.id', '=', 'svf.stall_visit_id')
+                    ->whereColumn('sv.stall_id', 'stalls.id')
+                    ->where('sfq.type', 'rating')
+                    ->selectRaw('AVG(CAST(svf.answer AS DECIMAL(10, 2)))');
+            }, 'avg_rating')
             ->get();
     }
 }

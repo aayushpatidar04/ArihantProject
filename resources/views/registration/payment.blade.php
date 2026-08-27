@@ -220,11 +220,11 @@
             @endif --}}
 
             <button id="payBtn" class="btn btn-primary" style="width:100%">Pay Now</button>
-            <div
+            {{-- <div
                 style="text-align:center; font-size:12px; line-height:1.6; color:red; padding:14px 18px; background:rgba(255,255,255,0.02); border:1px dashed rgba(255,255,255,0.08); border-radius:12px; max-width:520px; margin:20px auto 0;">
                 Disclaimer: An additional convenience fee upto ₹5 may be charged for payments made via Credit Card, UPI, Net
                 Banking, Debit Card, or EMI.
-            </div>
+            </div> --}}
             <div id="atomError" style="color:#ff6b6b;font-size:13px;margin-top:16px;display:none"></div>
         </div>
     </div>

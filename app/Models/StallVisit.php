@@ -18,7 +18,6 @@ class StallVisit extends Model
 
     protected $casts = [
         'visited_at' => 'datetime',
-        'quiz_answers' => 'array',
     ];
 
     public function registration(): BelongsTo
