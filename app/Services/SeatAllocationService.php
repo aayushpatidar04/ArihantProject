@@ -42,8 +42,8 @@ class SeatAllocationService
      */
     public function seedSeats(int $total = 500): void
     {
-        $sections = ['A', 'B', 'VIP'];
-        $counts = ['A' => 250, 'B' => 200, 'VIP' => 50];
+        $sections = ['A'];
+        $counts = ['A' => 1000];
         $seatNumber = 1;
 
         foreach ($sections as $section) {

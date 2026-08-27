@@ -63,7 +63,7 @@
                 <div class="sub">Non Clients: {{ $stats['paid_non_clients'] }}</div>
             </div>
             <div class="stat-card"><div class="num">{{ $stats['checked_in'] }}</div><div class="lbl">Checked In</div></div>
-            <div class="stat-card"><div class="num">{{ $stats['allocated_seats'] }}/{{ $stats['total_seats'] }}</div><div class="lbl">Seats Allocated</div></div>
+            {{-- <div class="stat-card"><div class="num">{{ $stats['allocated_seats'] }}/{{ $stats['total_seats'] }}</div><div class="lbl">Seats Allocated</div></div> --}}
             <div class="stat-card"><div class="num">{{ $stats['total_stall_visits'] }}</div><div class="lbl">Stall Visits</div></div>
             <div class="stat-card">
                 <div class="num">{{ $stats['total_referrals'] }}</div>

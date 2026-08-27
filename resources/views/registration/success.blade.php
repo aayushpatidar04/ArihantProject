@@ -33,11 +33,14 @@
         @endif
 
         <div class="qr-box">
-            @if($reg->status === 'checked_in' && isset($seat))
+            @if($reg->status === 'checked_in')
                 <div style="text-align:center">
-                    <div style="font-size:14px;color:var(--muted);margin-bottom:8px">Your Allocated Seat</div>
-                    <div style="font-size:56px;font-weight:800;color:var(--purple-1);line-height:1">{{ $seat->seat_number }}</div>
-                    <div style="font-size:14px;color:var(--muted);margin-top:8px">Section {{ $seat->section }} • Row {{ $seat->row }}</div>
+                    <div style="font-size:32px;font-weight:800;color:var(--purple-1);line-height:1">
+                        CHECKED IN
+                    </div>
+                    <div style="font-size:14px;color:var(--muted);margin-top:8px">
+                        Checked in at {{ $reg->checked_in_at->format('d M Y, h:i A') }}
+                    </div>
                 </div>
                 <div class="reg-num">{{ $reg->registration_number }}</div>
             @elseif(isset($qr) && $qr)
@@ -46,6 +49,7 @@
             @else
                 <p style="color:var(--muted)">QR code generating...</p>
             @endif
+
         </div>
 
         <div style="margin-bottom:24px">
