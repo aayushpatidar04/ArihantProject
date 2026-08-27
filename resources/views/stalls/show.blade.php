@@ -284,15 +284,6 @@
 
         <div class="stall-show-wrap">
 
-            <a
-                href="{{ route('admin.stalls.visits.index', $stall) }}"
-                class="btn btn-primary"
-            >
-                View Visits & Responses
-                @if(isset($visit_count))
-                    ({{ $visit_count }})
-                @endif
-            </a>
             <a href="{{ route('stalls.index') }}" class="back-link">
                 ← Back to Stalls
             </a>

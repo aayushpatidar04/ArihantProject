@@ -439,6 +439,16 @@
                     <a href="{{ route('admin.stalls.index') }}" class="btn btn-light">
                         ← Back
                     </a>
+                    
+                    <a
+                        href="{{ route('admin.stalls.visits.index', $stall) }}"
+                        class="btn btn-primary"
+                    >
+                        View Visits & Responses
+                        @if(isset($visit_count))
+                            ({{ $visit_count }})
+                        @endif
+                    </a>
 
                     <a href="{{ route('admin.stalls.edit', $stall) }}" class="btn btn-primary">
                         Edit Stall
