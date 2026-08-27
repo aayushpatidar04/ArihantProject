@@ -3902,8 +3902,8 @@
                     <p>A certificate for being part of Central India's largest AI & Algo Conclave.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/9.png" alt="Food & Refreshments"></div>
-                    <h3>Food & Refreshments</h3>
+                    <div class="icon-circle"><img src="assets/images/icons/9.png" alt="Lunch + High Tea"></div>
+                    <h3>Lunch + High Tea</h3>
                     <p>Enjoy a delicious lunch, high tea & snacks throughout the day.</p>
                 </div>
             </div>
@@ -3972,6 +3972,7 @@
                     <li><span class="check">✓</span> Trader Networking</li>
                     <li><span class="check">✓</span> Expert Sessions</li>
                     <li><span class="check">✓</span> Quizzes + Big Rewards</li>
+                    <li><span class="check">✓</span> Lunch + High Tea</li>
                 </ul>
             </div>
 

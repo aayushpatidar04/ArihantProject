@@ -199,7 +199,7 @@
                     <li>🎁 Exciting Rewards & Prizes</li>
                     <li>🧰 Trader Toolkit</li>
                     <li>📜 Certificate of Participation</li>
-                    <li>🍽️ Food & Refreshments</li>
+                    <li>🍽️ Lunch + High Tea</li>
                 </ul>
             </div>
             {{-- <div class="secure-badge">
