@@ -11,6 +11,7 @@ class TrackPlatform
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->has('platform') && $request->filled('platform')) {
+            \Log::info($request->platform);
             session(['registration_platform' => $request->query('platform')]);
         }
 
