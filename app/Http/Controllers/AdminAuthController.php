@@ -46,6 +46,7 @@ class AdminAuthController extends Controller
 
         // Generate OTP
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        \Log::info($otp);
 
         // Store in cache for 5 minutes
         Cache::put('admin_2fa_otp_' . $email, $otp, now()->addMinutes(5));

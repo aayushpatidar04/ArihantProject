@@ -100,7 +100,7 @@
 
                         <p>🚀 <strong>Just 2 Days to Go!</strong></p>
 
-                        <p>The countdown has begun! Get ready to experience <strong>ARIhant PLUS AI & ALGO
+                        <p>The countdown has begun! Get ready to experience <strong>ARIHANT PLUS AI & ALGO
                                 CONCLAVE</strong> – Central India's Largest AI & ALGO CONCLAVE.</p>
 
                         <div class="event-box">

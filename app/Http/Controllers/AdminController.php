@@ -84,7 +84,7 @@ class AdminController extends Controller
     public function stalls()
     {
         $stalls = \App\Models\Stall::withCount('visits')->get();
-        return view('admin.stalls', compact('stalls'));
+        return view('admin.stalls.index', compact('stalls'));
     }
 
     public function referrals()

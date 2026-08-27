@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\StallController as AdminStallController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\PaymentController;
@@ -94,13 +95,17 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
     Route::get('/checkins', [AdminController::class, 'checkIns'])->name('checkins');
-    Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
+    // Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
     Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
     Route::get('/leaderboard', [AdminController::class, 'leaderboard'])->name('leaderboard');
     Route::get('/influencer', [AdminController::class, 'influencerPosts'])->name('influencer');
     Route::post('/influencer/{post}/approve', [AdminController::class, 'approvePost'])->name('influencer.approve');
     Route::post('/influencer/{post}/reject', [AdminController::class, 'rejectPost'])->name('influencer.reject');
     Route::get('/communications', [AdminController::class, 'communications'])->name('communications');
+
+    Route::resource('stalls', AdminStallController::class);
+    Route::get('stalls/{stall}/qr', [AdminStallController::class, 'qr'])->name('stalls.qr');
+
 });
 
 Route::get('/vishal-mehta', [HomeController::class, 'vishal_mehta'])->name('vishal-mehta');

@@ -95,7 +95,7 @@
 
                         <p>🎉 <strong>Today's the Day!</strong></p>
 
-                        <p>The <strong>ARIhant PLUS AI & ALGO CONCLAVE</strong> is happening <strong>Today!</strong></p>
+                        <p>The <strong>ARIHANT PLUS AI & ALGO CONCLAVE</strong> is happening <strong>Today!</strong></p>
 
                         <div class="event-box">
                             <p>📅 <strong>Today –</strong> 5th September 2026</p>

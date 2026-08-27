@@ -33,7 +33,7 @@
 
                         <p>🚀 <strong>Your Seat Is Waiting!</strong></p>
 
-                        <p>This is a gentle reminder to complete your payment and reserve your seat for the <strong>ARIhant PLUS AI & ALGO CONCLAVE</strong>, happening on <strong>5th September 2026</strong> at <strong>Marriott Hotel, Indore</strong>.</p>
+                        <p>This is a gentle reminder to complete your payment and reserve your seat for the <strong>ARIHANT PLUS AI & ALGO CONCLAVE</strong>, happening on <strong>5th September 2026</strong> at <strong>Marriott Hotel, Indore</strong>.</p>
 
                         <div class="event-box">
                             <p>📅 <strong>Date:</strong> 5th September 2026</p>

@@ -95,7 +95,7 @@
 
                         <p>🎯 <strong>Just 1 Day to Go!</strong></p>
 
-                        <p>Tomorrow is the big day! Get ready to be part of <strong>ARIhant PLUS AI & ALGO
+                        <p>Tomorrow is the big day! Get ready to be part of <strong>ARIHANT PLUS AI & ALGO
                                 CONCLAVE</strong> – Central India's Largest AI & ALGO CONCLAVE.</p>
 
                         <div class="event-box">
