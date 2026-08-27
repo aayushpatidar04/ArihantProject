@@ -18,16 +18,23 @@ class QrCodeService
         $code = hash('sha256', $registration->id . '|' . $registration->registration_number . '|entry');
         $shortCode = substr($code, 0, 32);
 
+        $path = "qrcodes/{$registration->id}_entry.png";
+
         $existing = QrCodeModel::where('event_registration_id', $registration->id)
             ->where('purpose', 'entry')
             ->first();
 
+        // If record exists but file missing, regenerate image
         if ($existing) {
+            if (!Storage::disk('public')->exists($existing->image_path)) {
+                $qrImage = $this->generateImage($shortCode);
+                Storage::disk('public')->put($existing->image_path, $qrImage);
+            }
             return $existing;
         }
 
+        // Normal case: create new record + image
         $qrImage = $this->generateImage($shortCode);
-        $path = "qrcodes/{$registration->id}_entry.png";
         Storage::disk('public')->put($path, $qrImage);
 
         return QrCodeModel::create([
@@ -37,6 +44,7 @@ class QrCodeService
             'purpose' => 'entry',
         ]);
     }
+
 
     public function generateStallQr(Stall $stall): Stall
     {
