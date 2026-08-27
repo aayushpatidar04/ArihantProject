@@ -176,4 +176,8 @@ class HomeController extends Controller
     {
         return view('ankit-rai');
     }
+    public function rajesh_shrivastav()
+    {
+        return view('rajesh-shrivastav');
+    }
 }

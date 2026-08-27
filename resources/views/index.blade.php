@@ -4,15 +4,18 @@
 <head>
     <!-- Google Tag Manager -->
 
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
 
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
 
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
 
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
 
-    })(window,document,'script','dataLayer','GTM-NL23JDKS');</script>
+        })(window, document, 'script', 'dataLayer', 'GTM-NL23JDKS');</script>
 
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
@@ -1803,9 +1806,10 @@
         .panelist-arrow {
             width: 40px;
             height: 40px;
-            border-radius: 8px; /* squared with slight rounding */
+            border-radius: 8px;
+            /* squared with slight rounding */
             background-color: #272727;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -3531,7 +3535,8 @@
         }
 
         .mobile-sticky-cta {
-            display: none; /* desktop hidden */
+            display: none;
+            /* desktop hidden */
             position: fixed;
             bottom: 0;
             left: 0;
@@ -3596,7 +3601,7 @@
             .mobile-sticky-cta {
                 display: block;
             }
-            
+
             /* Prevent footer content from hiding behind the bar */
             footer {
                 padding-bottom: 72px;
@@ -3608,12 +3613,11 @@
 <body>
     <!-- Google Tag Manager (noscript) -->
 
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NL23JDKS"
-
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NL23JDKS" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- End Google Tag Manager (noscript) -->
-    
+
     <header>
         <div class="nav">
             <div style="display: flex; align-items: center;">
@@ -3875,7 +3879,8 @@
                     <p>Ready-to-use AI prompts, trading frameworks and practical takeaways.</p>
                 </div>
                 <div class="card">
-                    <div class="icon-circle"><img src="assets/images/icons/7.png" alt="₹14,997 Stratzy Access for Just ₹297">
+                    <div class="icon-circle"><img src="assets/images/icons/7.png"
+                            alt="₹14,997 Stratzy Access for Just ₹297">
                     </div>
                     <h3>₹14,997 Stratzy Access for Just ₹297</h3>
                     <p>Get 3 months of Stratzy at an exclusive Conclave-only price.</p>
@@ -4546,6 +4551,15 @@
                     { type: "x", url: "https://x.com/AnkitRai259" }
                 ]
                 , knowMore: "/ankit-rai"
+            }
+                , {
+                name: "Rajesh Srivastav"
+                , role: "Founder, QuantLab Technologies | Professional Derivatives Trader"
+                , img: "assets/images/25.png"
+                , socials: [
+
+                ]
+                , knowMore: "/rajesh-shrivastav"
             }
                 ,];
             var track = document.getElementById('panelistTrack');
