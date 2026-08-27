@@ -63,10 +63,10 @@ class StallController extends Controller
         $stall->load([
             'quizzes.questions.options',
             'feedbackQuestions.options',
-        ]);
-        $visit_count = $stall->loadCount('visits');
+        ])->loadCount('visits');
 
-        return view('admin.stalls.show', compact('stall', 'visit_count'));
+
+        return view('admin.stalls.show', compact('stall'));
     }
 
     /**

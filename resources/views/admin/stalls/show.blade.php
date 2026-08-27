@@ -440,13 +440,10 @@
                         ← Back
                     </a>
                     
-                    <a
-                        href="{{ route('admin.stalls.visits.index', $stall) }}"
-                        class="btn btn-primary"
-                    >
+                    <a href="{{ route('admin.stalls.visits.index', $stall) }}" class="btn btn-primary">
                         View Visits & Responses
-                        @if(isset($visit_count))
-                            ({{ $visit_count }})
+                        @if($stall->visits_count)
+                            ({{ $stall->visits_count }})
                         @endif
                     </a>
 
