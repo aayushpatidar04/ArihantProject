@@ -237,9 +237,9 @@ class WhatsAppService
      * Send 1-Day Event Reminder (PP17269800).
      * Variables: {{1}} = Name, {{2}} = View Ticket URL
      */
-    public function sendReminder1Day(EventRegistration $registration, string $ticketUrl): bool
+    public function sendReminder1Day(EventRegistration $registration): bool
     {
-        return $this->sendEventReminder($registration, $ticketUrl, 'PP17269800', '1day');
+        return $this->sendEventReminderDay1($registration, 'PY17811120', '1day');
     }
 
     /**
@@ -273,6 +273,49 @@ class WhatsAppService
                         'number' => $this->formatPhone($registration->phone),
                         'language' => 'en',
                         'template_message' => [$registration->full_name, $ticketUrl],
+                    ]
+                ],
+            ]);
+
+            $json = $response->json();
+            Log::info('PickyAssist event reminder [' . $logPrefix . '] response', [
+                'response' => $json,
+                'reference' => $reference,
+                'reg_id' => $registration->id,
+            ]);
+
+            if (!$response->successful() || ($json['status'] ?? 0) != 100) {
+                Log::error('PickyAssist event reminder [' . $logPrefix . '] failed', ['response' => $json]);
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('PickyAssist event reminder [' . $logPrefix . '] exception: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    protected function sendEventReminderDay1(EventRegistration $registration, string $templateId, string $logPrefix): bool
+    {
+        if (empty($this->token) || empty($this->applicationId)) {
+            Log::warning('PickyAssist not configured. Event reminder skipped.');
+            return false;
+        }
+
+        $reference = 'evrem_' . $logPrefix . '_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
+
+        try {
+            $response = Http::timeout(60)->post($this->apiUrl, [
+                'token' => $this->token,
+                'application' => $this->applicationId,
+                'template_id' => $templateId,
+                'data' => [
+                    [
+                        'number' => $this->formatPhone($registration->phone),
+                        'language' => 'en',
+                        'template_message' => [$registration->full_name],
                     ]
                 ],
             ]);
