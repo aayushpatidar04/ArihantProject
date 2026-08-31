@@ -21,6 +21,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
+    <meta property="og:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta property="og:image" content="https://event.arihantplus.com/assets/images/logo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://event.arihantplus.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
+    <meta name="twitter:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta name="twitter:image" content="https://event.arihantplus.com/assets/images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3607,6 +3619,69 @@
                 padding-bottom: 72px;
             }
         }
+
+        .partner-sec {
+            padding: 80px 24px 100px;
+            background: var(--bg-soft);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .partner-sec .section-head {
+            margin-bottom: 40px;
+        }
+
+        .partner-logos {
+            max-width: var(--max);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .partner-card {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: clamp(22px, 2.6vw, 34px) clamp(28px, 4vw, 52px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+        }
+
+        .partner-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1.5px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 55%, rgba(216, 110, 255, 0.45) 85%, rgba(224, 110, 255, 0.85) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 44px rgba(140, 40, 200, 0.28);
+        }
+
+        .partner-card img {
+            height: clamp(48px, 6.8vw, 102px);
+            width: auto;
+            max-width: 80vw;
+            /* logo has its own colored blocks + white text, so give it a light chip to sit on */
+            background: #fff;
+            padding: clamp(10px, 1.3vw, 20px) clamp(18px, 2.4vw, 36px);
+            border-radius: 14px;
+        }
     </style>
 </head>
 
@@ -3956,6 +4031,17 @@
 
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
     </section>
+
+    <section class="partner-sec" id="media-partner">
+        <div class="section-head">
+            <h2>Our Media Partner</h2>
+        </div>
+        <div class="partner-logos">
+            <div class="partner-card">
+                <img src="/assets/images/media-partner-etnow.svg" alt="ET Now Swadesh">
+            </div>
+        </div>
+    </section>  
 
     <section class="value-banner" id="value">
         <div class="value-heading wrap">
