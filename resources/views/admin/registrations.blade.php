@@ -199,8 +199,18 @@
                                 <td>{{ $r->created_at->format('M d') }}</td>
                                 <td>
                                     @if($r->status !== 'paid')
-                                        <button type="button" class="btn btn-primary" style="font-size:12px;padding:6px 14px"
-                                            onclick="openMarkPaidModal({{ $r->id }}, '{{ $r->registration_number }}', '{{ $r->full_name }}')">
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            style="font-size:12px;padding:6px 14px"
+                                            onclick='openMarkPaidModal(@json([
+                                                "id" => $r->id,
+                                                "registration_number" => $r->registration_number,
+                                                "name" => $r->full_name,
+                                                "phone" => $r->phone,
+                                                "is_existing_client" => $r->is_existing_client,
+                                            ]))'
+                                        >
                                             Mark Paid
                                         </button>
                                     @else
