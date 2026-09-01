@@ -12,6 +12,11 @@ use Illuminate\Validation\Rule;
 
 class InfluencerAdminController extends Controller
 {
+
+    public function __construct(
+        protected InfluencerScoringService $influencerScore
+    ) {
+    }
     /**
      * Display all influencers.
      */

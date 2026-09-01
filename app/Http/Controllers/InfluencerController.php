@@ -134,7 +134,7 @@ class InfluencerController extends Controller
      */
     protected function ensureInfluencer($user): void
     {
-        if (!$user || $user->account_type !== 'influencer') {
+        if (!$user || $user->role !== 'influencer') {
             abort(403, 'Unauthorized.');
         }
     }

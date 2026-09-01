@@ -16,7 +16,7 @@ class InfluencerAuthController extends Controller
     {
         if (
             Auth::check() &&
-            Auth::user()->account_type === 'influencer'
+            Auth::user()->role === 'influencer'
         ) {
             return redirect()->route('influencer.dashboard');
         }
@@ -49,7 +49,7 @@ class InfluencerAuthController extends Controller
             !Auth::validate([
                 'email' => $credentials['email'],
                 'password' => $credentials['password'],
-                'account_type' => 'influencer',
+                'role' => 'influencer',
             ])
         ) {
             return back()
@@ -66,7 +66,7 @@ class InfluencerAuthController extends Controller
         */
 
         $user = \App\Models\User::where('email', $credentials['email'])
-            ->where('account_type', 'influencer')
+            ->where('role', 'influencer')
             ->first();
 
         if (!$user) {
@@ -198,7 +198,7 @@ class InfluencerAuthController extends Controller
         */
 
         $user = \App\Models\User::where('id', $userId)
-            ->where('account_type', 'influencer')
+            ->where('role', 'influencer')
             ->first();
 
         if (!$user) {
@@ -258,7 +258,7 @@ class InfluencerAuthController extends Controller
         }
 
         $user = \App\Models\User::where('id', $userId)
-            ->where('account_type', 'influencer')
+            ->where('role', 'influencer')
             ->first();
 
         if (!$user) {
