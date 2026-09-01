@@ -176,6 +176,8 @@
         @yield('content')
     </main>
 
+    <x-flash />
+    
     <!-- Footer -->
     <footer>
         <div class="footer-glow"></div>
