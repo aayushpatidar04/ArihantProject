@@ -241,6 +241,54 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .post-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 11px;
+            border-radius: 9px;
+            border: 1px solid rgba(255, 255, 255, .1);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .post-action-approve {
+            background: rgba(40, 180, 100, .10);
+            color: #8ff0b3;
+            border-color: rgba(40, 180, 100, .22);
+        }
+
+        .post-action-approve:hover {
+            background: rgba(40, 180, 100, .18);
+            border-color: rgba(40, 180, 100, .4);
+        }
+
+        .post-action-reject {
+            background: rgba(255, 80, 80, .08);
+            color: #ffaaaa;
+            border-color: rgba(255, 80, 80, .2);
+        }
+
+        .post-action-reject:hover {
+            background: rgba(255, 80, 80, .15);
+            border-color: rgba(255, 80, 80, .4);
+        }
+
+        .post-action-disabled {
+            color: var(--muted);
+            font-size: 12px;
+        }
     </style>
 @endpush
 
@@ -391,6 +439,7 @@
                                     <th>Status</th>
                                     <th>Points</th>
                                     <th>Submitted</th>
+                                    <th>Actions</th>
                                 </tr>
 
                             </thead>
@@ -450,6 +499,51 @@
                                             {{ $post->created_at?->format('d M Y, h:i A') ?? '—' }}
                                         </td>
 
+                                        <td>
+                                            <div class="post-actions">
+
+                                                {{-- APPROVE --}}
+                                                @if($post->status !== 'approved')
+                                                    <form method="POST" action="{{ route('admin.influencers.posts.approve', $post) }}"
+                                                        onsubmit="return confirm('Approve this post and award 20 points?');">
+                                                        @csrf
+
+                                                        <button type="submit" class="post-action-btn post-action-approve">
+                                                            <i class="fas fa-check"></i>
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                {{-- REJECT --}}
+                                                @if($post->status !== 'rejected')
+                                                    <form method="POST" action="{{ route('admin.influencers.posts.reject', $post) }}"
+                                                        onsubmit="return rejectInfluencerPost(this);">
+                                                        @csrf
+
+                                                        <input type="hidden" name="reason" value="">
+
+                                                        <button type="submit" class="post-action-btn post-action-reject">
+                                                            <i class="fas fa-times"></i>
+                                                            Reject
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                @if($post->status === 'approved')
+                                                    <span class="post-action-disabled">
+                                                        Approved
+                                                    </span>
+                                                @elseif($post->status === 'rejected')
+                                                    <span class="post-action-disabled">
+                                                        Rejected
+                                                    </span>
+                                                @endif
+
+                                            </div>
+                                        </td>
+
+
                                     </tr>
 
                                 @endforeach
@@ -473,5 +567,14 @@
         </div>
 
     </div>
+
+    <script> 
+        function rejectInfluencerPost(form) { 
+            const reason = prompt('Enter rejection reason (optional):'); // User clicked Cancel 
+            if (reason === null) { return false; } 
+            form.querySelector('input[name="reason"]').value = reason; 
+            return confirm( 'Are you sure you want to reject this post?' ); 
+        } 
+    </script>
 
 @endsection
