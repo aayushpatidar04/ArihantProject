@@ -538,6 +538,8 @@ class AdminController extends Controller
             'Client Type',
             'Email',
             'Phone',
+            'Branch Codes',
+            'Client Branch Codes',
             'Type',
             'Status',
             'Platform',
@@ -571,6 +573,28 @@ class AdminController extends Controller
                         ? 'Existing Client'
                         : 'New Client');
 
+                $validationData = is_array($r->branch_client_validation)
+                    ? $r->branch_client_validation
+                    : json_decode($r->branch_client_validation ?? '{}', true);
+
+                $branchCodes = collect($validationData['branchlist'] ?? [])
+                    ->pluck('BranchCode')
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->implode(', ');
+
+                $clientBranchCodes = collect($validationData['clientlist'] ?? [])
+                    ->map(function ($client) {
+                        return implode(' — ', array_filter([
+                            $client['BranchCode'] ?? null,
+                            $client['RegionCode'] ?? null,
+                            $client['ZoneCode'] ?? null,
+                        ]));
+                    })
+                    ->filter()
+                    ->implode("\n");
+
                 fputcsv($handle, [
                     $r->registration_number,
                     $r->referral_code,
@@ -578,6 +602,8 @@ class AdminController extends Controller
                     $clientType,
                     $r->email,
                     $r->phone,
+                    $branchCodes,
+                    $clientBranchCodes,
                     ucfirst($r->type),
                     str_replace('_', ' ', ucfirst($r->status)),
                     $r->platform,

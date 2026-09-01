@@ -136,19 +136,13 @@
             <div class="admin-header">
                 <h1>All Registrations</h1>
                 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <a
-                        href="{{ route('admin.export', request()->query()) }}"
-                        class="btn btn-primary"
-                        style="font-size:13px;padding:9px 16px;"
-                    >
+                    <a href="{{ route('admin.export', request()->query()) }}" class="btn btn-primary"
+                        style="font-size:13px;padding:9px 16px;">
                         <i class="fas fa-file-excel" style="margin-right:6px;"></i>
                         Export Excel
                     </a>
 
-                    <a
-                        href="{{ route('admin.dashboard') }}"
-                        style="color:var(--purple-1);font-size:14px"
-                    >
+                    <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">
                         ← Back to Dashboard
                     </a>
                 </div>
@@ -177,6 +171,8 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>Branch Codes</th>
+                            <th>Client Branch Codes</th>
                             <th>Type</th>
                             <th>Status</th>
                             <th>Platform</th>
@@ -194,6 +190,49 @@
                                 </td>
                                 <td>{{ $r->email }}</td>
                                 <td>{{ $r->phone }}</td>
+                                <td>
+                                    @php
+                                        $validationData = is_array($r->branch_client_validation)
+                                            ? $r->branch_client_validation
+                                            : json_decode($r->branch_client_validation ?? '{}', true);
+
+                                        $branchCodes = collect($validationData['branchlist'] ?? [])
+                                            ->pluck('BranchCode')
+                                            ->filter()
+                                            ->unique()
+                                            ->values();
+
+                                        $clientBranchCodes = collect($validationData['clientlist'] ?? []);
+                                    @endphp
+
+                                    @if($branchCodes->count())
+                                        {{ $branchCodes->implode(', ') }}
+                                    @else
+                                        <span style="color:var(--muted)">—</span>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    @if($clientBranchCodes->count())
+                                        @foreach($clientBranchCodes as $client)
+                                            <div style="margin-bottom:6px;">
+                                                <strong>{{ $client['BranchCode'] ?? '—' }}</strong>
+                                                @if(!empty($client['RegionCode']))
+                                                    <span style="color:var(--muted);">
+                                                        — {{ $client['RegionCode'] }}
+                                                    </span>
+                                                @endif
+                                                @if(!empty($client['ZoneCode']))
+                                                    <span style="color:var(--muted);">
+                                                        — {{ $client['ZoneCode'] }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <span style="color:var(--muted)">—</span>
+                                    @endif
+                                </td>
                                 <td>{{ ucfirst($r->type) }}</td>
                                 <td><span
                                         class="badge badge-{{ $r->status }}">{{ str_replace('_', ' ', ucfirst($r->status)) }}</span>
@@ -214,23 +253,19 @@
                                 <td>{{ $r->created_at->format('M d') }}</td>
                                 <td>
                                     @if($r->status !== 'paid')
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        style="font-size:12px;padding:6px 14px"
-                                        onclick="openMarkPaidModal({{ Js::from([
+                                                            <button type="button" class="btn btn-primary" style="font-size:12px;padding:6px 14px"
+                                                                onclick="openMarkPaidModal({{ Js::from([
                                             'id' => $r->id,
                                             'registration_number' => $r->registration_number,
                                             'name' => $r->full_name,
                                             'phone' => $r->phone,
                                             'is_existing_client' => $r->is_existing_client,
-                                        ]) }})"
-                                    >
-                                        Mark Paid
-                                    </button>
-                                @else
-                                    <span style="color:#8ff0b3;font-size:12px">✓ Paid</span>
-                                @endif
+                                        ]) }})">
+                                                                Mark Paid
+                                                            </button>
+                                    @else
+                                        <span style="color:#8ff0b3;font-size:12px">✓ Paid</span>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
