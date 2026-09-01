@@ -45,16 +45,11 @@ class LeadScoringService
         $referralCount = $registration->referralsMade()->where('status', 'paid')->count();
         $score->referral_score = min($this->weights['referral'], $referralCount * ($this->weights['referral'] / 5));
 
-        // Social posts approved
-        $socialCount = $registration->influencerPosts()->where('status', 'approved')->count();
-        $score->social_score = min($this->weights['social'], $socialCount * ($this->weights['social'] / 5));
-
         $score->total_score = $score->registration_score
             + $score->kyc_score
             + $score->quiz_score
             + $score->stall_visit_score
-            + $score->referral_score
-            + $score->social_score;
+            + $score->referral_score;
 
         $score->save();
 
