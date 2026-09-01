@@ -4134,11 +4134,12 @@
                 <ul class="value-checklist">
                     <li><span class="check">✓</span> Live AI + Algo Demos</li>
                     <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
-                    <li><span class="check">✓</span> ₹4,999 Stratzy Access @ ₹99*</li>
+                    <li><span class="check">✓</span> 14997 stratzy access @297</li>
                     <li><span class="check">✓</span> Trader Networking</li>
                     <li><span class="check">✓</span> Expert Sessions</li>
                     <li><span class="check">✓</span> Quizzes + Big Rewards</li>
                     <li><span class="check">✓</span> Sound Healing</li>
+                    <li><span class="check">✓</span> Lunch + High tea</li>
                 </ul>
             </div>
 

@@ -7,15 +7,28 @@ use App\Models\StallVisit;
 use App\Models\Referral;
 use App\Models\InfluencerPost;
 use App\Models\Seat;
-use App\Models\LeadScore;
+use App\Models\Payment;
 use App\Models\Communication;
+use App\Services\EmailService;
 use App\Services\LeadScoringService;
+use App\Services\QrCodeService;
+use App\Services\SmsService;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
-    public function __construct(protected LeadScoringService $leadScore) {}
+    public function __construct(
+        protected QrCodeService $qr,
+        protected WhatsAppService $whatsapp,
+        protected SmsService $sms,
+        protected EmailService $email,
+        protected LeadScoringService $leadScore,
+    ) {
+    }
 
     public function dashboard()
     {
@@ -26,10 +39,10 @@ class AdminController extends Controller
             'registrations_non_clients' => EventRegistration::where('is_existing_client', false)->where('is_subbroker', false)->count(),
 
             'paid_registrations' => EventRegistration::where('status', 'paid')->orWhere('status', 'checked_in')->count(),
-            'paid_subbrokers' => EventRegistration::whereIn('status', ['paid','checked_in'])->where('is_subbroker', true)->count(),
-            'paid_existing_clients' => EventRegistration::whereIn('status', ['paid','checked_in'])->where('is_existing_client', true)->where('is_subbroker', false)->count(),
-            'paid_non_clients' => EventRegistration::whereIn('status', ['paid','checked_in'])->where('is_existing_client', false)->where('is_subbroker', false)->count(),
-                                                
+            'paid_subbrokers' => EventRegistration::whereIn('status', ['paid', 'checked_in'])->where('is_subbroker', true)->count(),
+            'paid_existing_clients' => EventRegistration::whereIn('status', ['paid', 'checked_in'])->where('is_existing_client', true)->where('is_subbroker', false)->count(),
+            'paid_non_clients' => EventRegistration::whereIn('status', ['paid', 'checked_in'])->where('is_existing_client', false)->where('is_subbroker', false)->count(),
+
             'checked_in' => EventRegistration::where('status', 'checked_in')->count(),
             'total_seats' => Seat::count(),
             'allocated_seats' => Seat::where('status', 'allocated')->count(),
@@ -62,14 +75,132 @@ class AdminController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('full_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('registration_number', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('registration_number', 'like', "%{$search}%");
             });
         }
 
         $registrations = $query->paginate(50);
         return view('admin.registrations', compact('registrations'));
+    }
+
+    public function markAsPaid(Request $request)
+    {
+        $validated = $request->validate([
+            'registration_id' => 'required|exists:event_registrations,id',
+            'gateway_payment_id' => 'nullable|string|max:255',
+            'payment_mode' => 'nullable|string|max:100',
+            'referral_code' => 'nullable|string|size:12',
+            'note' => 'nullable|string|max:500',
+        ]);
+
+        $reg = EventRegistration::with(['payment', 'qrCodes'])->findOrFail($validated['registration_id']);
+
+        if ($reg->status === 'paid') {
+            return back()->with('info', 'Registration is already marked as paid.');
+        }
+
+        $isFreeGiveaway = empty($validated['gateway_payment_id']);
+
+        DB::transaction(function () use ($reg, $validated, $isFreeGiveaway) {
+            // Mark registration paid + who did it
+            $reg->update([
+                'status' => 'paid',
+                'paid_at' => now(),
+                'marked_paid_by' => Auth::id(),
+                'marked_paid_at' => now(),
+                'referred_by' => $validated['referral_code'] ?? $reg->referred_by,
+            ]);
+
+            // Determine amount
+            $amount = $isFreeGiveaway
+                ? '0'
+                : ($reg->is_existing_client ? '399' : '599');
+
+            // Update existing payment or create new
+            if ($reg->payment) {
+                $reg->payment->update([
+                    'gateway_payment_id' => $validated['gateway_payment_id'] ?? 'FREE-' . strtoupper(Str::random(8)),
+                    'status' => 'paid',
+                    'amount' => $amount,
+                    'paid_at' => now(),
+                    'gateway_response' => array_merge(
+                        is_array($reg->payment->gateway_response) ? $reg->payment->gateway_response : [],
+                        [
+                            'admin_marked' => true,
+                            'marked_by' => Auth::user()->name,
+                            'payment_mode' => $validated['payment_mode'] ?? 'Complimentary',
+                            'note' => $validated['note'],
+                            'is_free_giveaway' => $isFreeGiveaway,
+                        ]
+                    ),
+                ]);
+            } else {
+                Payment::create([
+                    'event_registration_id' => $reg->id,
+                    'merch_txn_id' => $isFreeGiveaway
+                        ? 'FREE-' . strtoupper(Str::random(8))
+                        : 'ADMIN-' . strtoupper(Str::random(8)),
+                    'gateway_payment_id' => $validated['gateway_payment_id'] ?? 'FREE-' . strtoupper(Str::random(8)),
+                    'amount' => $amount,
+                    'status' => 'paid',
+                    'paid_at' => now(),
+                    'gateway_response' => [
+                        'admin_marked' => true,
+                        'marked_by' => Auth::user()->name,
+                        'payment_mode' => $validated['payment_mode'] ?? 'Complimentary',
+                        'note' => $validated['note'],
+                        'is_free_giveaway' => $isFreeGiveaway,
+                    ],
+                ]);
+            }
+        });
+
+        // Generate QR if missing
+        $existingQr = $reg->qrCodes()->where('purpose', 'entry')->first();
+        if (!$existingQr) {
+            $qr = $this->qr->generateEntryQr($reg);
+            $qrUrl = asset('storage/' . $qr->image_path);
+            $amount = $isFreeGiveaway ? '0' : ($reg->is_existing_client ? '399' : '599');
+
+            if(!$isFreeGiveaway) {
+                // WhatsApp confirmation
+                $this->whatsapp->sendRegistrationConfirmation(
+                    $reg,
+                    $validated['gateway_payment_id'] ?? 'FREE-' . $reg->registration_number,
+                    $amount,
+                    $validated['payment_mode'] ?? 'Complimentary'
+                );
+    
+                // SMS confirmation
+                $this->sms->sendRegistrationConfirmation(
+                    $reg->phone,
+                    $validated['gateway_payment_id'] ?? 'FREE-' . $reg->registration_number,
+                    $amount,
+                    $validated['payment_mode'] ?? 'Complimentary'
+                );
+            }
+
+            // QR Ticket
+            $this->whatsapp->sendQrImage($reg, $qrUrl);
+
+            // Email
+            $this->email->sendConfirmation($reg, $qr->image_path);
+        }
+
+        // Lead score + referrals
+        $this->leadScore->calculateScore($reg);
+
+        if ($reg->referred_by) {
+            $this->awardReferralPoints($reg);
+        }
+
+        $msg = $isFreeGiveaway
+            ? 'Registration marked as complimentary (free). QR generated and notifications sent.'
+            : 'Registration marked as paid. QR generated and notifications sent.';
+
+        return back()->with('success', $msg);
     }
 
     public function checkIns()
@@ -176,5 +307,20 @@ class AdminController extends Controller
                     ->selectRaw('AVG(CAST(svf.answer AS DECIMAL(10, 2)))');
             }, 'avg_rating')
             ->get();
+    }
+
+    protected function awardReferralPoints(EventRegistration $reg): void
+    {
+        $referral = Referral::where('referred_id', $reg->id)
+            ->where('status', '!=', 'paid')
+            ->first();
+
+        if ($referral) {
+            $referral->update(['status' => 'paid', 'points_awarded' => 50]);
+            $referrer = $referral->referrer;
+            if ($referrer) {
+            $this->leadScore->calculateScore($referrer);
+            }
+        }
     }
 }

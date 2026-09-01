@@ -14,7 +14,7 @@ class EventRegistration extends Model
 
     protected $fillable = [
         'user_id', 'registration_number', 'full_name', 'email', 'phone', 'city',
-        'type', 'is_existing_client', 'status', 'referral_code', 'referred_by', 'platform',
+        'type', 'is_existing_client', 'status', 'referral_code', 'referred_by', 'platform', 'marked_paid_by', 'marked_paid_at',
         'otp_verified_at', 'kyc_completed_at', 'paid_at', 'checked_in_at', 'is_subbroker'
     ];
 
@@ -23,6 +23,7 @@ class EventRegistration extends Model
         'otp_verified_at' => 'datetime',
         'kyc_completed_at' => 'datetime',
         'paid_at' => 'datetime',
+        'marked_paid_at' => 'datetime',
         'checked_in_at' => 'datetime',
     ];
 
@@ -74,5 +75,10 @@ class EventRegistration extends Model
     public function communications(): HasMany
     {
         return $this->hasMany(Communication::class);
+    }
+
+    public function markedPaidBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'marked_paid_by');
     }
 }

@@ -39,7 +39,7 @@
                         CHECKED IN
                     </div>
                     <div style="font-size:14px;color:var(--muted);margin-top:8px">
-                        Checked in at {{ $reg->checked_in_at->format('d M Y, h:i A') }}
+                        Checked in at {{ $reg->checked_in_at?->format('d M Y, h:i A') }}
                     </div>
                 </div>
                 <div class="reg-num">{{ $reg->registration_number }}</div>

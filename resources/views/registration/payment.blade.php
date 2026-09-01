@@ -200,6 +200,7 @@
                     <li>🧰 Trader Toolkit</li>
                     <li>📜 Certificate of Participation</li>
                     <li>🍽️ Lunch + High Tea</li>
+                    <li>✨ Sound Healing</li>
                 </ul>
             </div>
             {{-- <div class="secure-badge">
