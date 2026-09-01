@@ -3830,7 +3830,7 @@
 
 
         <img src="assets/images/head-logo.png" alt="AI & Algo Conclave" class="hero-conclave-logo">
-        <span class="eyebrow">#Liveevent</span>
+        <span class="eyebrow">#liveevent</span>
         <div class="countdown">
             <div class="cbox">
                 <div class="num" id="cd-days">28</div>
