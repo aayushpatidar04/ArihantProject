@@ -76,4 +76,12 @@ class EventRegistration extends Model
     {
         return $this->belongsTo(User::class, 'marked_paid_by');
     }
+
+    public function referral()
+    {
+        return $this->hasOne(
+            Referral::class,
+            'referred_id'
+        );
+    }
 }

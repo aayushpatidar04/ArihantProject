@@ -96,106 +96,308 @@ class AdminController extends Controller
             'note' => 'nullable|string|max:500',
         ]);
 
-        $reg = EventRegistration::with(['payment', 'qrCodes'])->findOrFail($validated['registration_id']);
+        $reg = EventRegistration::with([
+            'payment',
+            'qrCodes',
+        ])->findOrFail($validated['registration_id']);
 
         if ($reg->status === 'paid') {
-            return back()->with('info', 'Registration is already marked as paid.');
+            return back()->with(
+                'info',
+                'Registration is already marked as paid.'
+            );
         }
 
         $isFreeGiveaway = empty($validated['gateway_payment_id']);
 
-        DB::transaction(function () use ($reg, $validated, $isFreeGiveaway) {
-            // Mark registration paid + who did it
+        /*
+        |--------------------------------------------------------------------------
+        | Resolve referral before payment transaction
+        |--------------------------------------------------------------------------
+        */
+
+        $referrer = null;
+
+        if (!empty($validated['referral_code'])) {
+            $referrer = EventRegistration::where(
+                'referral_code',
+                $validated['referral_code']
+            )->first();
+
+            if (!$referrer) {
+                return back()
+                    ->withErrors([
+                        'referral_code' => 'Invalid referral code.',
+                    ])
+                    ->withInput();
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | A participant cannot refer themselves
+            |--------------------------------------------------------------------------
+            */
+
+            if ($referrer->id === $reg->id) {
+                return back()
+                    ->withErrors([
+                        'referral_code' => 'A participant cannot use their own referral code.',
+                    ])
+                    ->withInput();
+            }
+        }
+
+        DB::transaction(function () use ($reg, $validated, $isFreeGiveaway, $referrer) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Mark registration as paid
+            |--------------------------------------------------------------------------
+            */
+
             $reg->update([
                 'status' => 'paid',
                 'paid_at' => now(),
                 'marked_paid_by' => Auth::id(),
                 'marked_paid_at' => now(),
-                'referred_by' => $validated['referral_code'] ?? $reg->referred_by,
+
+                /*
+                 * Keep existing referred_by if admin did not provide
+                 * a referral code this time.
+                 */
+                'referred_by' => $validated['referral_code']
+                    ?? $reg->referred_by,
             ]);
 
-            // Determine amount
+            /*
+            |--------------------------------------------------------------------------
+            | Determine amount
+            |--------------------------------------------------------------------------
+            */
+
             $amount = $isFreeGiveaway
                 ? '0'
                 : ($reg->is_existing_client ? '399' : '599');
 
-            // Update existing payment or create new
+            /*
+            |--------------------------------------------------------------------------
+            | Update existing payment or create new payment
+            |--------------------------------------------------------------------------
+            */
+
             if ($reg->payment) {
+
                 $reg->payment->update([
-                    'gateway_payment_id' => $validated['gateway_payment_id'] ?? 'FREE-' . strtoupper(Str::random(8)),
+                    'gateway_payment_id' =>
+                        $validated['gateway_payment_id']
+                        ?? 'FREE-' . strtoupper(Str::random(8)),
+
                     'status' => 'paid',
+
                     'amount' => $amount,
+
                     'paid_at' => now(),
+
                     'gateway_response' => array_merge(
-                        is_array($reg->payment->gateway_response) ? $reg->payment->gateway_response : [],
+                        is_array($reg->payment->gateway_response)
+                        ? $reg->payment->gateway_response
+                        : [],
                         [
                             'admin_marked' => true,
                             'marked_by' => Auth::user()->name,
-                            'payment_mode' => $validated['payment_mode'] ?? 'Complimentary',
-                            'note' => $validated['note'],
+                            'payment_mode' =>
+                                $validated['payment_mode']
+                                ?? 'Complimentary',
+                            'note' => $validated['note'] ?? null,
                             'is_free_giveaway' => $isFreeGiveaway,
                         ]
                     ),
                 ]);
+
             } else {
+
                 Payment::create([
                     'event_registration_id' => $reg->id,
+
                     'merch_txn_id' => $isFreeGiveaway
                         ? 'FREE-' . strtoupper(Str::random(8))
                         : 'ADMIN-' . strtoupper(Str::random(8)),
-                    'gateway_payment_id' => $validated['gateway_payment_id'] ?? 'FREE-' . strtoupper(Str::random(8)),
+
+                    'gateway_payment_id' =>
+                        $validated['gateway_payment_id']
+                        ?? 'FREE-' . strtoupper(Str::random(8)),
+
                     'amount' => $amount,
+
                     'status' => 'paid',
+
                     'paid_at' => now(),
+
                     'gateway_response' => [
                         'admin_marked' => true,
                         'marked_by' => Auth::user()->name,
-                        'payment_mode' => $validated['payment_mode'] ?? 'Complimentary',
-                        'note' => $validated['note'],
+                        'payment_mode' =>
+                            $validated['payment_mode']
+                            ?? 'Complimentary',
+                        'note' => $validated['note'] ?? null,
                         'is_free_giveaway' => $isFreeGiveaway,
                     ],
                 ]);
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Referral
+            |--------------------------------------------------------------------------
+            |
+            | Only create a referral if:
+            |
+            | 1. A valid referral code was supplied
+            | 2. This registration does NOT already have a referral record
+            |
+            */
+
+            if ($referrer) {
+
+                $existingReferral = Referral::where(
+                    'referred_id',
+                    $reg->id
+                )->first();
+
+                if (!$existingReferral) {
+
+                    Referral::create([
+                        'referrer_id' => $referrer->id,
+                        'referred_id' => $reg->id,
+                        'referred_email' => $reg->email,
+                        'referred_phone' => $reg->phone,
+                        'referred_name' => $reg->full_name,
+                        'status' => 'paid',
+                        'points_awarded' => 0,
+                    ]);
+
+                } else {
+
+                    /*
+                     * Referral already existed, so DO NOT create
+                     * another row.
+                     *
+                     * Just connect/update it as paid.
+                     */
+                    $existingReferral->update([
+                        'referrer_id' => $referrer->id,
+                        'referred_email' => $reg->email,
+                        'referred_phone' => $reg->phone,
+                        'referred_name' => $reg->full_name,
+                        'status' => 'paid',
+                    ]);
+                }
+            }
         });
 
-        // Generate QR if missing
-        $existingQr = $reg->qrCodes()->where('purpose', 'entry')->first();
-        if (!$existingQr) {
-            $qr = $this->qr->generateEntryQr($reg);
-            $qrUrl = asset('storage/' . $qr->image_path);
-            $amount = $isFreeGiveaway ? '0' : ($reg->is_existing_client ? '399' : '599');
+        /*
+        |--------------------------------------------------------------------------
+        | Generate entry QR if missing
+        |--------------------------------------------------------------------------
+        */
 
-            if(!$isFreeGiveaway) {
-                // WhatsApp confirmation
+        $existingQr = $reg->qrCodes()
+            ->where('purpose', 'entry')
+            ->first();
+
+        if (!$existingQr) {
+
+            $qr = $this->qr->generateEntryQr($reg);
+
+            $qrUrl = asset(
+                'storage/' . $qr->image_path
+            );
+
+            $amount = $isFreeGiveaway
+                ? '0'
+                : ($reg->is_existing_client ? '399' : '599');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Paid payment notifications
+            |--------------------------------------------------------------------------
+            */
+
+            if (!$isFreeGiveaway) {
+
                 $this->whatsapp->sendRegistrationConfirmation(
                     $reg,
-                    $validated['gateway_payment_id'] ?? 'FREE-' . $reg->registration_number,
+                    $validated['gateway_payment_id']
+                    ?? 'FREE-' . $reg->registration_number,
                     $amount,
-                    $validated['payment_mode'] ?? 'Complimentary'
+                    $validated['payment_mode']
+                    ?? 'Complimentary'
                 );
-    
-                // SMS confirmation
+
                 $this->sms->sendRegistrationConfirmation(
                     $reg->phone,
-                    $validated['gateway_payment_id'] ?? 'FREE-' . $reg->registration_number,
+                    $validated['gateway_payment_id']
+                    ?? 'FREE-' . $reg->registration_number,
                     $amount,
-                    $validated['payment_mode'] ?? 'Complimentary'
+                    $validated['payment_mode']
+                    ?? 'Complimentary'
                 );
             }
 
-            // QR Ticket
-            $this->whatsapp->sendQrImage($reg, $qrUrl);
+            /*
+            |--------------------------------------------------------------------------
+            | QR Ticket
+            |--------------------------------------------------------------------------
+            */
 
-            // Email
-            $this->email->sendConfirmation($reg, $qr->image_path);
+            $this->whatsapp->sendQrImage(
+                $reg,
+                $qrUrl
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Email
+            |--------------------------------------------------------------------------
+            */
+
+            $this->email->sendConfirmation(
+                $reg,
+                $qr->image_path
+            );
         }
 
-        // Lead score + referrals
+        /*
+        |--------------------------------------------------------------------------
+        | Lead score
+        |--------------------------------------------------------------------------
+        */
+
         $this->leadScore->calculateScore($reg);
 
-        if ($reg->referred_by) {
-            $this->awardReferralPoints($reg);
+        /*
+        |--------------------------------------------------------------------------
+        | Award referral points
+        |--------------------------------------------------------------------------
+        |
+        | Only process referral points if a referral actually exists.
+        |
+        */
+
+        $referral = Referral::where(
+            'referred_id',
+            $reg->id
+        )->first();
+
+        if ($referral && $referral->status === 'paid') {
+            $this->awardReferralPoints($referral);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Response
+        |--------------------------------------------------------------------------
+        */
 
         $msg = $isFreeGiveaway
             ? 'Registration marked as complimentary (free). QR generated and notifications sent.'
@@ -285,18 +487,28 @@ class AdminController extends Controller
             ->get();
     }
 
-    protected function awardReferralPoints(EventRegistration $reg): void
+    protected function awardReferralPoints(Referral $referral): void
     {
-        $referral = Referral::where('referred_id', $reg->id)
-            ->where('status', '!=', 'paid')
-            ->first();
+        /*
+         * Prevent duplicate points.
+         */
+        if ($referral->points_awarded > 0) {
+            return;
+        }
 
-        if ($referral) {
-            $referral->update(['status' => 'paid', 'points_awarded' => 50]);
-            $referrer = $referral->referrer;
-            if ($referrer) {
+        $referral->update([
+            'points_awarded' => 25,
+        ]);
+
+        /*
+         * Recalculate the referrer's lead score.
+         */
+        $referrer = EventRegistration::find(
+            $referral->referrer_id
+        );
+
+        if ($referrer) {
             $this->leadScore->calculateScore($referrer);
-            }
         }
     }
 }
