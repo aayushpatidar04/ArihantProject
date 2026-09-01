@@ -10,31 +10,26 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SeatConfirmationMail extends Mailable implements ShouldQueue
+class EventThankYouMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     public function __construct(
         public EventRegistration $registration,
-        public string $seatNumber,
+        public string $feedbackLink,
     ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'You Are Checked In — ArihantPLUS Conclave 2026',
+            subject: 'Thank You for Being Part of the AI & ALGO CONCLAVE!',
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            view: 'emails.seat',
-            with: [
-                'seatNumber' => $this->seatNumber,
-                'name' => $this->registration->full_name,
-                'reg' => $this->registration,
-            ],
+            view: 'emails.event-thank-you',
         );
     }
 }

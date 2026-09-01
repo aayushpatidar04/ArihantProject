@@ -74,6 +74,20 @@ class SmsService
         return $this->dispatch($phone, $message);
     }
 
+    public function sendThankYouSms(string $phone, string $name, string $feedbackLink): bool
+    {
+        if (empty($this->apiKey)) {
+            Log::warning('SMS API key not configured. Thank you SMS skipped.');
+            return false;
+        }
+
+        $phone = $this->normalizePhone($phone);
+
+        $message = "Thank You for Being with Us! Hi {$name}, Thank you for being a part of the ARIHANT PLUS AI & ALGO CONCLAVE. We hope you enjoyed the insightful sessions, engaging discussions, and networking opportunities around AI, Algorithmic Trading & Financial Markets. Your presence made the event truly special! Share your feedback: {$feedbackLink}. Thank you once again for being a part of Central India's Largest AI & ALGO CONCLAVE! Regards, Arihant Capital Markets Limited";
+
+        return $this->dispatch($phone, $message);
+    }
+
     protected function dispatch(string $phone, string $message): bool
     {
         $payload = [

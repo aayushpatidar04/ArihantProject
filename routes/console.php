@@ -12,3 +12,4 @@ Schedule::command('reminders:payment')->cron('0 10 */2 * *');   // Every 2nd day
 Schedule::command('reminders:event 2day')->cron('0 10 3 9 *');   // 3 Sept 2026 at 10:00 AM
 Schedule::command('reminders:event 1day')->cron('0 10 4 9 *');   // 4 Sept 2026 at 10:00 AM
 Schedule::command('reminders:event same')->cron('0 8 5 9 *');    // 5 Sept 2026 at 8:00 AM
+Schedule::command('reminders:thankyou')->cron('0 19 5 9 *');

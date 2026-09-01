@@ -286,7 +286,7 @@ class StallController extends Controller
 
         $this->leadScore->calculateScore($reg);
 
-        return back()->with(
+        return redirect()->route('stalls.index')->with(
             'success',
             'Your feedback and quiz have been submitted successfully!'
         );

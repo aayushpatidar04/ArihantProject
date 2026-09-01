@@ -23,7 +23,8 @@
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <meta property="og:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
-    <meta property="og:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta property="og:description"
+        content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
     <meta property="og:image" content="https://event.arihantplus.com/assets/images/logo.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -31,7 +32,8 @@
     <meta property="og:url" content="https://event.arihantplus.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
-    <meta name="twitter:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta name="twitter:description"
+        content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
     <meta name="twitter:image" content="https://event.arihantplus.com/assets/images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
@@ -3620,6 +3622,7 @@
             }
         }
 
+        /* ---------- MEDIA PARTNER ---------- */
         .partner-sec {
             padding: 80px 24px 100px;
             background: var(--bg-soft);
@@ -3674,13 +3677,66 @@
         }
 
         .partner-card img {
-            height: clamp(48px, 6.8vw, 102px);
+            height: clamp(140px, 16vw, 220px);
             width: auto;
-            max-width: 80vw;
+            max-width: 60vw;
             /* logo has its own colored blocks + white text, so give it a light chip to sit on */
             background: #fff;
-            padding: clamp(10px, 1.3vw, 20px) clamp(18px, 2.4vw, 36px);
+            padding: clamp(16px, 1.8vw, 26px);
             border-radius: 14px;
+        }
+
+        /* ---------- HERO BROADCAST PARTNER (below date/time/venue card) ---------- */
+        .hero-broadcast-partner {
+            position: absolute;
+            left: 50%;
+            top: 168px;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .hero-broadcast-label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .hero-broadcast-partner img {
+            height: 72px;
+            width: auto;
+            background: #fff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        @media(max-width:700px) {
+            .hero-broadcast-partner {
+                position: static;
+                transform: none;
+                left: auto;
+                top: auto;
+                margin-top: 18px;
+                gap: 8px;
+            }
+
+            .hero-broadcast-label {
+                font-size: 10.5px;
+            }
+
+            .hero-broadcast-partner img {
+                height: 56px;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
@@ -3704,7 +3760,7 @@
                     @auth
                         <a href="/register/success">My Ticket</a>
                     @endauth
-                    {{-- <a href="#agenda">Agenda</a> --}}
+                    <a href="#agenda">Agenda</a>
                 </nav>
             </div>
             <div>
@@ -3728,7 +3784,7 @@
     <div class="mobile-menu" id="mobileMenu">
         <a href="#home">Home</a>
         <a href="#speaker">Speaker</a>
-        {{-- <a href="#agenda">Agenda</a> --}}
+        <a href="#agenda">Agenda</a>
 
         @auth
             <a href="/register/success">My Ticket</a>
@@ -3754,7 +3810,8 @@
         <div class="hero-video-veil" aria-hidden="true"></div>
 
 
-        <span class="eyebrow">#Live Event</span>
+        <img src="assets/images/head-logo.png" alt="AI & Algo Conclave" class="hero-conclave-logo">
+        <span class="eyebrow">#Liveevent</span>
         <div class="countdown">
             <div class="cbox">
                 <div class="num" id="cd-days">28</div>
@@ -3769,18 +3826,17 @@
                 <div class="lbl">Minutes</div>
             </div>
         </div>
-        <p class="hero-tagline">Central India's Largest</p>
+                <p class="hero-tagline">Central India's Largest</p>
         <h1>AI &amp; Algo Trading Conclave</h1>
-        <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the
-            markets, manage risk and build smarter strategies.</p>
+        <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.</p>
 
-        <div class="hero-pills">
-            <img src="assets/images/pill-2.png" alt="Learn" class="hero-pill-img">
-            <img src="assets/images/pill-3.png" alt="Experience" class="hero-pill-img">
-            <img src="assets/images/pill-4.png" alt="Connect" class="hero-pill-img">
-            <img src="assets/images/pill-5.png" alt="Compete" class="hero-pill-img">
-            <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
-        </div>
+       <div class="hero-pills">
+          <img src="assets/images/pill-2.png" alt="Learn" class="hero-pill-img">
+          <img src="assets/images/pill-3.png" alt="Experience" class="hero-pill-img">
+          <img src="assets/images/pill-4.png" alt="Connect" class="hero-pill-img">
+          <img src="assets/images/pill-5.png" alt="Compete" class="hero-pill-img">
+          <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
+      </div>
         <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
             <div class="info-card">
@@ -3801,7 +3857,7 @@
                                 <path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </span>
-                        <div>Time<br><strong>10:00 AM - 5:00 PM</strong></div>
+                        <div>Time<br><strong>10:30 AM - 5:00 PM</strong></div>
                     </div>
                     <div class="info-field" id="venueField">
                         <span class="ic">
@@ -3813,8 +3869,13 @@
                     </div>
                 </div>
             </div>
+            <div class="hero-broadcast-partner">
+                <span class="hero-broadcast-label">Broadcast Partner</span>
+                <img src="assets/images/media-partner-etnow.jpeg" alt="ET Now Swadesh">
+            </div>
         </div>
     </section>
+    
     {{-- <section class="pricing-sec" id="pricing">
         <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
         <img class="lg-glow lg-glow-beam" src="assets/images/8.png" alt="" aria-hidden="true">
@@ -3988,7 +4049,7 @@
         </section>
     </div>
 
-    {{-- <section class="schedule" id="agenda">
+    <section class="schedule" id="agenda">
         <div class="schedule-glow"></div>
         <div class="section-head" style="position:relative;z-index:2;">
             <h2>Here's What's Happening</h2>
@@ -4005,7 +4066,7 @@
         </div>
 
         <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
-    </section> --}}
+    </section>
 
     <section class="panel-sec" id="speaker">
         <div class="section-head">
@@ -4034,14 +4095,14 @@
 
     <section class="partner-sec" id="media-partner">
         <div class="section-head">
-            <h2>Our Media Partner</h2>
+            <h2>Our Broadcast Partner</h2>
         </div>
         <div class="partner-logos">
             <div class="partner-card">
-                <img src="/assets/images/media-partner-etnow.svg" alt="ET Now Swadesh">
+                <img src="assets/images/media-partner-etnow.jpeg" alt="ET Now Swadesh">
             </div>
         </div>
-    </section>  
+    </section>
 
     <section class="value-banner" id="value">
         <div class="value-heading wrap">
@@ -4050,15 +4111,15 @@
         <div class="value-inner wrap">
             <div class="value-left value-left-card">
                 <h2>One Day.<br>Massive Value.</h2>
-
+                
                 <ul class="value-checklist">
                     <li><span class="check">✓</span> Live AI + Algo Demos</li>
                     <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
-                    <li><span class="check">✓</span> ₹14,997 Stratzy Access for Just ₹297</li>
+                    <li><span class="check">✓</span> ₹4,999 Stratzy Access @ ₹99*</li>
                     <li><span class="check">✓</span> Trader Networking</li>
                     <li><span class="check">✓</span> Expert Sessions</li>
                     <li><span class="check">✓</span> Quizzes + Big Rewards</li>
-                    <li><span class="check">✓</span> Lunch + High Tea</li>
+                    <li><span class="check">✓</span> Sound Healing</li>
                 </ul>
             </div>
 
@@ -4085,8 +4146,7 @@
                             <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <h3>Regular Entry</h3> <br>
-                    <h3>For Non-Arihant users</h3>
+                    <h3>Regular Entry</h3> <br> <h3>For Non-Arihant users</h3>
                     <div class="value-price-row">
                         <span class="price-old">₹999</span>
                         <span class="price-new">₹599</span>
@@ -4135,7 +4195,7 @@
         <div class="videos-glow videos-glow-1" aria-hidden="true"></div>
         <div class="videos-glow videos-glow-2" aria-hidden="true"></div>
         <div class="section-head purple">
-            <h2>SEE ARIHANT PLUS IN ACTION</h2>
+            <h2>SEE ARIHANTPLUS IN ACTION</h2>
             <p>Master AI, MCP, Algo tools and advanced features with quick, practical videos.</p>
         </div>
 
@@ -4551,42 +4611,97 @@
 
         // ---------- Agenda (repeatable data-driven list) ----------
         var agenda = [{
-            time: "1:45 PM – 2:00 PM"
-            , title: "WELCOME & NETWORKING"
-            , body: "Meet fellow traders, investors and market enthusiasts before the masterclass begins."
-            , tag: "Opening"
+            time: "10:30 AM – 10:45 AM"
+            , title: "WELCOME SESSION"
+            , body: "Event introduction and lamp lighting to open the day."
+            , tag: "Ceremony"
         }
             , {
-            time: "2:00 PM – 2:20 PM"
-            , title: "WHY AI IS CHANGING THE MARKET"
-            , body: "A grounded look at where AI genuinely helps traders, and where hype outruns reality."
+            time: "10:45 AM – 11:05 AM"
+            , title: "SPECIAL ADDRESS"
+            , body: "An address from Arihant Leadership setting the tone for the conclave."
+            , tag: "Address"
+        }
+            , {
+            time: "11:05 AM – 11:45 AM"
+            , title: "ALGO TRADING BASICS + LIVE WORKSHOP"
+            , body: "Vishal Mehta walks through the fundamentals of algo trading with a live, hands-on workshop."
+            , tag: "Workshop"
+        }
+            , {
+            time: "11:45 AM – 12:00 PM"
+            , title: "AI TRADING BASICS: MCP & PROMPTS"
+            , body: "A primer on using MCP and prompts for AI-assisted trading, led by an AI expert."
             , tag: "Session"
         }
             , {
-            time: "2:20 PM – 2:45 PM"
-            , title: "LIVE AI STOCK SCREENING"
-            , body: "Watch an AI-assisted screen built and stress-tested live, step by step."
+            time: "12:00 PM – 12:25 PM"
+            , title: "PANEL DISCUSSION: AI + ALGO TRADING"
+            , body: "Vishal Mehta, Saurabh Sisodiya, Swati Jain and Rahul Saroge discuss where AI and algo trading meet."
+            , tag: "Panel"
+        }
+            , {
+            time: "12:25 PM – 12:40 PM"
+            , title: "Q&A"
+            , body: "Open floor questions following the AI + Algo Trading panel."
+            , tag: "Q&A"
+        }
+            , {
+            time: "12:40 PM – 1:10 PM"
+            , title: "ARIHANTPLUS ALGO PRODUCT EXPERIENCE"
+            , body: "Rajesh Srivastav takes attendees through the ArihantPlus algo product hands-on."
             , tag: "Demo"
         }
             , {
-            time: "2:45 PM – 3:05 PM"
-            , title: "ALGO TRADING 101"
-            , body: "The core logic behind rule-based strategies, explained without the jargon."
+            time: "1:10 PM – 2:10 PM"
+            , title: "LUNCH BREAK + NETWORKING"
+            , body: "A break to refuel and connect with fellow traders and speakers."
+            , tag: "Break"
+        }
+            , {
+            time: "2:10 PM – 3:10 PM"
+            , title: "AI + ALGO TRADING ADVANCED"
+            , body: "Ankit Rai goes deeper into advanced AI and algo trading techniques."
             , tag: "Session"
         }
             , {
-            time: "3:05 PM – 3:30 PM"
-            , title: "AI VS ALGO VS HUMAN — A LIVE DEBATE"
-            , body: "Three approaches to the same trade, argued out loud by people who use them daily."
-            , tag: "Debate"
+            time: "3:10 PM – 3:30 PM"
+            , title: "SOUND HEALING EXPERIENCE"
+            , body: "A wellness interlude to reset before the final stretch of sessions."
+            , tag: "Wellness"
         }
             , {
             time: "3:30 PM – 3:45 PM"
-            , title: "Q&A AND CLOSING NOTES"
-            , body: "Open floor for questions, plus how to keep building on what you learned today."
+            , title: "QUIZ / AUDIENCE ENGAGEMENT"
+            , body: "Live quiz and audience engagement with prizes up for grabs."
+            , tag: "Engagement"
+        }
+            , {
+            time: "3:45 PM – 4:15 PM"
+            , title: "ALGO + AI PANEL DISCUSSION"
+            , body: "Ankit Rai, Santosh Pasi, the Stratzy founder, Kavita Jain and Arpit Jain discuss the road ahead for algo and AI trading."
+            , tag: "Panel"
+        }
+            , {
+            time: "4:15 PM – 4:30 PM"
+            , title: "Q&A"
+            , body: "Open floor questions following the Algo + AI panel."
+            , tag: "Q&A"
+        }
+            , {
+            time: "4:30 PM – 5:00 PM"
+            , title: "HOW AI IS SHAPING THE FUTURE OF TRADING"
+            , body: "A panel discussion with Arihant clients on how AI is reshaping their trading approach."
+            , tag: "Panel"
+        }
+            , {
+            time: "5:00 PM"
+            , title: "NATIONAL ANTHEM + CLOSING"
+            , body: "A closing note and national anthem to wrap up the day, with all guests and attendees."
             , tag: "Closing"
         }
         ];
+
         var agendaHTML = agenda.map(function (a) {
             return '<div class="agenda-item">' +
                 '<div class="agenda-time">' + a.time + '</div>' +
@@ -4647,6 +4762,17 @@
 
                 ]
                 , knowMore: "/rajesh-shrivastav"
+            }
+                , {
+                name: "Rahul Saraoge"
+                , role: "Founder & Mentor, 5 Circles | Stock Market & Trading Expert"
+                , img: "assets/images/26.png"
+                , socials: [
+                    { type: "instagram", url: "https://instagram.com/trade_with_rahulsaraoge" },
+                    { type: "youtube", url: "https://www.youtube.com/@tradewithrahulsaraoge" },
+                    { type: "x", url: "https://x.com/Rahul_Saraoge" }
+                ]
+                , knowMore: "/rahul-saroge"
             }
                 ,];
             var track = document.getElementById('panelistTrack');

@@ -130,4 +130,5 @@ Route::get('/saurabh-sisodia', [HomeController::class, 'saurabh_sisodia'])->name
 Route::get('/santosh-pasi', [HomeController::class, 'santosh_pasi'])->name('santosh-pasi');
 Route::get('/ankit-rai', [HomeController::class, 'ankit_rai'])->name('ankit-rai');
 Route::get('/rajesh-shrivastav', [HomeController::class, 'rajesh_shrivastav'])->name('rajesh-shrivastav');
+Route::get('/rahul-saroge', [HomeController::class, 'rahul_saroge'])->name('rahul-saroge');
 Route::get('/detail', [HomeController::class, 'detail'])->name('detail');

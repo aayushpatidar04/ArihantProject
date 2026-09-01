@@ -340,6 +340,94 @@ class WhatsAppService
         }
     }
 
+    public function sendSeatConfirmation(EventRegistration $registration, string $seatNumber): bool
+    {
+       if (empty($this->token) || empty($this->applicationId)) {
+            Log::warning('PickyAssist not configured. Event reminder skipped.');
+            return false;
+        }
+
+        $reference = 'check_in_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
+
+        try {
+            $response = Http::timeout(60)->post($this->apiUrl, [
+                'token' => $this->token,
+                'application' => $this->applicationId,
+                'template_id' => "VY17973555",
+                'data' => [
+                    [
+                        'number' => $this->formatPhone($registration->phone),
+                        'language' => 'en',
+                        'template_message' => [$registration->full_name],
+                    ]
+                ],
+            ]);
+
+            $json = $response->json();
+            Log::info('PickyAssist event reminder [' . $registration->phone . '] response', [
+                'response' => $json,
+                'reference' => $reference,
+                'reg_id' => $registration->id,
+            ]);
+
+            if (!$response->successful() || ($json['status'] ?? 0) != 100) {
+                Log::error('PickyAssist event reminder [' . $registration->phone . '] failed', ['response' => $json]);
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('PickyAssist event reminder [' . $registration->phone . '] exception: ' . $e->getMessage());
+            return false;
+        }
+
+    }
+
+    public function sendThankYouWhatsApp(EventRegistration $registration, string $feedbackLink): bool
+    {
+        if (empty($this->token) || empty($this->applicationId)) {
+            Log::warning('PickyAssist not configured. Thank you WhatsApp skipped.');
+            return false;
+        }
+
+        $reference = 'ty_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
+
+        try {
+            $response = Http::timeout(60)->post($this->apiUrl, [
+                'token' => $this->token,
+                'application' => $this->applicationId,
+                'template_id' => 'YY17865263',
+                'reference_number' => $reference,
+                'data' => [
+                    [
+                        'number' => $this->formatPhone($registration->phone),
+                        'language' => 'en',
+                        'template_message' => [$registration->full_name, $feedbackLink],
+                    ]
+                ],
+            ]);
+
+            $json = $response->json();
+            Log::info('PickyAssist thank you response', [
+                'response' => $json,
+                'reference' => $reference,
+                'reg_id' => $registration->id,
+            ]);
+
+            if (!$response->successful() || ($json['status'] ?? 0) != 100) {
+                Log::error('PickyAssist thank you failed', ['response' => $json]);
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('PickyAssist thank you exception: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     /* ============================================================
        Meta/WhatsApp Cloud API methods (kept for backward compat)
        ============================================================ */
@@ -348,12 +436,6 @@ class WhatsAppService
     {
         $message = "Your ArihantPLUS verification code is: {$otp}. Valid for 10 minutes. Do not share it with anyone.";
         return $this->sendTextMessage($registration, $message, 'otp');
-    }
-
-    public function sendSeatConfirmation(EventRegistration $registration, string $seatNumber): bool
-    {
-        $message = "Welcome to ArihantPLUS Conclave! Your seat number is {$seatNumber}. Show this message at the entrance. Have a great day!";
-        return $this->sendTextMessage($registration, $message, 'seat');
     }
 
     public function sendReminder(EventRegistration $registration, string $daysLeft): bool
