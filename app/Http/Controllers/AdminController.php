@@ -511,4 +511,97 @@ class AdminController extends Controller
             $this->leadScore->calculateScore($referrer);
         }
     }
+
+    public function export()
+    {
+        $registrations = EventRegistration::with([
+            'payment',
+            'markedPaidBy',
+        ])
+            ->latest()
+            ->get();
+
+        $filename = 'registrations-' . now()->format('Y-m-d-H-i-s') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $columns = [
+            'Reg #',
+            'Referral Code',
+            'Name',
+            'Client Type',
+            'Email',
+            'Phone',
+            'Type',
+            'Status',
+            'Platform',
+            'Payment Status',
+            'Order ID',
+            'Payment ID',
+            'Marked By',
+            'Marked Paid At',
+            'Date',
+        ];
+
+        return response()->stream(function () use ($registrations, $columns) {
+
+            $handle = fopen('php://output', 'w');
+
+            /*
+             * UTF-8 BOM so Excel correctly recognizes
+             * UTF-8 characters.
+             */
+            fwrite($handle, "\xEF\xBB\xBF");
+
+            // Header row
+            fputcsv($handle, $columns);
+
+            // Data rows
+            foreach ($registrations as $r) {
+
+                $clientType = $r->is_subbroker
+                    ? 'Sub-broker'
+                    : ($r->is_existing_client
+                        ? 'Existing Client'
+                        : 'New Client');
+
+                fputcsv($handle, [
+                    $r->registration_number,
+                    $r->referral_code,
+                    $r->full_name,
+                    $clientType,
+                    $r->email,
+                    $r->phone,
+                    ucfirst($r->type),
+                    str_replace('_', ' ', ucfirst($r->status)),
+                    $r->platform,
+
+                    $r->payment?->status ?? 'N/A',
+
+                    $r->payment?->gateway_order_id ?? '',
+
+                    $r->payment?->gateway_payment_id ?? '',
+
+                    $r->markedPaidBy?->name ?? '',
+
+                    $r->marked_paid_at
+                    ? $r->marked_paid_at->format('d M Y, h:i A')
+                    : '',
+
+                    $r->created_at
+                    ? $r->created_at->format('d M Y, h:i A')
+                    : '',
+                ]);
+            }
+
+            fclose($handle);
+
+        }, 200, $headers);
+    }
 }

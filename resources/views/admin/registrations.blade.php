@@ -135,8 +135,23 @@
         <div class="admin-wrap">
             <div class="admin-header">
                 <h1>All Registrations</h1>
-                <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back to
-                    Dashboard</a>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <a
+                        href="{{ route('admin.export', request()->query()) }}"
+                        class="btn btn-primary"
+                        style="font-size:13px;padding:9px 16px;"
+                    >
+                        <i class="fas fa-file-excel" style="margin-right:6px;"></i>
+                        Export Excel
+                    </a>
+
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        style="color:var(--purple-1);font-size:14px"
+                    >
+                        ← Back to Dashboard
+                    </a>
+                </div>
             </div>
 
             <form class="filter-bar" method="GET">

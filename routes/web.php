@@ -118,6 +118,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::post('/registrations/mark-paid', [AdminController::class, 'markAsPaid'])->name('registrations.mark-paid');
     Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
+    Route::get('/export', [AdminController::class, 'export'])->name('export');
     Route::get('/checkins', [AdminController::class, 'checkIns'])->name('checkins');
     // Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
     Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
