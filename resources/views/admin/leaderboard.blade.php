@@ -43,7 +43,7 @@
                     <thead><tr><th>#</th><th>Name</th><th>Points</th></tr></thead>
                     <tbody>
                         @foreach($influencerLeaderboard as $i => $r)
-                        <tr><td>{{ $i+1 }}</td><td>{{ $r->full_name }}</td><td>{{ $r->total_points ?? 0 }}</td></tr>
+                        <tr><td>{{ $i+1 }}</td><td>{{ $r->name }}</td><td>{{ $r->total_points ?? 0 }}</td></tr>
                         @endforeach
                     </tbody>
                 </table>

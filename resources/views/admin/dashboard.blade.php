@@ -116,7 +116,7 @@
                     <thead><tr><th>Name</th><th>Points</th></tr></thead>
                     <tbody>
                         @forelse($topInfluencers as $t)
-                        <tr><td>{{ $t->full_name }}</td><td>{{ $t->total_points ?? 0 }}</td></tr>
+                        <tr><td>{{ $t->name }}</td><td>{{ $t->total_points ?? 0 }}</td></tr>
                         @empty
                         <tr><td colspan="2" style="text-align:center;color:var(--muted)">No data</td></tr>
                         @endforelse

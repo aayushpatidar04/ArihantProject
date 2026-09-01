@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventRegistration;
+use App\Models\User;
 use App\Models\StallVisit;
 use App\Models\Referral;
 use App\Models\InfluencerPost;
@@ -258,11 +259,12 @@ class AdminController extends Controller
 
     protected function getTopInfluencers(int $limit = 10)
     {
-        return EventRegistration::select('event_registrations.id', 'event_registrations.full_name')
+        return User::select('users.id', 'users.name')
             ->selectRaw('SUM(influencer_posts.points_awarded) as total_points')
-            ->leftJoin('influencer_posts', 'event_registrations.id', '=', 'influencer_posts.event_registration_id')
+            ->leftJoin('influencer_posts', 'users.id', '=', 'influencer_posts.user_id')
             ->where('influencer_posts.status', 'approved')
-            ->groupBy('event_registrations.id')
+            ->groupBy('users.id', 'users.name')
+            ->havingRaw('SUM(influencer_posts.points_awarded) > 0')
             ->orderByDesc('total_points')
             ->limit($limit)
             ->get();
