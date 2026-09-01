@@ -44,7 +44,7 @@
             <a href="{{ route('admin.stalls.index') }}">Stalls</a>
             <a href="{{ route('admin.referrals') }}">Referrals</a>
             <a href="{{ route('admin.leaderboard') }}">Leaderboard</a>
-            <a href="{{ route('admin.influencer.index') }}">Influencer</a>
+            <a href="{{ route('admin.influencers.index') }}">Influencer</a>
         </div>
 
         <div class="stats-grid">

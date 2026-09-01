@@ -39,8 +39,8 @@
                         <td>{{ ucfirst($p->status) }}</td>
                         <td>
                             @if($p->status === 'pending')
-                            <form style="display:inline" action="{{ route('admin.influencer.approve', $p) }}" method="POST">@csrf<button class="btn-sm btn-approve">Approve</button></form>
-                            <form style="display:inline" action="{{ route('admin.influencer.reject', $p) }}" method="POST">@csrf<button class="btn-sm btn-reject">Reject</button></form>
+                            <form style="display:inline" action="{{ route('admin.influencers.posts.approve', $p) }}" method="POST">@csrf<button class="btn-sm btn-approve">Approve</button></form>
+                            <form style="display:inline" action="{{ route('admin.influencers.posts.reject', $p) }}" method="POST">@csrf<button class="btn-sm btn-reject">Reject</button></form>
                             @else
                             <span style="color:var(--muted);font-size:12px">Processed</span>
                             @endif
