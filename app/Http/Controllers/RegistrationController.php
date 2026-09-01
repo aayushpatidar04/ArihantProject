@@ -18,6 +18,7 @@ use App\Services\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -168,6 +169,59 @@ class RegistrationController extends Controller
             'kyc_completed_at' => now(),
             'platform' => Session::get('registration_platform'),
         ]);
+
+        try {
+            $response = Http::withBasicAuth(
+                'sampark.arihantcapital',
+                'Arihant@12345'
+            )
+                ->timeout(10)
+                ->withQueryParameters([
+                    'MobileNumber' => $reg->phone,
+                ])
+                ->post(
+                    'https://inspection.arihantcapital.com/api/v1/CtC/branchclientValidationByMobileNo'
+                );
+
+            if ($response->successful()) {
+
+                $data = $response->json();
+
+                $reg->update([
+                    'client_validation_data' => [
+                        'branchlist' => $data['branchlist'] ?? [],
+                        'clientlist' => $data['clientlist'] ?? [],
+                    ],
+                ]);
+
+                Log::info('Arihant client validation API response', [
+                    'registration_id' => $reg->id,
+                    'registration_number' => $reg->registration_number,
+                    'phone' => $reg->phone,
+                    'status' => $response->status(),
+                    'response' => $data,
+                ]);
+
+            } else {
+
+                Log::error('Arihant client validation API failed', [
+                    'registration_id' => $reg->id,
+                    'registration_number' => $reg->registration_number,
+                    'phone' => $reg->phone,
+                    'status' => $response->status(),
+                    'response' => $response->body(),
+                ]);
+            }
+
+        } catch (\Throwable $e) {
+
+            Log::error('Arihant client validation API exception', [
+                'registration_id' => $reg->id,
+                'registration_number' => $reg->registration_number,
+                'phone' => $reg->phone,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         // Push lead to CRM (fire-and-forget)
         try {
@@ -334,6 +388,59 @@ class RegistrationController extends Controller
             'is_subbroker' => $isSubBroker,
             'platform' => Session::get('registration_platform'),
         ]);
+
+        try {
+            $response = Http::withBasicAuth(
+                'sampark.arihantcapital',
+                'Arihant@12345'
+            )
+                ->timeout(10)
+                ->withQueryParameters([
+                    'MobileNumber' => $reg->phone,
+                ])
+                ->post(
+                    'https://inspection.arihantcapital.com/api/v1/CtC/branchclientValidationByMobileNo'
+                );
+
+            if ($response->successful()) {
+
+                $data = $response->json();
+
+                $reg->update([
+                    'client_validation_data' => [
+                        'branchlist' => $data['branchlist'] ?? [],
+                        'clientlist' => $data['clientlist'] ?? [],
+                    ],
+                ]);
+
+                Log::info('Arihant client validation API response', [
+                    'registration_id' => $reg->id,
+                    'registration_number' => $reg->registration_number,
+                    'phone' => $reg->phone,
+                    'status' => $response->status(),
+                    'response' => $data,
+                ]);
+
+            } else {
+
+                Log::error('Arihant client validation API failed', [
+                    'registration_id' => $reg->id,
+                    'registration_number' => $reg->registration_number,
+                    'phone' => $reg->phone,
+                    'status' => $response->status(),
+                    'response' => $response->body(),
+                ]);
+            }
+
+        } catch (\Throwable $e) {
+
+            Log::error('Arihant client validation API exception', [
+                'registration_id' => $reg->id,
+                'registration_number' => $reg->registration_number,
+                'phone' => $reg->phone,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         // Push lead to CRM (fire-and-forget)
         try {
@@ -656,7 +763,8 @@ class RegistrationController extends Controller
         return redirect()->route('registration.thankyou');
     }
 
-    public function razorPaymentCallback(Request $request, $id) {
+    public function razorPaymentCallback(Request $request, $id)
+    {
         $user = User::find($id);
 
         if (!$user) {

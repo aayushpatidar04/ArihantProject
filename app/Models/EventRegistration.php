@@ -15,7 +15,7 @@ class EventRegistration extends Model
     protected $fillable = [
         'user_id', 'registration_number', 'full_name', 'email', 'phone', 'city',
         'type', 'is_existing_client', 'status', 'referral_code', 'referred_by', 'platform', 'marked_paid_by', 'marked_paid_at',
-        'otp_verified_at', 'kyc_completed_at', 'paid_at', 'checked_in_at', 'is_subbroker'
+        'otp_verified_at', 'kyc_completed_at', 'paid_at', 'checked_in_at', 'is_subbroker', 'client_validation_data'
     ];
 
     protected $casts = [
@@ -25,6 +25,7 @@ class EventRegistration extends Model
         'paid_at' => 'datetime',
         'marked_paid_at' => 'datetime',
         'checked_in_at' => 'datetime',
+        'client_validation_data' => 'array',
     ];
 
     public function user(): BelongsTo
