@@ -23,18 +23,16 @@
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <meta property="og:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
-    <meta property="og:description"
-        content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
-    <meta property="og:image" content="https://event.arihantplus.com/assets/images/logo.png">
+    <meta property="og:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta property="og:image" content="https://event.arihantplus.com/assets/images/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://event.arihantplus.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
-    <meta name="twitter:description"
-        content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
-    <meta name="twitter:image" content="https://event.arihantplus.com/assets/images/logo.png">
+    <meta name="twitter:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta name="twitter:image" content="https://event.arihantplus.com/assets/images/og-image.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,6 +128,23 @@
             border: 1px solid rgba(180, 120, 255, 0.35);
             padding: 6px 16px;
             border-radius: 999px;
+        }
+
+        .hero-conclave-logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: clamp(110px, 13vw, 190px);
+            height: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media(max-width:700px) {
+            .hero-conclave-logo {
+                width: clamp(110px, 32vw, 160px);
+                margin-bottom: 20px;
+                margin-top: 4px;
+            }
         }
 
         section {
@@ -325,10 +340,10 @@
             padding: 64px 24px 0;
             text-align: center;
             background:
-                radial-gradient(ellipse 620px 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
-                linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
-                url('assets/images/skyline.png') center bottom / cover no-repeat,
-                linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
+              radial-gradient(ellipse 620px 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
+              linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
+              url('assets/images/skyline.png') center bottom / cover no-repeat,
+              linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
             position: relative;
             overflow: hidden;
         }
@@ -336,15 +351,16 @@
         @media(max-width:700px) {
             .hero {
                 background:
-                    radial-gradient(ellipse 92% 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
-                    linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
-                    url('assets/images/skyline.png') center bottom / cover no-repeat,
-                    linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
+                  radial-gradient(ellipse 92% 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
+                  linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
+                  url('assets/images/skyline.png') center bottom / cover no-repeat,
+                  linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
             }
         }
 
         @media(max-width:700px) {
             .hero {
+                padding-top: 40px !important;
                 padding-bottom: 40px;
             }
         }
@@ -545,7 +561,7 @@
             letter-spacing: -.01em;
         }
 
-        .hero p.sub {
+                .hero p.sub {
             max-width: 680px;
             margin: 22px auto 0;
             color: #D5D5D5;
@@ -554,7 +570,7 @@
             text-transform: capitalize;
         }
 
-        .hero-tagline {
+       .hero-tagline {
             font-size: clamp(36px, 5.2vw, 52px);
             font-weight: 700;
             color: #F5CDFF;
@@ -595,7 +611,6 @@
                 padding: 6px 14px;
             }
         }
-
         .hero-pill-img {
             height: 29px;
             width: auto;
@@ -616,6 +631,10 @@
 
         .hero-visual img {
             display: none;
+        }
+
+        .hero-visual .hero-broadcast-partner img {
+            display: block;
         }
 
         .hero-visual::after {
@@ -3875,7 +3894,7 @@
             </div>
         </div>
     </section>
-    
+
     {{-- <section class="pricing-sec" id="pricing">
         <img class="lg-glow lg-glow-soft" src="assets/images/7.png" alt="" aria-hidden="true">
         <img class="lg-glow lg-glow-beam" src="assets/images/8.png" alt="" aria-hidden="true">
