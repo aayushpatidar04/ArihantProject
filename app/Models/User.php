@@ -15,6 +15,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     protected $hidden = [
@@ -33,5 +34,20 @@ class User extends Authenticatable
     public function eventRegistrations(): HasMany
     {
         return $this->hasMany(EventRegistration::class);
+    }
+
+    public function influencerPosts(): HasMany
+    {
+        return $this->hasMany(InfluencerPost::class);
+    }
+
+    public function isInfluencer(): bool
+    {
+        return $this->role === 'influencer';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

@@ -239,32 +239,6 @@ class AdminController extends Controller
         return view('admin.leaderboard', compact('referralLeaderboard', 'influencerLeaderboard', 'stallLeaderboard'));
     }
 
-    public function influencerPosts()
-    {
-        $posts = InfluencerPost::with('registration')->latest()->paginate(50);
-        return view('admin.influencer', compact('posts'));
-    }
-
-    public function approvePost(InfluencerPost $post)
-    {
-        $post->update([
-            'status' => 'approved',
-            'points_awarded' => 20,
-            'approved_at' => now(),
-        ]);
-        $this->leadScore->calculateScore($post->registration);
-        return back()->with('success', 'Post approved and points awarded.');
-    }
-
-    public function rejectPost(InfluencerPost $post, Request $request)
-    {
-        $post->update([
-            'status' => 'rejected',
-            'admin_notes' => $request->input('reason', ''),
-        ]);
-        return back()->with('success', 'Post rejected.');
-    }
-
     public function communications()
     {
         $communications = Communication::with('registration')->latest()->paginate(50);

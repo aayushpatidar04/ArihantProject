@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
 {
@@ -43,7 +45,7 @@ class RegistrationController extends Controller
 
     public function showForm(Request $request)
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             return redirect()->route('registration.success');
         }
 
@@ -104,7 +106,7 @@ class RegistrationController extends Controller
 
     public function showClientConfirm()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             return redirect()->route('registration.success');
         }
         if (!Session::get('is_existing_client') || !Session::has('client_users')) {
@@ -173,14 +175,14 @@ class RegistrationController extends Controller
                 'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
                 'Content-Type' => 'application/json',
             ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
-                'name' => $reg->full_name,
-                'mobileNumber' => $reg->phone,
-                'email' => $reg->email,
-                'city' => $reg->city,
-                'sourceUrl' => 'https://event.arihantplus.com', // or your event landing page
-                'source' => 'AI & Algo Conclave',
-                'clientType' => $reg->is_subbroker ? 'Sub-broker' : ($reg->is_existing_client ? 'Existing Client' : 'New Client'),
-            ]);
+                        'name' => $reg->full_name,
+                        'mobileNumber' => $reg->phone,
+                        'email' => $reg->email,
+                        'city' => $reg->city,
+                        'sourceUrl' => 'https://event.arihantplus.com', // or your event landing page
+                        'source' => 'AI & Algo Conclave',
+                        'clientType' => $reg->is_subbroker ? 'Sub-broker' : ($reg->is_existing_client ? 'Existing Client' : 'New Client'),
+                    ]);
 
         } catch (\Exception $e) {
             Log::error('CRM lead push failed: ' . $e->getMessage(), [
@@ -202,7 +204,7 @@ class RegistrationController extends Controller
 
         $plainPassword = $request->password;
         $this->email->sendRegistrationSuccessful($reg, $plainPassword);
-        
+
 
         return redirect()->route('registration.payment');
     }
@@ -213,7 +215,7 @@ class RegistrationController extends Controller
 
     public function showOtp()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             return redirect()->route('registration.success');
         }
         if (Session::get('is_existing_client') || Session::get('is_subbroker') || !Session::has('reg_phone')) {
@@ -263,7 +265,7 @@ class RegistrationController extends Controller
 
     public function showDetails()
     {
-        if(Auth::check()){
+        if (Auth::check()) {
             return redirect()->route('registration.success');
         }
         $isSubBroker = Session::get('is_subbroker');
@@ -339,14 +341,14 @@ class RegistrationController extends Controller
                 'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
                 'Content-Type' => 'application/json',
             ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
-                'name' => $reg->full_name,
-                'mobileNumber' => $reg->phone,
-                'email' => $reg->email,
-                'city' => $reg->city,
-                'sourceUrl' => 'https://event.arihantplus.com',
-                'source' => 'AI & Algo Conclave',
-                'clientType' => $reg->is_subbroker ? 'Sub-broker' : ($reg->is_existing_client ? 'Existing Client' : 'New Client'),
-            ]);
+                        'name' => $reg->full_name,
+                        'mobileNumber' => $reg->phone,
+                        'email' => $reg->email,
+                        'city' => $reg->city,
+                        'sourceUrl' => 'https://event.arihantplus.com',
+                        'source' => 'AI & Algo Conclave',
+                        'clientType' => $reg->is_subbroker ? 'Sub-broker' : ($reg->is_existing_client ? 'Existing Client' : 'New Client'),
+                    ]);
 
         } catch (\Exception $e) {
             Log::error('CRM lead push failed: ' . $e->getMessage(), [
@@ -377,10 +379,12 @@ class RegistrationController extends Controller
 
     public function showPayment()
     {
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('index');
         }
+
         $reg = $this->getCurrentRegistration();
+
         if (!$reg || $reg->status !== 'kyc_completed') {
             return redirect()->route('registration.form');
         }
@@ -388,11 +392,170 @@ class RegistrationController extends Controller
         Session::put('payment_registration_id', $reg->id);
 
         $order = $this->razor_payment->createOrder($reg);
+
         if (!$order) {
-            return redirect()->route('registration.payment')->withErrors(['payment' => 'Unable to initialize payment gateway. Please try again.']);
+            return redirect()
+                ->route('registration.payment')
+                ->withErrors([
+                    'payment' => 'Unable to initialize payment gateway. Please try again.'
+                ]);
         }
 
         return view('registration.payment', compact('reg', 'order'));
+    }
+
+    public function checkPromo(Request $request)
+    {
+        $validated = $request->validate([
+            'promo_code' => 'required|string|max:50',
+        ]);
+
+        $enteredCode = strtoupper(trim($validated['promo_code']));
+        $configuredCode = strtoupper(trim(config('event.promo.code')));
+
+        if ($enteredCode !== $configuredCode) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Invalid promo code.',
+            ], 422);
+        }
+
+        $usedCount = EventRegistration::where('promo_code_used', true)
+            ->where('promo_code', $configuredCode)
+            ->count();
+
+        $limit = (int) config('event.promo.limit');
+
+        if ($usedCount >= $limit) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'This promo code has reached its usage limit.',
+            ], 422);
+        }
+
+        $reg = $this->getCurrentRegistration();
+
+        if (!$reg) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Registration session expired. Please start again.',
+            ], 422);
+        }
+
+        if ($reg->promo_code_used) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'A promo code has already been applied to this registration.',
+            ], 422);
+        }
+
+        return response()->json([
+            'valid' => true,
+            'promo_code' => $configuredCode,
+            'amount' => (int) config('event.promo.amount'),
+            'remaining' => max(0, $limit - $usedCount),
+            'message' => 'Promo code applied successfully.',
+        ]);
+    }
+
+    public function createPaymentOrder(Request $request)
+    {
+        $reg = $this->getCurrentRegistration();
+
+        if (!$reg) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration session expired. Please start again.',
+            ], 422);
+        }
+
+        if ($reg->status === 'paid') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration is already paid.',
+            ], 422);
+        }
+
+        $promoCode = strtoupper(
+            trim($request->input('promo_code', ''))
+        );
+
+        $finalAmount = $reg->is_existing_client
+            ? 399
+            : 599;
+
+        $promoApplied = false;
+
+        if ($promoCode !== '') {
+
+            $configuredCode = strtoupper(
+                trim(config('event.promo.code'))
+            );
+
+            if ($promoCode !== $configuredCode) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid promo code.',
+                ], 422);
+            }
+
+            if ($reg->promo_code_used) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Promo code has already been used.',
+                ], 422);
+            }
+
+            $usedCount = EventRegistration::where(
+                'promo_code_used',
+                true
+            )
+                ->where(
+                    'promo_code',
+                    $configuredCode
+                )
+                ->count();
+
+            $limit = (int) config('event.promo.limit');
+
+            if ($usedCount >= $limit) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This promo code has reached its usage limit.',
+                ], 422);
+            }
+
+            $finalAmount = (int) config(
+                'event.promo.amount'
+            );
+
+            $promoApplied = true;
+        }
+
+        /*
+         * Create Razorpay order using the SERVER calculated amount.
+         */
+        $order = $this->razor_payment->createOrder(
+            $reg,
+            $finalAmount
+        );
+
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to initialize payment gateway.',
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'order_id' => $order['id'],
+            'amount' => $finalAmount,
+            'promo_applied' => $promoApplied,
+            'promo_code' => $promoApplied
+                ? $configuredCode
+                : null,
+        ]);
     }
 
     public function paymentCallback(Request $request, $id)
@@ -493,57 +656,324 @@ class RegistrationController extends Controller
         return redirect()->route('registration.thankyou');
     }
 
-    public function razorPaymentCallback(Request $request, $id)
-    {
+    public function razorPaymentCallback(Request $request, $id) {
         $user = User::find($id);
-        Auth::login($user);
-        
-        $request->validate([
-            'razorpay_payment_id' => 'required|string',
-            'razorpay_order_id' => 'required|string',
-            'razorpay_signature' => 'required|string',
-            ]);
-            
-        $reg = $this->getCurrentRegistration();
-        if (!$reg) {
-            return redirect()->route('registration.form');
+
+        if (!$user) {
+            return redirect()
+                ->route('registration.form')
+                ->withErrors([
+                    'payment' => 'User not found.'
+                ]);
         }
 
-        $isValid = $this->razor_payment->verifySignature([
-            'order_id' => $request->razorpay_order_id,
-            'payment_id' => $request->razorpay_payment_id,
-            'signature' => $request->razorpay_signature,
+        Auth::login($user);
+
+        $request->validate([
+            'razorpay_payment_id' =>
+                'required|string',
+
+            'razorpay_order_id' =>
+                'required|string',
+
+            'razorpay_signature' =>
+                'required|string',
+
+            'promo_code' =>
+                'nullable|string|max:50',
         ]);
 
-        if (!$isValid) {
-            return redirect()->route('registration.payment')->withErrors(['payment' => 'Payment verification failed.']);
+
+        $reg = $this->getCurrentRegistration();
+
+        if (!$reg) {
+            return redirect()
+                ->route('registration.form');
         }
 
-        $payment = $reg->payment;
-        if ($payment) {
-            $payment->update([
-                'gateway_payment_id' => $request->razorpay_payment_id,
-                'gateway_signature' => $request->razorpay_signature,
-                'status' => 'paid',
-                'paid_at' => now(),
+
+        /*
+         * Verify Razorpay signature.
+         */
+        $isValid =
+            $this->razor_payment->verifySignature([
+                'order_id' =>
+                    $request->razorpay_order_id,
+
+                'payment_id' =>
+                    $request->razorpay_payment_id,
+
+                'signature' =>
+                    $request->razorpay_signature,
             ]);
+
+
+        if (!$isValid) {
+
+            return redirect()
+                ->route('registration.payment')
+                ->withErrors([
+                    'payment' =>
+                        'Payment verification failed.'
+                ]);
         }
 
-        $reg->update(['status' => 'paid', 'paid_at' => now()]);
 
-        $qr = $this->qr->generateEntryQr($reg);
-        $qrUrl = asset('storage/' . $qr->image_path);
+        /*
+         * Already paid?
+         *
+         * Prevent duplicate callback processing.
+         */
+        if ($reg->status === 'paid') {
+            return redirect()
+                ->route('registration.thankyou');
+        }
 
-        $this->whatsapp->sendQrImage($reg, $qrUrl);
-        $this->email->sendConfirmation($reg, $qr->image_path);
 
+        $promoCode = strtoupper(
+            trim($request->promo_code ?? '')
+        );
+
+
+        $promoApplied = false;
+
+        $finalAmount =
+            $reg->is_existing_client
+            ? 399
+            : 599;
+
+
+        DB::transaction(function () use ($reg, $request, $promoCode, &$promoApplied, &$finalAmount) {
+
+            /*
+             * Lock registration.
+             */
+            $lockedReg =
+                EventRegistration::where(
+                    'id',
+                    $reg->id
+                )
+                    ->lockForUpdate()
+                    ->first();
+
+
+            if ($lockedReg->status === 'paid') {
+                return;
+            }
+
+
+            /*
+             * Verify promo AGAIN.
+             */
+            if ($promoCode !== '') {
+
+                $configuredCode =
+                    strtoupper(
+                        trim(
+                            config('event.promo.code')
+                        )
+                    );
+
+
+                if ($promoCode !== $configuredCode) {
+
+                    throw ValidationException::withMessages([
+                        'promo_code' =>
+                            'Invalid promo code.'
+                    ]);
+                }
+
+
+                if ($lockedReg->promo_code_used) {
+
+                    throw ValidationException::withMessages([
+                        'promo_code' =>
+                            'Promo code has already been used.'
+                    ]);
+                }
+
+
+                /*
+                 * Count successful promo usages.
+                 */
+                $usedCount =
+                    EventRegistration::where(
+                        'promo_code_used',
+                        true
+                    )
+                        ->where(
+                            'promo_code',
+                            $configuredCode
+                        )
+                        ->count();
+
+
+                $limit =
+                    (int) config(
+                        'event.promo.limit'
+                    );
+
+
+                if ($usedCount >= $limit) {
+
+                    throw ValidationException::withMessages([
+                        'promo_code' =>
+                            'Promo code usage limit has been reached.'
+                    ]);
+                }
+
+
+                $finalAmount =
+                    (int) config(
+                        'event.promo.amount'
+                    );
+
+                $promoApplied = true;
+            }
+
+
+            /*
+             * Get payment.
+             */
+            $payment =
+                $lockedReg->payment;
+
+
+            if ($payment) {
+
+                $payment->update([
+
+                    'gateway_payment_id' =>
+                        $request->razorpay_payment_id,
+
+                    'gateway_signature' =>
+                        $request->razorpay_signature,
+
+                    'status' =>
+                        'paid',
+
+                    'amount' =>
+                        $finalAmount,
+
+                    'paid_at' =>
+                        now(),
+                ]);
+
+            } else {
+
+                Payment::create([
+
+                    'event_registration_id' =>
+                        $lockedReg->id,
+
+                    'gateway' =>
+                        'razorpay',
+
+                    'gateway_order_id' =>
+                        $request->razorpay_order_id,
+
+                    'gateway_payment_id' =>
+                        $request->razorpay_payment_id,
+
+                    'gateway_signature' =>
+                        $request->razorpay_signature,
+
+                    'amount' =>
+                        $finalAmount,
+
+                    'currency' =>
+                        'INR',
+
+                    'status' =>
+                        'paid',
+
+                    'paid_at' =>
+                        now(),
+                ]);
+            }
+
+
+            /*
+             * Mark registration paid.
+             *
+             * Promo is consumed ONLY HERE.
+             */
+            $lockedReg->update([
+
+                'status' =>
+                    'paid',
+
+                'paid_at' =>
+                    now(),
+
+                'promo_code_used' =>
+                    $promoApplied,
+
+                'promo_code' =>
+                    $promoApplied
+                    ? strtoupper(
+                        trim(
+                            config('event.promo.code')
+                        )
+                    )
+                    : null,
+
+                'promo_amount' =>
+                    $promoApplied
+                    ? $finalAmount
+                    : null,
+            ]);
+
+        });
+
+
+        /*
+         * Refresh registration.
+         */
+        $reg->refresh();
+
+
+        /*
+         * Generate QR.
+         */
+        $qr =
+            $this->qr->generateEntryQr($reg);
+
+        $qrUrl =
+            asset(
+                'storage/' .
+                $qr->image_path
+            );
+
+
+        /*
+         * Send QR.
+         */
+        $this->whatsapp->sendQrImage(
+            $reg,
+            $qrUrl
+        );
+
+
+        $this->email->sendConfirmation(
+            $reg,
+            $qr->image_path
+        );
+
+
+        /*
+         * Lead scoring.
+         */
         $this->leadScore->calculateScore($reg);
+
 
         if ($reg->referred_by) {
             $this->awardReferralPoints($reg);
         }
 
-        return redirect()->route('registration.thankyou');
+
+        return redirect()
+            ->route('registration.thankyou');
     }
 
     public function thankYou()
@@ -563,7 +993,7 @@ class RegistrationController extends Controller
 
     public function success()
     {
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('index');
         }
         $reg = $this->getCurrentRegistration();
@@ -610,7 +1040,7 @@ class RegistrationController extends Controller
             $referral->update(['status' => 'paid', 'points_awarded' => 50]);
             $referrer = $referral->referrer;
             if ($referrer) {
-            $this->leadScore->calculateScore($referrer);
+                $this->leadScore->calculateScore($referrer);
             }
         }
     }

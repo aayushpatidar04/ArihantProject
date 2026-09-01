@@ -11,7 +11,7 @@ class InfluencerPost extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_registration_id', 'platform', 'post_url',
+        'user_id', 'platform', 'post_url',
         'post_type', 'status', 'admin_notes', 'points_awarded', 'approved_at'
     ];
 
@@ -19,8 +19,8 @@ class InfluencerPost extends Model
         'approved_at' => 'datetime',
     ];
 
-    public function registration(): BelongsTo
+    public function influencer(): BelongsTo
     {
-        return $this->belongsTo(EventRegistration::class, 'event_registration_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -180,9 +180,12 @@ class HomeController extends Controller
     {
         return view('rajesh-shrivastav');
     }
-
     public function rahul_saroge()
     {
         return view('rahul-saroge');
+    }
+    public function nikhil_bhandari()
+    {
+        return view('nikhil');
     }
 }

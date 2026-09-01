@@ -149,7 +149,9 @@
                 <div class="client-badge">✓ Client Special Price</div>
             @endif
             <h1>Complete Payment</h1>
-            <div class="amount">₹{{ $reg->is_existing_client ? '399' : '599' }}</div>
+            <div class="amount" id="paymentAmount">
+                ₹{{ $reg->is_existing_client ? '399' : '599' }}
+            </div>
             @php
                 $name = $reg->full_name;
                 $nLen = mb_strlen($name);
@@ -203,22 +205,30 @@
                     <li>✨ Sound Healing</li>
                 </ul>
             </div>
-            {{-- <div class="secure-badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" />
-                    <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
-                Secure Payment via Atom / NTT DATA PAY
-            </div> --}}
 
-            {{-- @if(app()->environment('local'))
-            <div class="debug-info">
-                <strong>Debug:</strong><br>
-                token: {{ $order['atomTokenId'] ?? 'MISSING' }}<br>
-                returnUrl: {{ $order['returnUrl'] ?? 'MISSING' }}<br>
-                env: {{ $order['env'] ?? 'prod' }}
+            <div style="margin:24px 0 18px;text-align:left">
+
+                <label for="promoCode" style="display:block;font-size:13px;font-weight:600;color:#e9e4f0;margin-bottom:7px">
+                    Have a Promo Code?
+                </label>
+
+                <div style="display:flex;gap:8px">
+
+                    <input type="text" id="promoCode" maxlength="50" placeholder="Enter promo code" autocomplete="off"
+                        style="flex:1;min-width:0;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 14px;color:var(--ink);font-size:14px;outline:none;text-transform:uppercase">
+
+                    <button type="button" id="applyPromoBtn" class="btn btn-primary"
+                        style="padding:10px 16px;white-space:nowrap">
+                        Apply
+                    </button>
+
+                </div>
+
+                <div id="promoMessage" style="display:none;font-size:12px;margin-top:7px">
+                </div>
+
             </div>
-            @endif --}}
+
 
             <button id="payBtn" class="btn btn-primary" style="width:100%">Pay Now</button>
             {{-- <div
@@ -232,7 +242,8 @@
 
     <script src="{{ config('services.atom.js_cdn') }}"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    {{-- <script>
+    {{--
+    <script>
         document.getElementById('payBtn').onclick = function () {
             const atomTokenId = '{{ $order["atomTokenId"] ?? "" }}';
             const merchId = '{{ $order["merchId"] ?? "" }}';
@@ -276,37 +287,360 @@
         };
     </script> --}}
     <script>
-        const options = {
-            key: '{{ config("services.payment.key_id") }}',
-            amount: {{ $reg->is_existing_client ? '39900' : '59900' }},
-            currency: 'INR',
-            name: 'ArihantPLUS Conclave',
-            description: 'AI & Algo Conclave 2026 Registration',
-            image: 'https://event.arihantplus.com/assets/images/logo.png") }}',
-            order_id: '{{ $order["id"] ?? "" }}',
-            handler: function (response) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{{ route("razor.payment.callback", $reg->user_id) }}';
-                form.innerHTML = `
-                @csrf
-                <input type="hidden" name="razorpay_payment_id" value="${response.razorpay_payment_id}">
-                <input type="hidden" name="razorpay_order_id" value="${response.razorpay_order_id}">
-                <input type="hidden" name="razorpay_signature" value="${response.razorpay_signature}">
-            `;
-                document.body.appendChild(form);
-                form.submit();
-            },
-            prefill: {
-                name: '{{ $reg->full_name }}',
-                email: '{{ $reg->email }}',
-                contact: '{{ $reg->phone }}'
-            },
-            theme: { color: '#8b2fd9' }
+
+        const originalAmount =
+            {{ $reg->is_existing_client ? 399 : 599 }};
+
+        let appliedPromoCode = null;
+
+        const paymentAmount =
+            document.getElementById('paymentAmount');
+
+        const promoCodeInput =
+            document.getElementById('promoCode');
+
+        const applyPromoBtn =
+            document.getElementById('applyPromoBtn');
+
+        const promoMessage =
+            document.getElementById('promoMessage');
+
+        const payBtn =
+            document.getElementById('payBtn');
+
+        const atomError =
+            document.getElementById('atomError');
+
+
+        function showPromoMessage(message, success = false) {
+            promoMessage.textContent = message;
+
+            promoMessage.style.display = 'block';
+
+            promoMessage.style.color =
+                success ? '#8ff0b3' : '#ff6b6b';
+        }
+
+
+        function resetPromo() {
+            appliedPromoCode = null;
+
+            paymentAmount.textContent =
+                '₹' + originalAmount;
+
+            promoCodeInput.disabled = false;
+
+            applyPromoBtn.disabled = false;
+
+            applyPromoBtn.textContent = 'Apply';
+
+            promoMessage.style.display = 'none';
+        }
+
+
+        /*
+         * Check promo code.
+         * IMPORTANT: This DOES NOT consume the promo.
+         */
+        applyPromoBtn.addEventListener(
+            'click',
+            async function () {
+
+                const promoCode =
+                    promoCodeInput.value
+                        .trim()
+                        .toUpperCase();
+
+                if (!promoCode) {
+
+                    showPromoMessage(
+                        'Please enter a promo code.'
+                    );
+
+                    return;
+                }
+
+                applyPromoBtn.disabled = true;
+
+                applyPromoBtn.textContent =
+                    'Checking...';
+
+                try {
+
+                    const response = await fetch(
+                        '{{ route("registration.check-promo") }}',
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json',
+
+                                'Accept':
+                                    'application/json',
+
+                                'X-CSRF-TOKEN':
+                                    '{{ csrf_token() }}'
+                            },
+
+                            body: JSON.stringify({
+                                promo_code: promoCode
+                            })
+                        }
+                    );
+
+                    const data =
+                        await response.json();
+
+                    if (!response.ok || !data.valid) {
+
+                        resetPromo();
+
+                        showPromoMessage(
+                            data.message ||
+                            'Invalid promo code.'
+                        );
+
+                        return;
+                    }
+
+                    appliedPromoCode =
+                        data.promo_code;
+
+                    paymentAmount.textContent =
+                        '₹' + data.amount;
+
+                    promoCodeInput.disabled = true;
+
+                    applyPromoBtn.disabled = true;
+
+                    applyPromoBtn.textContent =
+                        'Applied';
+
+                    showPromoMessage(
+                        data.message,
+                        true
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        'Promo validation error:',
+                        error
+                    );
+
+                    resetPromo();
+
+                    showPromoMessage(
+                        'Unable to validate promo code.'
+                    );
+                }
+
+            });
+
+
+        /*
+         * If promo input changes, remove previously
+         * applied promo.
+         */
+        promoCodeInput.addEventListener(
+            'input',
+            function () {
+
+                this.value =
+                    this.value.toUpperCase();
+
+                if (appliedPromoCode) {
+                    resetPromo();
+                }
+
+            });
+
+
+        /*
+         * Pay Now
+         */
+        payBtn.onclick = async function () {
+
+            payBtn.disabled = true;
+
+            payBtn.textContent =
+                'Processing...';
+
+            atomError.style.display = 'none';
+
+            try {
+
+                /*
+                 * Server decides the actual amount.
+                 */
+                const response = await fetch(
+                    '{{ route("registration.payment.create-order") }}',
+                    {
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type':
+                                'application/json',
+
+                            'Accept':
+                                'application/json',
+
+                            'X-CSRF-TOKEN':
+                                '{{ csrf_token() }}'
+                        },
+
+                        body: JSON.stringify({
+                            promo_code:
+                                appliedPromoCode
+                        })
+                    }
+                );
+
+                const data =
+                    await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message ||
+                        'Unable to create payment order.'
+                    );
+                }
+
+
+                const options = {
+
+                    key:
+                        '{{ config("services.payment.key_id") }}',
+
+                    amount:
+                        data.amount * 100,
+
+                    currency: 'INR',
+
+                    name:
+                        'ArihantPLUS Conclave',
+
+                    description:
+                        data.promo_applied
+                            ? 'AI & Algo Conclave 2026 Registration - Promo'
+                            : 'AI & Algo Conclave 2026 Registration',
+
+                    image:
+                        'https://event.arihantplus.com/assets/images/logo.png',
+
+                    order_id:
+                        data.order_id,
+
+                    handler:
+                        function (response) {
+
+                            const form =
+                                document.createElement('form');
+
+                            form.method = 'POST';
+
+                            form.action =
+                                '{{ route("razor.payment.callback", $reg->user_id) }}';
+
+                            form.innerHTML = `
+
+                            @csrf
+
+                            <input
+                                type="hidden"
+                                name="razorpay_payment_id"
+                                value="${response.razorpay_payment_id}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="razorpay_order_id"
+                                value="${response.razorpay_order_id}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="razorpay_signature"
+                                value="${response.razorpay_signature}"
+                            >
+
+                            <input
+                                type="hidden"
+                                name="promo_code"
+                                value="${data.promo_code ?? ''}"
+                            >
+
+                        `;
+
+                            document.body.appendChild(form);
+
+                            form.submit();
+                        },
+
+                    prefill: {
+                        name:
+                            @json($reg->full_name),
+
+                        email:
+                            @json($reg->email),
+
+                        contact:
+                            @json($reg->phone)
+                    },
+
+                    theme: {
+                        color: '#8b2fd9'
+                    }
+                };
+
+
+                const rzp =
+                    new Razorpay(options);
+
+                rzp.open();
+
+
+                rzp.on(
+                    'payment.failed',
+                    function (response) {
+
+                        console.error(
+                            'Razorpay payment failed:',
+                            response
+                        );
+
+                        atomError.textContent =
+                            response.error?.description ||
+                            'Payment failed. Please try again.';
+
+                        atomError.style.display =
+                            'block';
+
+                        payBtn.disabled = false;
+
+                        payBtn.textContent =
+                            'Pay Now';
+                    });
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                atomError.textContent =
+                    error.message ||
+                    'Unable to initiate payment.';
+
+                atomError.style.display =
+                    'block';
+
+                payBtn.disabled = false;
+
+                payBtn.textContent =
+                    'Pay Now';
+            }
         };
-        document.getElementById('payBtn').onclick = function () {
-            const rzp = new Razorpay(options);
-            rzp.open();
-        };
+
     </script>
 @endsection

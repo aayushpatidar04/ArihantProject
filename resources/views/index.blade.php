@@ -4794,6 +4794,17 @@
                 ]
                 , knowMore: "/rahul-saroge"
             }
+                , {
+                name: "Nikhil Bhandari"
+                , role: "Co-Founder, Stratzy | Systematic Trading & Investment Professional"
+                , img: "assets/images/neee.png"
+                , socials: [
+                    { type: "linkedin", url: "https://www.linkedin.com/in/iamnikhilbhandari" },
+                    // { type: "youtube", url: "https://www.youtube.com/@tradewithrahulsaraoge" },
+                    { type: "x", url: "https://x.com/inikhilbhandari" }
+                ]
+                , knowMore: "/nikhil-bhandari"
+            }
                 ,];
             var track = document.getElementById('panelistTrack');
             if (!track) return;

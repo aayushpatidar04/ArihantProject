@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'venue' => \App\Http\Middleware\VenueStaffMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'influencer' => \App\Http\Middleware\InfluencerMiddleware::class,
         ]);
 
         $middleware->web(append: [

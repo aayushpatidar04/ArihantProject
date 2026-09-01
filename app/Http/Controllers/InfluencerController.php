@@ -2,59 +2,140 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EventRegistration;
 use App\Models\InfluencerPost;
-use App\Services\LeadScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class InfluencerController extends Controller
 {
-    public function __construct(protected LeadScoringService $leadScore) {}
-
     /**
-     * Show submission form and user's posts.
+     * Influencer dashboard.
      */
-    public function index()
+    public function dashboard()
     {
-        $reg = $this->getCurrentRegistration();
-        if (!$reg) {
-            return redirect()->route('registration.form');
-        }
-        $posts = $reg->influencerPosts()->latest()->get();
-        return view('influencer.submit', compact('reg', 'posts'));
+        $user = Auth::user();
+
+        $this->ensureInfluencer($user);
+
+        $posts = $user->influencerPosts()
+            ->latest()
+            ->get();
+
+        $totalPosts = $posts->count();
+
+        $approvedPosts = $posts->where('status', 'approved')->count();
+
+        $pendingPosts = $posts->where('status', 'pending')->count();
+
+        $rejectedPosts = $posts->where('status', 'rejected')->count();
+
+        $totalScore = (int) $posts
+            ->where('status', 'approved')
+            ->sum('points_awarded');
+
+        return view('influencer.dashboard', compact(
+            'user',
+            'posts',
+            'totalPosts',
+            'approvedPosts',
+            'pendingPosts',
+            'rejectedPosts',
+            'totalScore'
+        ));
     }
 
     /**
-     * Submit a post/reel URL.
+     * Show post submission form.
      */
-    public function submit(Request $request)
+    public function createPost()
     {
-        $request->validate([
-            'platform' => 'required|in:instagram,meta,x,youtube',
-            'post_url' => 'required|url|max:500',
-            'post_type' => 'required|in:reel,post,story,video',
-        ]);
+        $this->ensureInfluencer(Auth::user());
 
-        $reg = $this->getCurrentRegistration();
-        if (!$reg) {
-            return redirect()->route('registration.form');
-        }
+        return view('influencer.posts.create');
+    }
+
+    /**
+     * Submit influencer post.
+     */
+    public function storePost(Request $request)
+    {
+        $user = Auth::user();
+
+        $this->ensureInfluencer($user);
+
+        $validated = $request->validate([
+            'platform' => [
+                'required',
+                'string',
+                'in:instagram,facebook,youtube,x,linkedin'
+            ],
+            'post_type' => [
+                'required',
+                'string',
+                'in:reel,post,video,story'
+            ],
+            'post_url' => [
+                'required',
+                'url',
+                'max:1000'
+            ],
+        ]);
 
         InfluencerPost::create([
-            'event_registration_id' => $reg->id,
-            'platform' => $request->platform,
-            'post_url' => $request->post_url,
-            'post_type' => $request->post_type,
+            'user_id' => $user->id,
+            'platform' => $validated['platform'],
+            'post_type' => $validated['post_type'],
+            'post_url' => $validated['post_url'],
             'status' => 'pending',
+            'points_awarded' => 0,
         ]);
 
-        return back()->with('success', 'Post submitted for verification.');
+        return redirect()
+            ->route('influencer.dashboard')
+            ->with(
+                'success',
+                'Your post has been submitted for approval.'
+            );
     }
 
-    protected function getCurrentRegistration(): ?EventRegistration
+    /**
+     * Show influencer's own posts.
+     */
+    public function posts()
     {
-        if (!Auth::check()) return null;
-        return EventRegistration::where('user_id', Auth::id())->latest()->first();
+        $user = Auth::user();
+
+        $this->ensureInfluencer($user);
+
+        $posts = $user->influencerPosts()
+            ->latest()
+            ->paginate(15);
+
+        return view('influencer.posts.index', compact('posts'));
+    }
+
+    /**
+     * Logout influencer.
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()
+            ->route('influencer.login')
+            ->with('success', 'You have been logged out.');
+    }
+
+    /**
+     * Make sure only influencers can access these pages.
+     */
+    protected function ensureInfluencer($user): void
+    {
+        if (!$user || $user->account_type !== 'influencer') {
+            abort(403, 'Unauthorized.');
+        }
     }
 }

@@ -26,57 +26,94 @@ class razorPaymentGatewayService
      * Create an order for the registration.
      * Existing clients: ₹399 | New users: ₹599
      */
-    public function createOrder(EventRegistration $registration): ?array
-    {
-        $amount = $registration->is_existing_client ? 39900 : 59900; // paise
+    public function createOrder(EventRegistration $registration, ?int $amount = null): ?array {
+
+        // Amount in rupees
+        $amountRupees = $amount ?? (
+            $registration->is_existing_client ? 399 : 599
+        );
+
+        // Razorpay requires paise
+        $amountPaise = $amountRupees * 100;
 
         try {
-            $response = Http::withBasicAuth($this->keyId, $this->keySecret)
-                ->post("{$this->apiUrl}/orders", [
-                    'amount' => $amount,
-                    'currency' => 'INR',
-                    'receipt' => $registration->registration_number,
-                    'notes' => [
-                        'registration_id' => $registration->id,
-                        'email' => $registration->email,
-                        'phone' => $registration->phone,
-                        'client_type' => $registration->is_existing_client ? 'existing' : 'new',
-                    ],
-                ]);
 
-            if ($response->successful()) {
-                $data = $response->json();
-                $payment = Payment::query()
-                    ->where('event_registration_id', $registration->id)
-                    ->whereIn('status', ['created', 'attempted', 'failed'])
-                    ->latest('id')
-                    ->first();
+            $response = Http::withBasicAuth(
+                $this->keyId,
+                $this->keySecret
+            )->post("{$this->apiUrl}/orders", [
 
-                if ($payment) {
-                    $payment->update([
-                        'gateway' => $this->gateway,
-                        'gateway_order_id' => $data['id'],
-                        'amount' => $amount / 100,
+                        'amount' => $amountPaise,
+
                         'currency' => 'INR',
-                        'status' => 'created',
+
+                        'receipt' => $registration->registration_number,
+
+                        'notes' => [
+                            'registration_id' => $registration->id,
+                            'email' => $registration->email,
+                            'phone' => $registration->phone,
+                            'client_type' =>
+                                $registration->is_existing_client
+                                ? 'existing'
+                                : 'new',
+                            'amount' => $amountRupees,
+                        ],
                     ]);
-                } else {
-                    $payment = Payment::create([
-                        'event_registration_id' => $registration->id,
-                        'gateway' => $this->gateway,
-                        'gateway_order_id' => $data['id'],
-                        'amount' => $amount / 100,
-                        'currency' => 'INR',
-                        'status' => 'created',
-                    ]);
-                }
-                return $data;
+
+            if (!$response->successful()) {
+
+                Log::error(
+                    'Payment order creation failed: ' .
+                    $response->body()
+                );
+
+                return null;
             }
 
-            Log::error('Payment order creation failed: ' . $response->body());
-            return null;
+            $data = $response->json();
+
+            $payment = Payment::query()
+                ->where('event_registration_id', $registration->id)
+                ->whereIn('status', [
+                    'created',
+                    'attempted',
+                    'failed'
+                ])
+                ->latest('id')
+                ->first();
+
+            if ($payment) {
+
+                $payment->update([
+                    'gateway' => $this->gateway,
+                    'gateway_order_id' => $data['id'],
+                    'amount' => $amountRupees,
+                    'currency' => 'INR',
+                    'status' => 'created',
+                ]);
+
+            } else {
+
+                Payment::create([
+                    'event_registration_id' => $registration->id,
+                    'gateway' => $this->gateway,
+                    'gateway_order_id' => $data['id'],
+                    'amount' => $amountRupees,
+                    'currency' => 'INR',
+                    'status' => 'created',
+                ]);
+            }
+
+            return $data;
+
         } catch (\Exception $e) {
-            Log::error('Payment gateway exception: ' . $e->getMessage());
+
+            Log::error(
+                'Payment gateway exception: ' .
+                $e->getMessage()
+            );
+
             return null;
         }
     }

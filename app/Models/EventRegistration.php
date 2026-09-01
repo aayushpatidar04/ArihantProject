@@ -62,11 +62,6 @@ class EventRegistration extends Model
         return $this->hasMany(Referral::class, 'referrer_id');
     }
 
-    public function influencerPosts(): HasMany
-    {
-        return $this->hasMany(InfluencerPost::class);
-    }
-
     public function leadScore(): HasOne
     {
         return $this->hasOne(LeadScore::class);

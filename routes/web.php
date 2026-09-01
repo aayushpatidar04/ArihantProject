@@ -10,7 +10,9 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\StallController;
 use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\InfluencerAuthController;
 use App\Http\Controllers\InfluencerController;
+use App\Http\Controllers\Admin\InfluencerAdminController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +25,17 @@ Route::get('/login', [HomeController::class, 'showLogin'])->name('login');
 Route::post('/login/otp/send', [HomeController::class, 'sendOtp'])->middleware('throttle:5,1')->name('login.otp.send');
 Route::post('/login/otp/verify', [HomeController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('login.otp.verify');
 
+
+Route::prefix('influencer')->name('influencer.')->group(function () {
+
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [InfluencerAuthController::class, 'showLogin'])->name('login');
+        Route::post('/login', [InfluencerAuthController::class, 'login'])->name('login.submit');
+        Route::get('/verify-otp', [InfluencerAuthController::class, 'showOtp'])->name('otp');
+        Route::post('/verify-otp', [InfluencerAuthController::class, 'verifyOtp'])->name('otp.verify');
+        Route::post('/resend-otp', [InfluencerAuthController::class, 'resendOtp'])->name('otp.resend');
+    });
+});
 /* ---------- Registration Flow ---------- */
 
 // Step 1: Phone number + client check
@@ -42,15 +55,25 @@ Route::post('/register/otp/resend', [RegistrationController::class, 'resendOtp']
 Route::get('/register/details', [RegistrationController::class, 'showDetails'])->name('registration.details');
 Route::post('/register/details', [RegistrationController::class, 'submitDetails'])->name('registration.details.submit');
 
-Route::get('/event-policy', function () {return view('registration.policy'); })->name('event.policy');
-Route::get('/payment-terms', function () {return view('registration.payment_terms'); })->name('payment.terms');
-Route::get('/cookie-policy', function () {return view('registration.cookie_policy'); })->name('cookie.policy');
-Route::get('/disclaimer', function () {return view('registration.disclaimer'); })->name('disclaimer');
+Route::get('/event-policy', function () {
+    return view('registration.policy');
+})->name('event.policy');
+Route::get('/payment-terms', function () {
+    return view('registration.payment_terms');
+})->name('payment.terms');
+Route::get('/cookie-policy', function () {
+    return view('registration.cookie_policy');
+})->name('cookie.policy');
+Route::get('/disclaimer', function () {
+    return view('registration.disclaimer');
+})->name('disclaimer');
 
 
 Route::middleware(['auth'])->group(function () {
     // Step 5: Payment
     Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
+    Route::post('/registration/check-promo', [RegistrationController::class, 'checkPromo'])->name('registration.check-promo');
+    Route::post('/registration/payment/create-order', [RegistrationController::class, 'createPaymentOrder'])->name('registration.payment.create-order');
     Route::get('/register/thank-you', [RegistrationController::class, 'thankYou'])->name('registration.thankyou');
     // Step 6: Success
     Route::get('/register/success', [RegistrationController::class, 'success'])->name('registration.success');
@@ -66,9 +89,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/refer', [ReferralController::class, 'index'])->name('referral.index');
     Route::post('/refer', [ReferralController::class, 'invite'])->name('referral.invite');
 
-    /* ---------- Influencer ---------- */
-    Route::get('/influencer', [InfluencerController::class, 'index'])->name('influencer.index');
-    Route::post('/influencer', [InfluencerController::class, 'submit'])->name('influencer.submit');
 });
 
 Route::get('/venue/login', [CheckInController::class, 'showVenueLogin'])->name('venue.login');
@@ -102,10 +122,22 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     // Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
     Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
     Route::get('/leaderboard', [AdminController::class, 'leaderboard'])->name('leaderboard');
-    Route::get('/influencer', [AdminController::class, 'influencerPosts'])->name('influencer');
-    Route::post('/influencer/{post}/approve', [AdminController::class, 'approvePost'])->name('influencer.approve');
-    Route::post('/influencer/{post}/reject', [AdminController::class, 'rejectPost'])->name('influencer.reject');
     Route::get('/communications', [AdminController::class, 'communications'])->name('communications');
+
+    Route::prefix('influencers')
+        ->name('influencers.')
+        ->group(function () {
+            Route::get('/', [InfluencerAdminController::class,'index'])->name('index');
+            Route::get('/create', [InfluencerAdminController::class,'create'])->name('create');
+            Route::post('/', [InfluencerAdminController::class,'store'])->name('store');
+            Route::get('/{user}', [InfluencerAdminController::class,'show'])->name('show');
+            Route::get('/{user}/edit', [InfluencerAdminController::class,'edit'])->name('edit');
+            Route::put('/{user}', [InfluencerAdminController::class,'update'])->name('update');
+            Route::delete('/{user}', [InfluencerAdminController::class,'destroy'])->name('destroy');
+
+            Route::post('/influencer-posts/{post}/approve', [InfluencerAdminController::class, 'approvePost'])->name('posts.approve');
+            Route::post('/influencer-posts/{post}/reject', [InfluencerAdminController::class, 'rejectPost'])->name('posts.reject');
+        });
 
     Route::resource('stalls', AdminStallController::class);
     Route::prefix('stalls/{stall}')->name('stalls.')->group(function () {
@@ -126,10 +158,23 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
 
 });
 
+Route::prefix('influencer')
+    ->name('influencer.')
+    ->middleware(['auth', 'influencer'])
+    ->group(function () {
+
+        Route::get('/dashboard', [InfluencerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/posts', [InfluencerController::class, 'posts'])->name('posts.index');
+        Route::get('/posts/create', [InfluencerController::class, 'createPost'])->name('posts.create');
+        Route::post('/posts', [InfluencerController::class, 'storePost'])->name('posts.store');
+        Route::post('/logout', [InfluencerController::class, 'logout'])->name('logout');
+    });
+
 Route::get('/vishal-mehta', [HomeController::class, 'vishal_mehta'])->name('vishal-mehta');
 Route::get('/saurabh-sisodia', [HomeController::class, 'saurabh_sisodia'])->name('saurabh-sisodia');
 Route::get('/santosh-pasi', [HomeController::class, 'santosh_pasi'])->name('santosh-pasi');
 Route::get('/ankit-rai', [HomeController::class, 'ankit_rai'])->name('ankit-rai');
 Route::get('/rajesh-shrivastav', [HomeController::class, 'rajesh_shrivastav'])->name('rajesh-shrivastav');
 Route::get('/rahul-saroge', [HomeController::class, 'rahul_saroge'])->name('rahul-saroge');
+Route::get('/nikhil-bhandari', [HomeController::class, 'nikhil_bhandari'])->name('nikhil-bhandari');
 Route::get('/detail', [HomeController::class, 'detail'])->name('detail');

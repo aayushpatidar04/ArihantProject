@@ -20,4 +20,10 @@ return [
         'ayushb190458@gmail.com',
     ],
 
+    'promo' => [
+        'code' => env('EVENT_PROMO_CODE', 'IIT200'),
+        'limit' => (int) env('EVENT_PROMO_LIMIT', 30),
+        'amount' => (int) env('EVENT_PROMO_AMOUNT', 200),
+    ],
+
 ];
