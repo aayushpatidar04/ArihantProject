@@ -60,7 +60,8 @@
             background: linear-gradient(160deg, rgba(22, 12, 30, 0.9) 0%, rgba(8, 4, 12, 0.96) 100%);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 18px;
-            padding: 24px
+            padding: 24px;
+            overflow-x: auto;
         }
 
         table {
@@ -333,7 +334,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         const markPaidModal = document.getElementById('markPaidModal');
         const markPaidForm = document.getElementById('markPaidForm');
