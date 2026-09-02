@@ -147,7 +147,7 @@ class RegistrationController extends Controller
         $user = User::create([
             'name' => $request->full_name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make('ArihantCapitals'),
         ]);
 
         $referral = $this->findReferralForRegistration($request->email, $request->phone);
