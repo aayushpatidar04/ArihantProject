@@ -171,8 +171,8 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Branch Codes</th>
-                            <th>Client Branch Codes</th>
+                            <th>Branch List</th>
+                            <th>Client List</th>
                             <th>Type</th>
                             <th>Status</th>
                             <th>Platform</th>
@@ -192,9 +192,9 @@
                                 <td>{{ $r->phone }}</td>
                                 <td>
                                     @php
-                                        $validationData = is_array($r->branch_client_validation)
-                                            ? $r->branch_client_validation
-                                            : json_decode($r->branch_client_validation ?? '{}', true);
+                                        $validationData = is_array($r->client_validation_data)
+                                            ? $r->client_validation_data
+                                            : json_decode($r->client_validation_data ?? '{}', true);
 
                                         $branchCodes = collect($validationData['branchlist'] ?? [])
                                             ->pluck('BranchCode')

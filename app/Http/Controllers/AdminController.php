@@ -538,8 +538,8 @@ class AdminController extends Controller
             'Client Type',
             'Email',
             'Phone',
-            'Branch Codes',
-            'Client Branch Codes',
+            'Branch List',
+            'Client List',
             'Type',
             'Status',
             'Platform',
@@ -573,9 +573,9 @@ class AdminController extends Controller
                         ? 'Existing Client'
                         : 'New Client');
 
-                $validationData = is_array($r->branch_client_validation)
-                    ? $r->branch_client_validation
-                    : json_decode($r->branch_client_validation ?? '{}', true);
+                $validationData = is_array($r->client_validation_data)
+                    ? $r->client_validation_data
+                    : json_decode($r->client_validation_data ?? '{}', true);
 
                 $branchCodes = collect($validationData['branchlist'] ?? [])
                     ->pluck('BranchCode')
