@@ -4038,7 +4038,7 @@
                             alt="₹14,997 Stratzy Access for Just ₹297">
                     </div>
                     <h3>₹14,997 Stratzy Access for Just ₹297</h3>
-                    <p>Get 3 months of Stratzy at an exclusive Conclave-only price.</p>
+                    <p>Get 3 months of Stratzy at an exclusive Conclave-only price only for arihant account holder.</p>
                 </div>
                 <div class="card">
                     <div class="icon-circle"><img src="assets/images/icons/12.png" alt="Exciting rewards"></div>
@@ -4134,7 +4134,7 @@
                 <ul class="value-checklist">
                     <li><span class="check">✓</span> Live AI + Algo Demos</li>
                     <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
-                    <li><span class="check">✓</span> 14997 stratzy access @297</li>
+                    <li><span class="check">✓</span> 14997 stratzy access @297 only for arihant account holder</li>
                     <li><span class="check">✓</span> Trader Networking</li>
                     <li><span class="check">✓</span> Expert Sessions</li>
                     <li><span class="check">✓</span> Quizzes + Big Rewards</li>
@@ -4918,6 +4918,10 @@
             , {
             q: "What is the refund/cancellation policy?"
             , a: "We follow a No Refund Policy."
+        }
+            , {
+            q: "Can everyone access Stratzy?"
+            , a: "No. Stratzy access is exclusively available to clients who have an account with Arihant."
         }
         ];
         document.getElementById('faq-list').innerHTML = faqs.map(function (f, i) {

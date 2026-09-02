@@ -342,12 +342,12 @@
 
                 if (data.success) {
                     document.getElementById('actions').style.display = 'none';
-                    document.getElementById('seatResult').innerHTML = `
-                    <div class="seat-result">
-                        <div class="seat-num">${data.seat}</div>
-                        <div class="seat-sec">Section: ${data.section}</div>
-                    </div>
-                `;
+               //     document.getElementById('seatResult').innerHTML = `
+               //     <div class="seat-result">
+               //         <div class="seat-num">${data.seat}</div>
+               //         <div class="seat-sec">Section: ${data.section}</div>
+               //     </div>
+               // `;
                     document.getElementById('resultTitle').innerHTML = '✅ Check-in Complete';
                 } else {
                     showError('❌ Failed', data.message);

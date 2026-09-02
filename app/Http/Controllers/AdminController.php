@@ -178,7 +178,9 @@ class AdminController extends Controller
             $amount = $isFreeGiveaway
                 ? '0'
                 : ($reg->is_existing_client ? '399' : '599');
-
+            if($reg->promo_amount){
+                $amount = $reg->promo_amount;
+            }
             /*
             |--------------------------------------------------------------------------
             | Update existing payment or create new payment

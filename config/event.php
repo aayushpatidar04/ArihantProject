@@ -18,6 +18,7 @@ return [
         'vinay.jain@arihantcapital.com',
         'vedant.sharma@arihantcapital.com',
         'ayushb190458@gmail.com',
+        'sales@intouchsoftware.co.in',
     ],
 
     'promo' => [
