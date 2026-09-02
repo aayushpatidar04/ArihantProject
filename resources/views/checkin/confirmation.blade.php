@@ -18,13 +18,13 @@
     <div class="card">
         <img src="{{ asset('assets/images/logo-2.png') }}" alt="ArihantPLUS" class="logo">
         <h1>Welcome, {{ $reg->full_name }}!</h1>
-        <p>Your seat has been allocated.</p>
-        @if($seat)
+        <p>You are Checked In successfully!.</p>
+        {{-- @if($seat)
         <div class="seat">{{ $seat->seat_number }}</div>
         <div class="detail">Section: {{ $seat->section }} | Row: {{ $seat->row }}</div>
         @else
         <p style="color:#ff9e9e">Seat allocation pending. Please contact venue staff.</p>
-        @endif
+        @endif --}}
         <div class="detail" style="margin-top:24px">ArihantPLUS AI & Algo Conclave 2026</div>
     </div>
 </body>
