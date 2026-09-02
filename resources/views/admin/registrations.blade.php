@@ -190,7 +190,7 @@
                                 </td>
                                 <td>{{ $r->email }}</td>
                                 <td>{{ $r->phone }}</td>
-                                <td>
+                                <td style="min-width: 100px;">
                                     @php
                                         $validationData = is_array($r->client_validation_data)
                                             ? $r->client_validation_data
@@ -212,7 +212,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td style="min-width: 100px;">
                                     @if($clientBranchCodes->count())
                                         @foreach($clientBranchCodes as $client)
                                             <div style="margin-bottom:6px;">
