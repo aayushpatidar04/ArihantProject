@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -31,9 +32,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function eventRegistrations(): HasMany
+    public function eventRegistration(): HasOne
     {
-        return $this->hasMany(EventRegistration::class);
+        return $this->hasOne(EventRegistration::class);
     }
 
     public function influencerPosts(): HasMany
