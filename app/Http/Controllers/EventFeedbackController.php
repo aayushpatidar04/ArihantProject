@@ -10,9 +10,9 @@ class EventFeedbackController extends Controller
 {
     public function create()
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        $registration = $user->eventRegistration;
+        $registration = $user->eventRegistrations()->latest()->first();
 
         if (!$registration) {
             return redirect()
