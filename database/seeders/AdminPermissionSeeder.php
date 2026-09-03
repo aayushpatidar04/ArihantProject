@@ -15,7 +15,7 @@ class AdminPermissionSeeder extends Seeder
         $superAdminEmails = array_map('strtolower', config('event.super_admin_emails', []));
         $allAdminEmails = array_map('strtolower', config('event.admin_emails', []));
 
-        $resources = ['dashboard', 'registrations', 'checkins', 'event-feedback', 'referrals', 'leaderboard', 'communications', 'influencers', 'stalls'];
+        $resources = ['dashboard', 'registrations', 'checkins', 'event-feedback', 'referrals', 'leaderboard', 'influencers', 'stalls'];
 
         foreach ($allAdminEmails as $email) {
             $email = strtolower($email);
@@ -32,24 +32,18 @@ class AdminPermissionSeeder extends Seeder
             );
 
             if ($isSuper) {
-                $this->command->info(" [SUPER] {$user->name} <{$user->email}> — full access, no row-level permissions needed");
+                $this->command->info(" [SUPER] {$user->name} <{$user->email}>");
                 continue;
             }
 
             foreach ($resources as $resource) {
-                $perm = AdminPermission::updateOrCreate(
+                AdminPermission::firstOrCreate(
                     ['user_id' => $user->id, 'resource' => $resource],
-                    [
-                        'view' => true,
-                        'create' => false,
-                        'edit' => false,
-                        'delete' => false,
-                        'export' => false,
-                    ]
+                    ['view' => true, 'create' => false, 'edit' => false, 'delete' => false, 'export' => false]
                 );
             }
 
-            $this->command->info(" [ADMIN] {$user->name} <{$user->email}> — view-only on all resources");
+            $this->command->info(" [ADMIN] {$user->name} <{$user->email}>");
         }
 
         $this->command->info('');

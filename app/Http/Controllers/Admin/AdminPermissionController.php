@@ -18,14 +18,12 @@ class AdminPermissionController extends Controller
         'event-feedback',
         'referrals',
         'leaderboard',
-        'communications',
         'influencers',
         'stalls',
-        'admin-management',
     ];
 
     /**
-     * List all admins with their current permissions.
+     * List all non-super-admins with their current permissions.
      */
     public function index()
     {
@@ -33,15 +31,19 @@ class AdminPermissionController extends Controller
             abort(403, 'Only super admins can manage permissions.');
         }
 
+        $superAdminEmails = array_map('strtolower', config('event.super_admin_emails', []));
+
         $admins = User::where('role', 'admin')
+            ->where(function ($q) use ($superAdminEmails) {
+                $q->whereNotIn(DB::raw('LOWER(email)'), $superAdminEmails);
+            })
             ->orderBy('name')
             ->get();
 
         // Pre-seed default permissions for admins without any
         foreach ($admins as $admin) {
             if ($admin->permissions->isEmpty()) {
-                $defaults = ['dashboard', 'registrations', 'communications'];
-                foreach ($defaults as $r) {
+                foreach (self::RESOURCES as $r) {
                     AdminPermission::firstOrCreate(
                         ['user_id' => $admin->id, 'resource' => $r],
                         ['view' => true, 'create' => false, 'edit' => false, 'delete' => false, 'export' => false]
@@ -65,7 +67,7 @@ class AdminPermissionController extends Controller
             abort(403);
         }
 
-        if (!$admin->isAdmin()) {
+        if (!$admin->isAdmin() || $admin->isSuperAdmin()) {
             return response()->json(['permissions' => []]);
         }
 
@@ -94,14 +96,8 @@ class AdminPermissionController extends Controller
             abort(403, 'Only super admins can manage permissions.');
         }
 
-        if (!$admin->isAdmin()) {
-            return back()->with('error', 'User is not an admin.');
-        }
-
-        // Prevent modifying another super admin
-        $superAdminEmails = array_map('strtolower', config('event.super_admin_emails', []));
-        if (in_array(strtolower($admin->email), $superAdminEmails, true)) {
-            return back()->with('error', 'Cannot modify permissions of a super admin.');
+        if (!$admin->isAdmin() || $admin->isSuperAdmin()) {
+            return back()->with('error', 'Cannot modify permissions for this user.');
         }
 
         $request->validate([
@@ -115,7 +111,6 @@ class AdminPermissionController extends Controller
         ]);
 
         DB::transaction(function () use ($request, $admin) {
-            // Remove existing permissions
             AdminPermission::where('user_id', $admin->id)->delete();
 
             $input = $request->input('permissions', []);

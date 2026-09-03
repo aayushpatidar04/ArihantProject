@@ -91,11 +91,6 @@
             margin-top: 4px
         }
 
-        .badge-super {
-            background: rgba(255, 180, 0, 0.15);
-            color: #ffd700
-        }
-
         .badge-admin {
             background: rgba(100, 180, 255, 0.15);
             color: #8cd4ff
@@ -241,7 +236,8 @@
         <div class="admin-wrap">
             <div class="admin-header">
                 <h1>Admin Permission Management</h1>
-                <span style="color:var(--muted);font-size:13px">Super admins only — Dipak, Varun, Ayush</span>
+                <a href="{{ route('admin.dashboard') }}" class="btn"
+                    style="background:rgba(255,255,255,0.06);color:var(--muted);font-size:13px">← Back to Dashboard</a>
             </div>
 
             @if(session('success'))
@@ -256,7 +252,6 @@
                 <p style="color:var(--muted);font-size:13px;margin-bottom:20px">
                     Click <strong>Edit Permissions</strong> to grant or revoke view, create, edit, delete, and export access
                     per page.
-                    Super admins (highlighted in gold) have full access and cannot be modified.
                 </p>
 
                 <div style="overflow-x:auto">
@@ -270,7 +265,6 @@
                                 <th>Event Feedback</th>
                                 <th>Referrals</th>
                                 <th>Leaderboard</th>
-                                <th>Communications</th>
                                 <th>Influencers</th>
                                 <th>Stalls</th>
                                 <th>Actions</th>
@@ -282,40 +276,26 @@
                                     <td>
                                         <div class="perm-cell">{{ $admin->name }}</div>
                                         <div class="perm-email">{{ $admin->email }}</div>
-                                        @if($admin->is_super_admin)
-                                            <span class="badge-role badge-super">Super Admin</span>
-                                        @else
-                                            <span class="badge-role badge-admin">Admin</span>
-                                        @endif
+                                        <span class="badge-role badge-admin">Admin</span>
                                     </td>
-                                    @foreach(['dashboard', 'registrations', 'checkins', 'event-feedback', 'referrals', 'leaderboard', 'communications', 'influencers', 'stalls'] as $res)
+                                    @foreach(['dashboard', 'registrations', 'checkins', 'event-feedback', 'referrals', 'leaderboard', 'influencers', 'stalls'] as $res)
                                         <td>
                                             @php
                                                 $p = $admin->permissions->firstWhere('resource', $res);
                                              @endphp
-                                            <div style="display:flex;flex-direction:column;gap:3px">
-                                                <span
-                                                    style="font-size:11px;color:{{ $p && $p->view ? '#8ff0b3' : 'var(--muted)' }}">
-                                                    {!! $p && $p->view ? '&#10003; View' : 'View' !!}
-                                                </span>
-                                                @if($admin->is_super_admin)
-                                                    <span style="font-size:11px;color:#ffd700">{!! '&#10003;' !!} All</span>
-                                                @endif
-                                            </div>
+                                            <span style="font-size:11px;color:{{ $p && $p->view ? '#8ff0b3' : 'var(--muted)' }}">
+                                                {{ $p && $p->view ? '&#10003; View' : 'View' }}
+                                            </span>
                                         </td>
                                     @endforeach
                                     <td>
-                                        @if($admin->is_super_admin)
-                                            <span style="color:#ffd700;font-size:12px;font-weight:600">Full Access</span>
-                                        @else
-                                            <button class="btn btn-primary btn-sm edit-perm-btn" data-admin="{{ $admin->id }}"
-                                                data-name="{{ $admin->name }}">Edit Permissions</button>
-                                        @endif
+                                        <button class="btn btn-primary btn-sm edit-perm-btn" data-admin="{{ $admin->id }}"
+                                            data-name="{{ $admin->name }}">Edit Permissions</button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="11" class="no-perms">No admin users found.</td>
+                                    <td colspan="10" class="no-perms">No admin users found.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -335,22 +315,25 @@
             <form id="permForm" method="POST">
                 @csrf
                 <div class="perm-grid" id="permGrid">
+                    @php $idx = 0; @endphp
                     @foreach($allResources as $resource)
                         <div class="perm-section">
                             <div class="perm-section-title">{{ $resource }}</div>
+                            <input type="hidden" name="permissions[{{ $idx }}][resource]" value="{{ $resource }}">
                             <div class="check-group">
-                                <label class="check-item"><input type="checkbox" name="permissions[{{ $resource }}][view]"
-                                        value="1" checked> View</label>
-                                <label class="check-item"><input type="checkbox" name="permissions[{{ $resource }}][create]"
+                                <label class="check-item"><input type="checkbox" name="permissions[{{ $idx }}][view]" value="1"
+                                        checked> View</label>
+                                <label class="check-item"><input type="checkbox" name="permissions[{{ $idx }}][create]"
                                         value="1"> Create</label>
-                                <label class="check-item"><input type="checkbox" name="permissions[{{ $resource }}][edit]"
-                                        value="1"> Edit</label>
-                                <label class="check-item"><input type="checkbox" name="permissions[{{ $resource }}][delete]"
+                                <label class="check-item"><input type="checkbox" name="permissions[{{ $idx }}][edit]" value="1">
+                                    Edit</label>
+                                <label class="check-item"><input type="checkbox" name="permissions[{{ $idx }}][delete]"
                                         value="1"> Delete</label>
-                                <label class="check-item"><input type="checkbox" name="permissions[{{ $resource }}][export]"
+                                <label class="check-item"><input type="checkbox" name="permissions[{{ $idx }}][export]"
                                         value="1"> Export</label>
                             </div>
                         </div>
+                        @php $idx++; @endphp
                     @endforeach
                 </div>
                 <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
@@ -387,9 +370,16 @@
                 .then(data => {
                     if (data.permissions) {
                         data.permissions.forEach(p => {
-                            ['view', 'create', 'edit', 'delete', 'export'].forEach(action => {
-                                const cb = permGrid.querySelector('input[name="permissions[' + p.resource + '][' + action + ']"]');
-                                if (cb && p[action]) cb.checked = true;
+                            // Find the index for this resource
+                            const sections = permGrid.querySelectorAll('.perm-section');
+                            sections.forEach(section => {
+                                const hidden = section.querySelector('input[type="hidden"]');
+                                if (hidden && hidden.value === p.resource) {
+                                    section.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                                        const action = cb.name.match(/\[(\w+)\]$/)?.[1];
+                                        if (action && p[action]) cb.checked = true;
+                                    });
+                                }
                             });
                         });
                     }
