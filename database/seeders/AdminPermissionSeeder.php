@@ -25,7 +25,7 @@ class AdminPermissionSeeder extends Seeder
                 ['email' => $email],
                 [
                     'name' => $this->guessName($email),
-                    'password' => Hash::make(Str::random(32)),
+                    'password' => Hash::make('ArihantPlus@123'),
                     'role' => 'admin',
                     'is_super_admin' => $isSuper,
                     'can_view_pii' => $isSuper,
