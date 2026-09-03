@@ -53,7 +53,7 @@
                                 <span class="participant">{{ $score->registration?->full_name ?? 'Unknown lead' }}</span>
                                 <span class="meta">{{ $score->registration?->registration_number ?? '-' }}</span>
                             </td>
-                            <td>{{ $score->registration_score }}</td>
+                            <td>{{ $score->registration_score + $score->kyc_score }}</td>
                             <td>{{ $score->referral_score }}</td>
                             <td>{{ $score->social_score }}</td>
                             <td>{{ $score->quiz_score + $score->stall_visit_score }}</td>
