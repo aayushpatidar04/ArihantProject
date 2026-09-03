@@ -82,8 +82,8 @@
                     <tr>
                         <th>Name</th>
                         <th>Reg #</th>
-                        <th>Seat</th>
-                        <th>Section</th>
+                        {{-- <th>Seat</th>
+                        <th>Section</th> --}}
                         <th>Checked In At</th>
                     </tr>
                 </thead>
@@ -92,8 +92,8 @@
                         <tr>
                             <td>{{ $c->full_name }}</td>
                             <td>{{ $c->registration_number }}</td>
-                            <td>{{ $c->seat?->seat_number ?? '-' }}</td>
-                            <td>{{ $c->seat?->section ?? '-' }}</td>
+                            {{-- <td>{{ $c->seat?->seat_number ?? '-' }}</td>
+                            <td>{{ $c->seat?->section ?? '-' }}</td> --}}
                             <td>{{ $c->checked_in_at?->format('M d, h:i A') ?? '-' }}</td>
                         </tr>
                     @empty

@@ -270,28 +270,32 @@
                                                 View
                                             </a>
 
-                                            <a
-                                                @permission('stalls', 'edit') href="{{ route('admin.stalls.edit', $stall) }}"
-                                                class="action-btn"
-                                            >
-                                                Edit
-                                            </a>
-
-                                            <form
-                                                method="POST"
-                                                @permission('stalls', 'delete') action="{{ route('admin.stalls.destroy', $stall) }}"
-                                                onsubmit="return confirm('Are you sure you want to delete this stall? All related visit records may also be deleted.')"
-                                            >
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button
-                                                    type="submit"
-                                                    class="action-btn action-delete"
+                                            @permission('stalls', 'edit')
+                                                <a
+                                                    href="{{ route('admin.stalls.edit', $stall) }}"
+                                                    class="action-btn"
                                                 >
-                                                    Delete
-                                                </button>
-                                            </form>
+                                                    Edit
+                                                </a>
+                                            @endpermission
+
+                                            @permission('stalls', 'delete')
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('admin.stalls.destroy', $stall) }}"
+                                                    onsubmit="return confirm('Are you sure you want to delete this stall? All related visit records may also be deleted.')"
+                                                >
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button
+                                                        type="submit"
+                                                        class="action-btn action-delete"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            @endpermission
                                         </div>
                                     </td>
                                 </tr>
