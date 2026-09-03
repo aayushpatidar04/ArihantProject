@@ -41,23 +41,23 @@ class SendEventReminders extends Command
 
             // Email
             $emailOk = false;
-            try {
-                $mailable = match ($type) {
-                    '2day' => new EventReminder2DayMail($reg),
-                    '1day' => new EventReminder1DayMail($reg),
-                    'same' => new EventReminderSameDayMail($reg),
-                };
+            // try {
+            //     $mailable = match ($type) {
+            //         '2day' => new EventReminder2DayMail($reg),
+            //         '1day' => new EventReminder1DayMail($reg),
+            //         'same' => new EventReminderSameDayMail($reg),
+            //     };
 
-                if (!empty($reg->email)) {
-                    Mail::to($reg->email)->send($mailable);
-                    $emailOk = true;
-                    $sentEmail++;
-                }
-            } catch (\Exception $e) {
-                Log::error("Event reminder email [{$type}] failed: " . $e->getMessage(), [
-                    'reg_id' => $reg->id,
-                ]);
-            }
+            //     if (!empty($reg->email)) {
+            //         Mail::to($reg->email)->send($mailable);
+            //         $emailOk = true;
+            //         $sentEmail++;
+            //     }
+            // } catch (\Exception $e) {
+            //     Log::error("Event reminder email [{$type}] failed: " . $e->getMessage(), [
+            //         'reg_id' => $reg->id,
+            //     ]);
+            // }
 
             // WhatsApp
             $waOk = match ($type) {
