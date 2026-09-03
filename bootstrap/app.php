@@ -33,6 +33,11 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Throwable $e, Request $request) {
+            // Allow Laravel to convert unauthenticated requests into login redirects.
+            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+                return null;
+            }
+
             // Let Laravel handle validation errors normally (redirect back with errors)
             if ($e instanceof \Illuminate\Validation\ValidationException) {
                 return null;
