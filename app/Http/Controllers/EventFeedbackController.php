@@ -44,9 +44,9 @@ class EventFeedbackController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::user();
+        $user = auth()->user();
 
-        $registration = $user->eventRegistration;
+        $registration = $user->eventRegistrations()->latest()->first();
 
         if (!$registration) {
             return redirect()
@@ -54,11 +54,11 @@ class EventFeedbackController extends Controller
                 ->with('error', 'No event registration found.');
         }
 
-        if ($registration->status !== 'paid') {
-            return redirect()
-                ->route('index')
-                ->with('error', 'Only confirmed event participants can submit feedback.');
-        }
+        // if ($registration->status !== 'paid') {
+        //     return redirect()
+        //         ->route('index')
+        //         ->with('error', 'Only confirmed event participants can submit feedback.');
+        // }
 
         // Prevent duplicate submissions
         if (
