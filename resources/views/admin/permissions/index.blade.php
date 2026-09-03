@@ -296,10 +296,10 @@
                                             <div style="display:flex;flex-direction:column;gap:3px">
                                                 <span
                                                     style="font-size:11px;color:{{ $p && $p->view ? '#8ff0b3' : 'var(--muted)' }}">
-                                                    {{ $p && $p->view ? '&#10003; View' : 'View' }}
+                                                    {!! $p && $p->view ? '&#10003; View' : 'View' !!}
                                                 </span>
                                                 @if($admin->is_super_admin)
-                                                    <span style="font-size:11px;color:#ffd700">&#10003; All</span>
+                                                    <span style="font-size:11px;color:#ffd700">{!! '&#10003;' !!} All</span>
                                                 @endif
                                             </div>
                                         </td>
