@@ -48,7 +48,7 @@
                 <strong>Your Event QR Code</strong>
             </p>
 
-            <img src="{{ $message->embed(public_path($qrImagePath)) }}" alt="Event QR Code"
+            <img src="{{ $qrUrl }}" alt="Event QR Code"
                 style="width:250px;height:250px;object-fit:contain;">
 
         </div>
