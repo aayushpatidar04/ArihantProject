@@ -15,8 +15,7 @@ class Authenticate extends Middleware
         if (!$request->expectsJson()) {
             // Store the intended URL in the session before redirecting to login
             // This allows us to redirect back to the original page after login
-            // Use getPathAndQuery() to store path + query string (without the domain)
-            session(['url.intended' => $request->getPathAndQuery()]);
+            session(['url.intended' => $request->fullUrl()]);
             
             return route('login');
         }

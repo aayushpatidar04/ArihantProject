@@ -14,8 +14,7 @@ class InfluencerMiddleware
     ): Response {
         if (!auth()->check()) {
             // Store the intended URL before redirecting to influencer login
-            // Use getPathAndQuery() to store path + query string (without the domain)
-            session(['url.intended' => $request->getPathAndQuery()]);
+            session(['url.intended' => $request->fullUrl()]);
             return redirect()->route('influencer.login');
         }
 
