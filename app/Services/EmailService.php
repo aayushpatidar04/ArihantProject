@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Communication;
 use App\Models\EventRegistration;
 use App\Mail\EventConfirmationMail;
+use App\Mail\EventDayQrMail;
 use App\Mail\SeatConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -68,6 +69,28 @@ class EmailService
         } catch (\Exception $e) {
             Log::error('Reminder email failed: ' . $e->getMessage());
             // $this->logCommunication($registration, 'reminder', $body, 'failed', $e->getMessage());
+        }
+    }
+
+    public function sendEventDayQr(EventRegistration $registration, string $qrImagePath): bool {
+        try {
+            Mail::to($registration->email)
+                ->send(
+                    new EventDayQrMail(
+                        $registration,
+                        $qrImagePath
+                    )
+                );
+
+            return true;
+
+        } catch (\Exception $e) {
+
+            Log::error('Event day QR email failed: ' . $e->getMessage(), [
+                'registration_id' => $registration->id,
+            ]);
+
+            return false;
         }
     }
 

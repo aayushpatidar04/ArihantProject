@@ -176,6 +176,50 @@ class WhatsAppService
         }
     }
 
+    public function sendDayQrImage(EventRegistration $registration, string $imageUrl): bool
+    {
+        if (empty($this->token) || empty($this->applicationId)) {
+            Log::warning('PickyAssist not configured. QR ticket skipped.');
+            return false;
+        }
+
+        $reference = 'event_day_qr_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
+
+        try {
+            $response = Http::timeout(60)->post($this->apiUrl, [
+                'token' => $this->token,
+                'application' => $this->applicationId,
+                'template_id' => 'XX22679679',
+                'data' => [
+                    [
+                        'number' => $this->formatPhone($registration->phone),
+                        'language' => 'en',
+                        'template_message' => [$registration->full_name],
+                        'media' => $imageUrl,
+                    ]
+                ],
+            ]);
+
+            $json = $response->json();
+            Log::info('PickyAssist QR ticket response', [
+                'response' => $json,
+                'reference' => $reference,
+                'reg_id' => $registration->id,
+            ]);
+
+            if (!$response->successful() || ($json['status'] ?? 0) != 100) {
+                Log::error('PickyAssist QR ticket failed', ['response' => $json]);
+                return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error('PickyAssist QR ticket exception: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     /**
      * Send Payment Reminder template (WX22433028).
      * Variables: {{1}} = Name, {{2}} = Payment Link
