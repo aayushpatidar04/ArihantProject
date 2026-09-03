@@ -273,7 +273,7 @@
                                         {{ $r->phone }}@else{{ \App\Models\User::maskPhone($r->phone) }}
                                     @endif
                                 </td>
-                                <td>
+                                <td style="min-width:250px;">
                                     @php
                                         $validationData = is_array($r->client_validation_data)
                                             ? $r->client_validation_data
@@ -295,7 +295,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td style="min-width:250px;">
                                     @if($clientBranchCodes->count())
                                         @foreach($clientBranchCodes as $client)
                                             <div style="margin-bottom:6px;">
