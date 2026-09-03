@@ -124,6 +124,7 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
     Route::get('/export', [AdminController::class, 'export'])->name('export');
     Route::get('/checkins', [AdminController::class, 'checkIns'])->name('checkins');
+    Route::get('/event-feedback', [AdminController::class, 'eventFeedback'])->name('event-feedback');
     // Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
     Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
     Route::get('/leaderboard', [AdminController::class, 'leaderboard'])->name('leaderboard');

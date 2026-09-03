@@ -10,6 +10,8 @@ use App\Models\InfluencerPost;
 use App\Models\Seat;
 use App\Models\Payment;
 use App\Models\Communication;
+use App\Models\EventFeedback;
+use App\Models\LeadScore;
 use App\Services\EmailService;
 use App\Services\LeadScoringService;
 use App\Services\QrCodeService;
@@ -417,6 +419,15 @@ class AdminController extends Controller
         return view('admin.checkins', compact('checkIns'));
     }
 
+    public function eventFeedback()
+    {
+        $feedback = EventFeedback::with(['registration.leadScore'])
+            ->latest()
+            ->paginate(50);
+
+        return view('admin.event-feedback', compact('feedback'));
+    }
+
     public function stalls()
     {
         $stalls = \App\Models\Stall::withCount('visits')->get();
@@ -431,6 +442,10 @@ class AdminController extends Controller
 
     public function leaderboard()
     {
+        $overallLeaderboard = LeadScore::with('registration')
+            ->orderByDesc('total_score')
+            ->orderBy('id')
+            ->get();
         $referralLeaderboard = $this->getTopReferrers(20);
         $influencerLeaderboard = $this->getTopInfluencers(20);
         $stallLeaderboard = EventRegistration::select('event_registrations.*')
@@ -441,7 +456,12 @@ class AdminController extends Controller
             ->limit(20)
             ->get();
 
-        return view('admin.leaderboard', compact('referralLeaderboard', 'influencerLeaderboard', 'stallLeaderboard'));
+        return view('admin.leaderboard', compact(
+            'overallLeaderboard',
+            'referralLeaderboard',
+            'influencerLeaderboard',
+            'stallLeaderboard'
+        ));
     }
 
     public function communications()
