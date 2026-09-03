@@ -205,18 +205,18 @@
                 </div>
             </div>
 
-            <div class="filter-bar">
+            <form class="filter-bar" method="GET" action="{{ route('admin.registrations') }}">
                 <input type="text" name="search" placeholder="Search name, email, phone..."
                     value="{{ request('search') }}">
                 <select name="status">
-                    <option value="">All Status</option>
-                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Paid</option>
-                    <option value="checked_in" {{ request('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
-                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    <option value="" style="color: #000;">All Status</option>
+                    <option value="pending" style="color: #000;" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="paid" style="color: #000;" {{ request('status') == 'paid' ? 'selected' : '' }}>Paid</option>
+                    <option value="checked_in" style="color: #000;" {{ request('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
+                    <option value="cancelled" style="color: #000;" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                 </select>
-                <button>Filter</button>
-            </div>
+                <button type="submit">Filter</button>
+            </form>
 
             <div class="admin-section">
                 <table>
@@ -344,7 +344,7 @@
                             @endforelse
                         </tbody>
                     </table>
-                    <div class="pagination">{{ $registrations->links() }}</div>
+                    <div class="pagination">{{ $registrations->withQueryString()->links() }}</div>
                 </div>
 
                 @canAction('registrations', 'edit')
