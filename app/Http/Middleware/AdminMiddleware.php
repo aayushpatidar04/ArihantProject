@@ -14,7 +14,10 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check()) {
-            return redirect()->route('admin.login', ['redirect' => $request->getRequestUri()]);
+            // Store the intended URL before redirecting to admin login
+            // Use getPathAndQuery() to store path + query string (without the domain)
+            session(['url.intended' => $request->getPathAndQuery()]);
+            return redirect()->route('admin.login');
         }
 
         $allowedEmails = array_map('strtolower', config('event.admin_emails', []));

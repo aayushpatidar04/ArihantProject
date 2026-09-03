@@ -13,7 +13,10 @@ class InfluencerMiddleware
         Closure $next
     ): Response {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            // Store the intended URL before redirecting to influencer login
+            // Use getPathAndQuery() to store path + query string (without the domain)
+            session(['url.intended' => $request->getPathAndQuery()]);
+            return redirect()->route('influencer.login');
         }
 
         if (auth()->user()->role !== 'influencer') {

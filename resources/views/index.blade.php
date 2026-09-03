@@ -4699,7 +4699,7 @@
             , {
             time: "3:45 PM – 4:15 PM"
             , title: "ALGO + AI PANEL DISCUSSION"
-            , body: "Ankit Rai, Santosh Pasi, the Stratzy founder, Kavita Jain and Arpit Jain discuss the road ahead for algo and AI trading."
+            , body: "Ankit Rai, Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading."
             , tag: "Panel"
         }
             , {
@@ -4711,7 +4711,7 @@
             , {
             time: "4:30 PM – 5:00 PM"
             , title: "HOW AI IS SHAPING THE FUTURE OF TRADING"
-            , body: "A panel discussion with Arihant clients on how AI is reshaping their trading approach."
+            , body: "A conversation with Arpit Jain & Praneet Maheshwari, alongside Arihant clients, on how AI is changing the way they trade, analyse markets, and make decisions."
             , tag: "Panel"
         }
             , {

@@ -85,4 +85,9 @@ class EventRegistration extends Model
             'referred_id'
         );
     }
+
+    public function feedback()
+    {
+        return $this->hasOne(EventFeedback::class);
+    }
 }

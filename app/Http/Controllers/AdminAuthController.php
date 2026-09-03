@@ -17,13 +17,16 @@ class AdminAuthController extends Controller
     {
         if (Auth::check()) {
             if ($this->isAdmin(Auth::user()->email)) {
-                return redirect()->to($this->redirectPath($request));
+                // Use intended redirect if available, otherwise dashboard
+                return redirect()->intended(route('admin.dashboard'));
             }
 
             Auth::logout();
         }
 
-        return view('admin.login', ['redirect' => $request->query('redirect')]);
+        // Pass the intended URL from session to the view
+        $redirect = session('url.intended') ?? $request->query('redirect');
+        return view('admin.login', ['redirect' => $redirect]);
     }
 
     public function login(Request $request)
@@ -117,7 +120,10 @@ class AdminAuthController extends Controller
         Auth::login($user, $remember);
         $request->session()->regenerate();
 
-        return redirect()->to($this->redirectPath($request));
+        // Use intended redirect if available, otherwise use the redirect parameter or dashboard
+        return redirect()->intended(
+            $redirect && str_starts_with($redirect, '/admin') ? $redirect : route('admin.dashboard')
+        );
     }
 
     protected function isAdmin(string $email): bool

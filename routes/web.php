@@ -15,6 +15,7 @@ use App\Http\Controllers\InfluencerController;
 use App\Http\Controllers\Admin\InfluencerAdminController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\EventFeedbackController;
 use Illuminate\Support\Facades\Route;
 
 /* ---------- Public Routes ---------- */
@@ -88,6 +89,9 @@ Route::middleware(['auth'])->group(function () {
     /* ---------- Referral ---------- */
     Route::get('/refer', [ReferralController::class, 'index'])->name('referral.index');
     Route::post('/refer', [ReferralController::class, 'invite'])->name('referral.invite');
+
+    Route::get('/feedback', [EventFeedbackController::class, 'create'])->name('event.feedback');
+    Route::post('/event-feedback', [EventFeedbackController::class, 'store'])->name('event.feedback.store');
 
 });
 
