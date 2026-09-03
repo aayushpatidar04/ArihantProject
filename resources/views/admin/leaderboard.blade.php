@@ -6,7 +6,7 @@
 <style>
     .admin-page{min-height:100vh;padding:40px 24px;background:var(--bg-soft)}
     .admin-wrap{max-width:1200px;margin:0 auto}
-    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:12px;flex-wrap:wrap}
     .overall-section{margin-bottom:24px;overflow-x:auto}
     .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
     .admin-section{background:linear-gradient(160deg,rgba(22,12,30,0.9) 0%,rgba(8,4,12,0.96) 100%);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:24px}
@@ -19,6 +19,9 @@
     .overall-table .total-score{color:#8ff0b3;font-weight:700}
     .overall-table .participant{font-weight:600;white-space:nowrap}
     .overall-table .meta{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+    .pagination{margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .pagination a,.pagination span{padding:7px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--muted);font-size:12px}
+    .pagination span{background:var(--purple-1);color:#fff}
     @media(max-width:900px){.grid-3{grid-template-columns:1fr}}
 </style>
 @endpush
@@ -28,7 +31,12 @@
     <div class="admin-wrap">
         <div class="admin-header">
             <h1>Leaderboards</h1>
-            <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back</a>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <a href="{{ route('admin.export', ['type' => 'leadscore']) }}" class="btn btn-primary" style="font-size:13px;padding:9px 16px">
+                    Export Excel
+                </a>
+                <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back</a>
+            </div>
         </div>
 
         <div class="admin-section overall-section">
@@ -68,6 +76,7 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="pagination">{{ $overallLeaderboard->links() }}</div>
         </div>
 
         <div class="grid-3">
@@ -81,6 +90,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="pagination">{{ $referralLeaderboard->links() }}</div>
             </div>
             <div class="admin-section">
                 <h2>📱 Top Influencers</h2>
@@ -92,6 +102,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="pagination">{{ $influencerLeaderboard->links() }}</div>
             </div>
             <div class="admin-section">
                 <h2>🎯 Stall Explorers</h2>
@@ -103,6 +114,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                <div class="pagination">{{ $stallLeaderboard->links() }}</div>
             </div>
         </div>
     </div>

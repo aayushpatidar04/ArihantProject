@@ -445,16 +445,15 @@ class AdminController extends Controller
         $overallLeaderboard = LeadScore::with('registration')
             ->orderByDesc('total_score')
             ->orderBy('id')
-            ->get();
-        $referralLeaderboard = $this->getTopReferrers(20);
-        $influencerLeaderboard = $this->getTopInfluencers(20);
+            ->paginate(20, ['*'], 'overall_page');
+        $referralLeaderboard = $this->getTopReferrers(20, true);
+        $influencerLeaderboard = $this->getTopInfluencers(20, true);
         $stallLeaderboard = EventRegistration::select('event_registrations.*')
             ->selectRaw('COUNT(stall_visits.id) as visit_count')
             ->leftJoin('stall_visits', 'event_registrations.id', '=', 'stall_visits.event_registration_id')
             ->groupBy('event_registrations.id')
             ->orderByDesc('visit_count')
-            ->limit(20)
-            ->get();
+            ->paginate(20, ['*'], 'stalls_page');
 
         return view('admin.leaderboard', compact(
             'overallLeaderboard',
@@ -470,28 +469,32 @@ class AdminController extends Controller
         return view('admin.communications', compact('communications'));
     }
 
-    protected function getTopReferrers(int $limit = 10)
+    protected function getTopReferrers(int $limit = 10, bool $paginate = false)
     {
-        return EventRegistration::select('event_registrations.id', 'event_registrations.full_name', 'event_registrations.referral_code')
+        $query = EventRegistration::select('event_registrations.id', 'event_registrations.full_name', 'event_registrations.referral_code')
             ->selectRaw('SUM(referrals.points_awarded) as total_points')
             ->leftJoin('referrals', 'event_registrations.id', '=', 'referrals.referrer_id')
             ->groupBy('event_registrations.id')
-            ->orderByDesc('total_points')
-            ->limit($limit)
-            ->get();
+            ->orderByDesc('total_points');
+
+        return $paginate
+            ? $query->paginate($limit, ['*'], 'referrers_page')
+            : $query->limit($limit)->get();
     }
 
-    protected function getTopInfluencers(int $limit = 10)
+    protected function getTopInfluencers(int $limit = 10, bool $paginate = false)
     {
-        return User::select('users.id', 'users.name')
+        $query = User::select('users.id', 'users.name')
             ->selectRaw('SUM(influencer_posts.points_awarded) as total_points')
             ->leftJoin('influencer_posts', 'users.id', '=', 'influencer_posts.user_id')
             ->where('influencer_posts.status', 'approved')
             ->groupBy('users.id', 'users.name')
             ->havingRaw('SUM(influencer_posts.points_awarded) > 0')
-            ->orderByDesc('total_points')
-            ->limit($limit)
-            ->get();
+            ->orderByDesc('total_points');
+
+        return $paginate
+            ? $query->paginate($limit, ['*'], 'influencers_page')
+            : $query->limit($limit)->get();
     }
 
     protected function getStallStats()
@@ -534,7 +537,18 @@ class AdminController extends Controller
         }
     }
 
-    public function export()
+    public function export(Request $request)
+    {
+        return match ($request->query('type')) {
+            'feedback' => $this->exportFeedback(),
+            'leadscore' => $this->exportLeadScores(),
+            'checkins' => $this->exportCheckIns(),
+            'referrals' => $this->exportReferrals(),
+            default => $this->exportRegistrations(),
+        };
+    }
+
+    protected function exportRegistrations()
     {
         $registrations = EventRegistration::with([
             'payment',
@@ -650,6 +664,123 @@ class AdminController extends Controller
 
             fclose($handle);
 
+        }, 200, $headers);
+    }
+
+    protected function exportFeedback()
+    {
+        $feedback = EventFeedback::with(['registration.leadScore'])->latest()->get();
+
+        return $this->downloadCsv('event-feedback', [
+            'Registration Number', 'Participant', 'Submitted At', 'Experience',
+            'Session Quality', 'Content Usefulness', 'Networking', 'Recommendation',
+            'Feedback Score', 'Most Valuable Session', 'Liked Most', 'Improvements',
+        ], function ($handle) use ($feedback) {
+            foreach ($feedback as $item) {
+                fputcsv($handle, [
+                    $item->registration?->registration_number ?? '',
+                    $item->registration?->full_name ?? '',
+                    $item->created_at?->format('d M Y, h:i A') ?? '',
+                    $item->experience_rating,
+                    $item->session_quality,
+                    $item->content_usefulness,
+                    $item->networking_rating,
+                    $item->recommendation,
+                    $item->registration?->leadScore?->social_score ?? 0,
+                    $item->most_valuable_session,
+                    $item->liked_most,
+                    $item->improvements,
+                ]);
+            }
+        });
+    }
+
+    protected function exportLeadScores()
+    {
+        $scores = LeadScore::with('registration')->orderByDesc('total_score')->get();
+
+        return $this->downloadCsv('lead-scores', [
+            'Rank', 'Registration Number', 'Lead', 'Registration Score', 'Referral Score',
+            'Feedback Score', 'Engagement Score', 'Overall Score',
+        ], function ($handle) use ($scores) {
+            foreach ($scores as $index => $score) {
+                fputcsv($handle, [
+                    $index + 1,
+                    $score->registration?->registration_number ?? '',
+                    $score->registration?->full_name ?? '',
+                    $score->registration_score + $score->kyc_score,
+                    $score->referral_score,
+                    $score->social_score,
+                    $score->quiz_score + $score->stall_visit_score,
+                    $score->total_score,
+                ]);
+            }
+        });
+    }
+
+    protected function exportCheckIns()
+    {
+        $checkIns = EventRegistration::where('status', 'checked_in')
+            ->with('seat')
+            ->latest('checked_in_at')
+            ->get();
+
+        return $this->downloadCsv('check-ins', [
+            'Registration Number', 'Name', 'Email', 'Phone', 'Seat', 'Section', 'Checked In At',
+        ], function ($handle) use ($checkIns) {
+            foreach ($checkIns as $checkIn) {
+                fputcsv($handle, [
+                    $checkIn->registration_number,
+                    $checkIn->full_name,
+                    $checkIn->email,
+                    $checkIn->phone,
+                    $checkIn->seat?->seat_number ?? '',
+                    $checkIn->seat?->section ?? '',
+                    $checkIn->checked_in_at?->format('d M Y, h:i A') ?? '',
+                ]);
+            }
+        });
+    }
+
+    protected function exportReferrals()
+    {
+        $referrals = Referral::with(['referrer', 'referred'])->latest()->get();
+
+        return $this->downloadCsv('referrals', [
+            'Referrer', 'Referred Name', 'Referred Email', 'Referred Phone',
+            'Status', 'Points', 'Date',
+        ], function ($handle) use ($referrals) {
+            foreach ($referrals as $referral) {
+                fputcsv($handle, [
+                    $referral->referrer?->full_name ?? '',
+                    $referral->referred?->full_name ?? $referral->referred_name ?? '',
+                    $referral->referred_email,
+                    $referral->referred_phone,
+                    ucfirst($referral->status),
+                    $referral->points_awarded,
+                    $referral->created_at?->format('d M Y, h:i A') ?? '',
+                ]);
+            }
+        });
+    }
+
+    protected function downloadCsv(string $name, array $columns, callable $writeRows)
+    {
+        $filename = $name . '-' . now()->format('Y-m-d-H-i-s') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        return response()->stream(function () use ($columns, $writeRows) {
+            $handle = fopen('php://output', 'w');
+            fwrite($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, $columns);
+            $writeRows($handle);
+            fclose($handle);
         }, 200, $headers);
     }
 }

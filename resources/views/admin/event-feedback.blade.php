@@ -113,9 +113,14 @@
         <div class="admin-wrap">
             <div class="admin-header">
                 <h1>Event Feedback</h1>
-                <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">
-                    ← Back to Dashboard
-                </a>
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                    <a href="{{ route('admin.export', ['type' => 'feedback']) }}" class="btn btn-primary" style="font-size:13px;padding:9px 16px">
+                        Export Excel
+                    </a>
+                    <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">
+                        ← Back to Dashboard
+                    </a>
+                </div>
             </div>
 
             <div class="admin-section">
@@ -129,7 +134,7 @@
                             <th>Content Usefulness</th>
                             <th>Networking</th>
                             <th>Recommendation</th>
-                            <th>Social Score</th>
+                            <th>Feedback Score</th>
                             <th>Most Valuable Session</th>
                             <th>Liked Most</th>
                             <th>Improvements</th>

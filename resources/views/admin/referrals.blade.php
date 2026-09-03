@@ -21,7 +21,12 @@
     <div class="admin-wrap">
         <div class="admin-header">
             <h1>All Referrals</h1>
-            <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back</a>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <a href="{{ route('admin.export', ['type' => 'referrals']) }}" class="btn btn-primary" style="font-size:13px;padding:9px 16px">
+                    Export Excel
+                </a>
+                <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back</a>
+            </div>
         </div>
         <div class="admin-section">
             <table>

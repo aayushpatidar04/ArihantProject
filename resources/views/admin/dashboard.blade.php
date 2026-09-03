@@ -41,6 +41,7 @@
             <a href="{{ route('admin.dashboard') }}" class="active">Overview</a>
             <a href="{{ route('admin.registrations') }}">Registrations</a>
             <a href="{{ route('admin.checkins') }}">Check-Ins</a>
+            <a href="{{ route('admin.event-feedback') }}">Event Feedback</a>
             <a href="{{ route('admin.stalls.index') }}">Stalls</a>
             <a href="{{ route('admin.referrals') }}">Referrals</a>
             <a href="{{ route('admin.leaderboard') }}">Leaderboard</a>
