@@ -37,6 +37,11 @@ class AdminAuthController extends Controller
         $email = strtolower(trim($credentials['email']));
         $user = \App\Models\User::where('email', $email)->first();
 
+        Log::info('Admin login attempt', [
+            'is_admin' => $this->isAdmin($email),
+            'user' => $user,
+            'password_match' => Hash::check($credentials['password'], $user->password)
+        ]);
         if (!$user || !$this->isAdmin($email) || !Hash::check($credentials['password'], $user->password)) {
             return back()
                 ->withErrors(['email' => 'These credentials do not match an admin account.'])
