@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class AdminPermissionController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['admin']);
-    }
-
     private const RESOURCES = [
         'dashboard',
         'registrations',
