@@ -227,9 +227,12 @@
                             <th>Type</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Branch / Client</th>
+                            <th>Branch List</th>
+                            <th>Client List</th>
                             <th>Status</th>
+                            <th>Platform</th>
                             <th>Payment</th>
+                            <th>Marked By</th>
                             <th>Date</th>
                             @canAction('registrations', 'edit')
                             <th>Actions</th>
@@ -275,23 +278,42 @@
                                         $validationData = is_array($r->client_validation_data)
                                             ? $r->client_validation_data
                                             : json_decode($r->client_validation_data ?? '{}', true);
+
                                         $branchCodes = collect($validationData['branchlist'] ?? [])
                                             ->pluck('BranchCode')
                                             ->filter()
                                             ->unique()
-                                            ->values()
-                                            ->take(2)
-                                            ->implode(', ');
-                                        $clientCodes = collect($validationData['clientlist'] ?? [])
-                                            ->pluck('ClientCode')
-                                            ->filter()
-                                            ->unique()
-                                            ->values()
-                                            ->take(2)
-                                            ->implode(', ');
+                                            ->values();
+
+                                        $clientBranchCodes = collect($validationData['clientlist'] ?? []);
                                     @endphp
-                                    {{ $branchCodes ?: '—' }}@if ($clientCodes)
-                                        <br><span style="font-size:11px;color:var(--muted)">{{ $clientCodes }}</span>
+
+                                    @if($branchCodes->count())
+                                        {{ $branchCodes->implode(', ') }}
+                                    @else
+                                        <span style="color:var(--muted)">—</span>
+                                    @endif
+                                </td>
+
+                                <td>
+                                    @if($clientBranchCodes->count())
+                                        @foreach($clientBranchCodes as $client)
+                                            <div style="margin-bottom:6px;">
+                                                <strong>{{ $client['BranchCode'] ?? '—' }}</strong>
+                                                @if(!empty($client['RegionCode']))
+                                                    <span style="color:var(--muted);">
+                                                        — {{ $client['RegionCode'] }}
+                                                    </span>
+                                                @endif
+                                                @if(!empty($client['ZoneCode']))
+                                                    <span style="color:var(--muted);">
+                                                        — {{ $client['ZoneCode'] }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <span style="color:var(--muted)">—</span>
                                     @endif
                                 </td>
                                 <td>
@@ -303,11 +325,22 @@
                                         <span class="badge badge-pending">Pending</span>
                                     @endif
                                 </td>
+                                <td>{{ $r->platform }}</td>
                                 <td>
                                     @if ($r->payment)
                                         {{ $r->payment->status === 'paid' ? 'Paid' : ucfirst($r->payment->status) }}
                                     @else
                                         —
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($r->markedPaidBy)
+                                        <span style="color:var(--purple-1);font-size:12px">
+                                            {{ $r->markedPaidBy->name }}<br>
+                                            <span style="color:var(--muted)">{{ $r->marked_paid_at?->format('M d, h:i A') }}</span>
+                                        </span>
+                                    @else
+                                        <span style="color:var(--muted);font-size:12px">—</span>
                                     @endif
                                 </td>
                                 <td>{{ $r->created_at->format('M d, Y') }}</td>
