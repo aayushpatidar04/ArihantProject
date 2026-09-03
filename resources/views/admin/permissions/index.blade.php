@@ -284,7 +284,7 @@
                                                 $p = $admin->permissions->firstWhere('resource', $res);
                                              @endphp
                                             <span style="font-size:11px;color:{{ $p && $p->view ? '#8ff0b3' : 'var(--muted)' }}">
-                                                {{ $p && $p->view ? '&#10003; View' : 'View' }}
+                                                {!! $p && $p->view ? '&#10003; View' : 'View' !!}
                                             </span>
                                         </td>
                                     @endforeach
