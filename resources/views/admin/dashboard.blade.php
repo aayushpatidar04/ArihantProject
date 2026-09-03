@@ -218,10 +218,6 @@
                 <div class="num">{{ $stats['checked_in'] }}</div>
                 <div class="lbl">Checked In</div>
             </div>
-            {{-- <div class="stat-card">
-                <div class="num">{{ $stats['allocated_seats'] }}/{{ $stats['total_seats'] }}</div>
-                <div class="lbl">Seats Allocated</div>
-            </div> --}}
             <div class="stat-card">
                 <div class="num">{{ $stats['total_stall_visits'] }}</div>
                 <div class="lbl">Stall Visits</div>
@@ -257,8 +253,10 @@
                     @forelse($recentRegistrations as $r)
                         <tr>
                             <td>{{ $r->registration_number }}</td>
-                            <td>{{ $r->full_name }}</td>
-                            <td>{{ $r->email }}</td>
+                            <td>@if(auth()->check() && auth()->user()->canViewPii()){{ $r->full_name }}@else{{ \App\Models\User::maskName($r->full_name) }}@endif
+                            </td>
+                            <td>@if(auth()->check() && auth()->user()->canViewPii()){{ $r->email }}@else{{ \App\Models\User::maskEmail($r->email) }}@endif
+                            </td>
                             <td>{{ ucfirst($r->type) }}</td>
                             <td><span class="badge badge-{{ $r->status }}">{{ ucfirst($r->status) }}</span></td>
                             <td>{{ $r->created_at->format('M d, Y') }}</td>
@@ -285,7 +283,8 @@
                     <tbody>
                         @forelse($topReferrers as $t)
                             <tr>
-                                <td>{{ $t->full_name }}</td>
+                                <td>@if(auth()->check() && auth()->user()->canViewPii()){{ $t->full_name }}@else{{ \App\Models\User::maskName($t->full_name) }}@endif
+                                </td>
                                 <td>{{ $t->total_points ?? 0 }}</td>
                             </tr>
                         @empty

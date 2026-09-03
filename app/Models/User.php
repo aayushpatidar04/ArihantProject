@@ -18,6 +18,7 @@ class User extends Authenticatable
         'password',
         'role',
         'is_super_admin',
+        'can_view_pii',
     ];
 
     protected $hidden = [
@@ -31,6 +32,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_super_admin' => 'boolean',
+            'can_view_pii' => 'boolean',
         ];
     }
 
@@ -64,6 +66,15 @@ class User extends Authenticatable
         return $this->is_super_admin;
     }
 
+    /**
+     * Returns true if the user can see unmasked PII (email, phone, name).
+     * Super admins always have this. Regular admins need the flag toggled on.
+     */
+    public function canViewPii(): bool
+    {
+        return $this->isSuperAdmin() || $this->can_view_pii;
+    }
+
     public function can($abilities, $arguments = [])
     {
         if (!is_string($abilities) || !is_string($arguments)) {
@@ -84,6 +95,7 @@ class User extends Authenticatable
 
         return (bool) $perm->{$action};
     }
+
     // PII masking helpers
     public static function maskEmail(string $email): string
     {
@@ -111,4 +123,3 @@ class User extends Authenticatable
         return implode(' ', $parts);
     }
 }
-

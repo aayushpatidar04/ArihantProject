@@ -59,7 +59,7 @@ class AdminPermissionController extends Controller
     }
 
     /**
-     * AJAX endpoint: return permissions JSON for a given admin.
+     * AJAX endpoint: return permissions + pii flag for a given admin.
      */
     public function editData(User $admin)
     {
@@ -68,7 +68,7 @@ class AdminPermissionController extends Controller
         }
 
         if (!$admin->isAdmin() || $admin->isSuperAdmin()) {
-            return response()->json(['permissions' => []]);
+            return response()->json(['permissions' => [], 'can_view_pii' => false]);
         }
 
         $perms = $admin->permissions()
@@ -84,7 +84,10 @@ class AdminPermissionController extends Controller
             ->values()
             ->all();
 
-        return response()->json(['permissions' => $perms]);
+        return response()->json([
+            'permissions' => $perms,
+            'can_view_pii' => (bool) $admin->can_view_pii,
+        ]);
     }
 
     /**
@@ -126,6 +129,11 @@ class AdminPermissionController extends Controller
                     'export' => (bool) ($perm['export'] ?? false),
                 ]);
             }
+
+            // Save PII access flag
+            $admin->update([
+                'can_view_pii' => (bool) $request->input('can_view_pii', 0),
+            ]);
         });
 
         return back()->with('success', "Permissions updated for {$admin->name}.");

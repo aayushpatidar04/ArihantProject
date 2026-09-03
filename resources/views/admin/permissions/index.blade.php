@@ -210,6 +210,29 @@
             color: var(--purple-1)
         }
 
+        .pii-toggle {
+            background: rgba(255, 180, 0, 0.06);
+            border: 1px solid rgba(255, 180, 0, 0.2);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .pii-toggle-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffd700
+        }
+
+        .pii-toggle-desc {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px
+        }
+
         .alert {
             padding: 12px 16px;
             border-radius: 12px;
@@ -250,8 +273,7 @@
             <div class="admin-section">
                 <h2>Admin Users & Permissions</h2>
                 <p style="color:var(--muted);font-size:13px;margin-bottom:20px">
-                    Click <strong>Edit Permissions</strong> to grant or revoke view, create, edit, delete, and export access
-                    per page.
+                    Click <strong>Edit Permissions</strong> to grant or revoke page access and view permissions.
                 </p>
 
                 <div style="overflow-x:auto">
@@ -277,6 +299,10 @@
                                         <div class="perm-cell">{{ $admin->name }}</div>
                                         <div class="perm-email">{{ $admin->email }}</div>
                                         <span class="badge-role badge-admin">Admin</span>
+                                        @if($admin->can_view_pii)
+                                            <span class="badge-role"
+                                                style="background:rgba(255,180,0,0.15);color:#ffd700;margin-left:4px">Unmasked</span>
+                                        @endif
                                     </td>
                                     @foreach(['dashboard', 'registrations', 'checkins', 'event-feedback', 'referrals', 'leaderboard', 'influencers', 'stalls'] as $res)
                                         <td>
@@ -290,7 +316,8 @@
                                     @endforeach
                                     <td>
                                         <button class="btn btn-primary btn-sm edit-perm-btn" data-admin="{{ $admin->id }}"
-                                            data-name="{{ $admin->name }}">Edit Permissions</button>
+                                            data-name="{{ $admin->name }}"
+                                            data-pii="{{ $admin->can_view_pii ? '1' : '0' }}">Edit Permissions</button>
                                     </td>
                                 </tr>
                             @empty
@@ -314,6 +341,19 @@
             </div>
             <form id="permForm" method="POST">
                 @csrf
+                <input type="hidden" name="can_view_pii" id="canViewPiiField" value="0">
+
+                <div class="pii-toggle">
+                    <label class="check-item" style="flex-direction:row;gap:8px;cursor:pointer">
+                        <input type="checkbox" id="piiToggle" style="width:16px;height:16px;accent-color:#ffd700">
+                        <div>
+                            <div class="pii-toggle-label">View Unmasked Client Data</div>
+                            <div class="pii-toggle-desc">When enabled, this admin can see full email, phone, and name
+                                instead of masked versions (****@***.***).</div>
+                        </div>
+                    </label>
+                </div>
+
                 <div class="perm-grid" id="permGrid">
                     @php $idx = 0; @endphp
                     @foreach($allResources as $resource)
@@ -352,17 +392,23 @@
         const form = document.getElementById('permForm');
         const modalTitle = document.getElementById('modalTitle');
         const permGrid = document.getElementById('permGrid');
+        const piiToggle = document.getElementById('piiToggle');
+        const canViewPiiField = document.getElementById('canViewPiiField');
 
         function closeModal() {
             modal.classList.remove('active');
         }
 
-        function openModal(adminId, adminName) {
+        function openModal(adminId, adminName, hasPiiAccess) {
             modalTitle.textContent = 'Edit Permissions — ' + adminName;
             form.action = '/admin/permissions/' + adminId;
 
-            // Uncheck all first
+            // Reset all checkboxes
             permGrid.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+            // Set PII toggle
+            piiToggle.checked = hasPiiAccess === '1';
+            canViewPiiField.value = hasPiiAccess === '1' ? '1' : '0';
 
             // Fetch existing permissions via AJAX
             fetch('/admin/permissions/' + adminId + '/edit-data')
@@ -370,7 +416,6 @@
                 .then(data => {
                     if (data.permissions) {
                         data.permissions.forEach(p => {
-                            // Find the index for this resource
                             const sections = permGrid.querySelectorAll('.perm-section');
                             sections.forEach(section => {
                                 const hidden = section.querySelector('input[type="hidden"]');
@@ -389,6 +434,11 @@
             modal.classList.add('active');
         }
 
+        // Sync hidden field with checkbox
+        piiToggle.addEventListener('change', function () {
+            canViewPiiField.value = this.checked ? '1' : '0';
+        });
+
         document.getElementById('modalClose').addEventListener('click', closeModal);
         document.getElementById('modalCancel').addEventListener('click', closeModal);
         modal.addEventListener('click', (e) => {
@@ -400,7 +450,7 @@
 
         document.querySelectorAll('.edit-perm-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                openModal(btn.dataset.admin, btn.dataset.name);
+                openModal(btn.dataset.admin, btn.dataset.name, btn.dataset.pii);
             });
         });
     </script>

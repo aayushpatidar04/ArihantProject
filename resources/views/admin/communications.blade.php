@@ -84,7 +84,7 @@
                     <tbody>
                         @forelse($communications as $c)
                             <tr>
-                                <td>@if(auth()->check() && auth()->user()->isSuperAdmin()){{ $c->registration?->full_name ?? 'N/A' }}@else{{ \App\Models\User::maskName($c->registration?->full_name ?? 'N/A') }}@endif
+                                <td>@if(auth()->check() && auth()->user()->canViewPii()){{ $c->registration?->full_name ?? 'N/A' }}@else{{ \App\Models\User::maskName($c->registration?->full_name ?? 'N/A') }}@endif
                                 </td>
                                 <td>{{ ucfirst($c->channel) }}</td>
                                 <td>{{ ucfirst(str_replace('_', ' ', $c->type)) }}</td>

@@ -28,6 +28,7 @@ class AdminPermissionSeeder extends Seeder
                     'password' => Hash::make(Str::random(32)),
                     'role' => 'admin',
                     'is_super_admin' => $isSuper,
+                    'can_view_pii' => $isSuper,
                 ]
             );
 

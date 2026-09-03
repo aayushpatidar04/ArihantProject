@@ -244,7 +244,7 @@
                                     <span style="color:var(--muted);font-size:11px">{{ $r->referral_code }}</span>
                                 </td>
                                 <td>
-                                    @if (auth()->check() && auth()->user()->isSuperAdmin())
+                                    @if (auth()->check() && auth()->user()->canViewPii())
                                         {{ $r->full_name }}@else{{ \App\Models\User::maskName($r->full_name) }}
                                     @endif
                                 </td>
@@ -261,12 +261,12 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if (auth()->check() && auth()->user()->isSuperAdmin())
+                                    @if (auth()->check() && auth()->user()->canViewPii())
                                         {{ $r->email }}@else{{ \App\Models\User::maskEmail($r->email) }}
                                     @endif
                                 </td>
                                 <td>
-                                    @if (auth()->check() && auth()->user()->isSuperAdmin())
+                                    @if (auth()->check() && auth()->user()->canViewPii())
                                         {{ $r->phone }}@else{{ \App\Models\User::maskPhone($r->phone) }}
                                     @endif
                                 </td>
