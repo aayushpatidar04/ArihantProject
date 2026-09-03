@@ -385,14 +385,14 @@
                     Submit Post
                 </a>
 
-                <form method="POST" action="{{ route('influencer.logout') }}">
+                {{-- <form method="POST" action="{{ route('influencer.logout') }}">
                     @csrf
 
                     <button type="submit" class="btn btn-secondary">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </button>
-                </form>
+                </form> --}}
 
             </div>
 
