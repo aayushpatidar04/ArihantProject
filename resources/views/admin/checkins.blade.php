@@ -85,6 +85,8 @@
                         {{-- <th>Seat</th>
                         <th>Section</th> --}}
                         <th>Checked In At</th>
+                        <th>Checked Out At</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +97,8 @@
                             {{-- <td>{{ $c->seat?->seat_number ?? '-' }}</td>
                             <td>{{ $c->seat?->section ?? '-' }}</td> --}}
                             <td>{{ $c->checked_in_at?->format('M d, h:i A') ?? '-' }}</td>
+                            <td>{{ $c->checked_out_at?->format('M d, h:i A') ?? '-' }}</td>
+                            <td>{{ $c->checked_out_at ? 'Checked Out' : 'Checked In' }}</td>
                         </tr>
                     @empty
                         <tr>

@@ -13,9 +13,27 @@ class EventRegistration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'registration_number', 'full_name', 'email', 'phone', 'city',
-        'type', 'is_existing_client', 'status', 'referral_code', 'referred_by', 'platform', 'marked_paid_by', 'marked_paid_at',
-        'otp_verified_at', 'kyc_completed_at', 'paid_at', 'checked_in_at', 'is_subbroker', 'client_validation_data'
+        'user_id',
+        'registration_number',
+        'full_name',
+        'email',
+        'phone',
+        'city',
+        'type',
+        'is_existing_client',
+        'status',
+        'referral_code',
+        'referred_by',
+        'platform',
+        'marked_paid_by',
+        'marked_paid_at',
+        'otp_verified_at',
+        'kyc_completed_at',
+        'paid_at',
+        'checked_in_at',
+        'checked_out_at',
+        'is_subbroker',
+        'client_validation_data'
     ];
 
     protected $casts = [
@@ -25,6 +43,7 @@ class EventRegistration extends Model
         'paid_at' => 'datetime',
         'marked_paid_at' => 'datetime',
         'checked_in_at' => 'datetime',
+        'checked_out_at' => 'datetime',
         'client_validation_data' => 'array',
     ];
 
@@ -89,5 +108,21 @@ class EventRegistration extends Model
     public function feedback()
     {
         return $this->hasOne(EventFeedback::class);
+    }
+
+    /**
+     * Check if the participant is currently checked in (not yet checked out).
+     */
+    public function isCheckedIn(): bool
+    {
+        return !is_null($this->checked_in_at) && is_null($this->checked_out_at);
+    }
+
+    /**
+     * Check if the participant has fully checked out.
+     */
+    public function hasCheckedOut(): bool
+    {
+        return !is_null($this->checked_out_at);
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\StallController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\InfluencerAuthController;
@@ -102,6 +103,10 @@ Route::middleware(['venue'])->group(function () {
     Route::get('/checkin/scanner', [CheckInController::class, 'scanner'])->name('checkin.scanner');
     Route::post('/checkin/validate', [CheckInController::class, 'validateQr'])->name('checkin.validate');
     Route::post('/checkin/allocate', [CheckInController::class, 'allocateSeat'])->name('checkin.allocate');
+
+    Route::get('/checkout/scanner', [CheckOutController::class, 'scanner'])->name('checkout.scanner');
+    Route::post('/checkout/validate', [CheckOutController::class, 'validateQr'])->name('checkout.validate');
+    Route::post('/checkout', [CheckOutController::class, 'checkOut'])->name('checkout.perform');
 });
 /* ---------- Payment Callback ---------- */
 Route::post('/payment/callback/{id}', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
