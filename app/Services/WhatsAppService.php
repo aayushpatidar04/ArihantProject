@@ -264,35 +264,73 @@ class WhatsAppService
         $reference = 'evrem_' . $logPrefix . '_' . $registration->phone . '_' . now()->format('YmdHis') . '_' . \Illuminate\Support\Str::random(4);
 
         try {
-            $response = Http::timeout(60)->post($this->apiUrl, [
+
+            $payload = [
                 'token' => $this->token,
                 'application' => $this->applicationId,
                 'template_id' => $templateId,
+
                 'data' => [
                     [
                         'number' => $this->formatPhone($registration->phone),
                         'language' => 'en',
-                        'template_message' => [$registration->full_name, $ticketUrl],
+
+                        'template_message' => [
+                            $registration->full_name,
+                        ],
+
+                        'reference_number' => $reference,
                     ]
                 ],
+            ];
+
+            // Log request WITHOUT token
+            Log::info('PickyAssist event reminder [' . $logPrefix . '] request', [
+                'application' => $this->applicationId,
+                'template_id' => $templateId,
+                'data' => $payload['data'],
+                'reference' => $reference,
+                'reg_id' => $registration->id,
             ]);
 
+            $response = Http::timeout(60)
+                ->acceptJson()
+                ->post($this->apiUrl, $payload);
+
             $json = $response->json();
+
             Log::info('PickyAssist event reminder [' . $logPrefix . '] response', [
+                'http_status' => $response->status(),
                 'response' => $json,
                 'reference' => $reference,
                 'reg_id' => $registration->id,
             ]);
 
             if (!$response->successful() || ($json['status'] ?? 0) != 100) {
-                Log::error('PickyAssist event reminder [' . $logPrefix . '] failed', ['response' => $json]);
+
+                Log::error(
+                    'PickyAssist event reminder [' . $logPrefix . '] API failed',
+                    [
+                        'response' => $json,
+                        'reference' => $reference,
+                    ]
+                );
+
                 return false;
             }
 
             return true;
 
-        } catch (\Exception $e) {
-            Log::error('PickyAssist event reminder [' . $logPrefix . '] exception: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+
+            Log::error(
+                'PickyAssist event reminder [' . $logPrefix . '] exception',
+                [
+                    'message' => $e->getMessage(),
+                    'reference' => $reference,
+                ]
+            );
+
             return false;
         }
     }
@@ -342,7 +380,7 @@ class WhatsAppService
 
     public function sendSeatConfirmation(EventRegistration $registration, string $seatNumber): bool
     {
-       if (empty($this->token) || empty($this->applicationId)) {
+        if (empty($this->token) || empty($this->applicationId)) {
             Log::warning('PickyAssist not configured. Event reminder skipped.');
             return false;
         }

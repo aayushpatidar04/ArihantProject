@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\EventRegistration;
+use App\Models\EventFeedback;
 use App\Models\LeadScore;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -45,11 +46,15 @@ class LeadScoringService
         $referralCount = $registration->referralsMade()->where('status', 'paid')->count();
         $score->referral_score = min($this->weights['referral'], $referralCount * ($this->weights['referral'] / 5));
 
+        $feedback = $registration->feedback()->first();
+        $score->social_score = $feedback ? $this->calculateFeedbackScore($feedback) : 0;
+
         $score->total_score = $score->registration_score
             + $score->kyc_score
             + $score->quiz_score
             + $score->stall_visit_score
-            + $score->referral_score;
+            + $score->referral_score
+            + $score->social_score;
 
         $score->save();
 
@@ -59,6 +64,30 @@ class LeadScoringService
         }
 
         return $score;
+    }
+
+    public function calculateFeedbackScore(EventFeedback $feedback): int
+    {
+        $ratingScores = [
+            'Excellent' => 4,
+            'Very Good' => 3,
+            'Good' => 2,
+            'Average' => 1,
+            'Poor' => 0,
+            'Not Applicable' => 0,
+        ];
+
+        return min(20, max(0, (int) $feedback->experience_rating - 1)
+            + ($ratingScores[$feedback->session_quality] ?? 0)
+            + ($ratingScores[$feedback->content_usefulness] ?? 0)
+            + ($ratingScores[$feedback->networking_rating] ?? 0)
+            + match ($feedback->recommendation) {
+                'Definitely Yes' => 4,
+                'Probably Yes' => 3,
+                'Maybe' => 2,
+                'Probably No' => 1,
+                default => 0,
+            });
     }
 
     /**

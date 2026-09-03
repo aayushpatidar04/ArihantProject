@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventFeedback;
+use App\Services\LeadScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EventFeedbackController extends Controller
 {
@@ -42,7 +44,7 @@ class EventFeedbackController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, LeadScoringService $leadScoringService)
     {
         $user = auth()->user();
 
@@ -54,11 +56,11 @@ class EventFeedbackController extends Controller
                 ->with('error', 'No event registration found.');
         }
 
-        // if ($registration->status !== 'paid') {
-        //     return redirect()
-        //         ->route('index')
-        //         ->with('error', 'Only confirmed event participants can submit feedback.');
-        // }
+        if ($registration->status !== 'paid') {
+            return redirect()
+                ->route('index')
+                ->with('error', 'Only confirmed event participants can submit feedback.');
+        }
 
         // Prevent duplicate submissions
         if (
@@ -118,20 +120,21 @@ class EventFeedbackController extends Controller
             ],
         ]);
 
-        EventFeedback::create([
-            'event_registration_id' => $registration->id,
+        DB::transaction(function () use ($registration, $validated, $leadScoringService) {
+            EventFeedback::create([
+                'event_registration_id' => $registration->id,
+                'experience_rating' => $validated['experience_rating'],
+                'session_quality' => $validated['session_quality'],
+                'content_usefulness' => $validated['content_usefulness'],
+                'networking_rating' => $validated['networking_rating'],
+                'most_valuable_session' => $validated['most_valuable_session'],
+                'liked_most' => $validated['liked_most'],
+                'improvements' => $validated['improvements'],
+                'recommendation' => $validated['recommendation'],
+            ]);
 
-            'experience_rating' => $validated['experience_rating'],
-            'session_quality' => $validated['session_quality'],
-            'content_usefulness' => $validated['content_usefulness'],
-            'networking_rating' => $validated['networking_rating'],
-
-            'most_valuable_session' => $validated['most_valuable_session'],
-            'liked_most' => $validated['liked_most'],
-            'improvements' => $validated['improvements'],
-
-            'recommendation' => $validated['recommendation'],
-        ]);
+            $leadScoringService->calculateScore($registration);
+        });
 
         return redirect()
             ->route('event.feedback')
