@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventFeedback extends Model
 {
+    protected $table = 'event_feedbacks';
     protected $fillable = [
         'event_registration_id',
         'experience_rating',
