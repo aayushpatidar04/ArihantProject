@@ -36,6 +36,13 @@
             margin-bottom: 30px;
         }
 
+        .brand-logo {
+            display: block;
+            width: min(220px, 70vw);
+            height: auto;
+            margin: 0 auto 24px;
+        }
+
         .header h1 {
             margin: 0 0 10px;
             font-size: 30px;
@@ -196,6 +203,8 @@
     <div class="container">
 
         <div class="header">
+            <img src="{{ asset('assets/images/logo-2.png') }}" alt="ArihantPLUS" class="brand-logo">
+
             <h1>Event Feedback</h1>
 
             <p>

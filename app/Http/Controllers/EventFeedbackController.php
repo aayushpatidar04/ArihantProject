@@ -22,11 +22,11 @@ class EventFeedbackController extends Controller
                 ->with('error', 'No event registration found for your account.');
         }
 
-        if ($registration->status !== 'paid') {
-            return redirect()
-                ->route('index')
-                ->with('error', 'Only confirmed event participants can submit feedback.');
-        }
+        // if ($registration->status !== 'paid' && $registration->status !== 'confirmed' && $registration->status !== 'checked_in') {
+        //     return redirect()
+        //         ->route('index')
+        //         ->with('error', 'Only confirmed event participants can submit feedback.');
+        // }
 
         $existingFeedback = EventFeedback::where(
             'event_registration_id',
@@ -56,11 +56,11 @@ class EventFeedbackController extends Controller
                 ->with('error', 'No event registration found.');
         }
 
-        if ($registration->status !== 'paid') {
-            return redirect()
-                ->route('index')
-                ->with('error', 'Only confirmed event participants can submit feedback.');
-        }
+        // if ($registration->status !== 'paid' && $registration->status !== 'confirmed' && $registration->status !== 'checked_in') {
+        //     return redirect()
+        //         ->route('index')
+        //         ->with('error', 'Only confirmed event participants can submit feedback.');
+        // }
 
         // Prevent duplicate submissions
         if (

@@ -34,6 +34,13 @@
             padding: 45px 30px;
         }
 
+        .brand-logo {
+            display: block;
+            width: min(220px, 70vw);
+            height: auto;
+            margin: 0 auto 30px;
+        }
+
         .icon {
             font-size: 50px;
             margin-bottom: 20px;
@@ -47,12 +54,30 @@
             color: #aaa;
             line-height: 1.7;
         }
+
+        .home-button {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 13px 24px;
+            border-radius: 9px;
+            background: #fff;
+            color: #000;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .home-button:hover {
+            opacity: .9;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="card">
+
+        <img src="{{ asset('assets/images/logo-2.png') }}" alt="ArihantPLUS" class="brand-logo">
 
         <div class="icon">✓</div>
 
@@ -63,6 +88,8 @@
             We truly appreciate you taking the time to share your experience
             with us.
         </p>
+
+        <a href="{{ route('index') }}" class="home-button">Go to Home</a>
 
     </div>
 
