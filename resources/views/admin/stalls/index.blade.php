@@ -190,9 +190,11 @@
                 <p>Create and manage event stalls and their unique QR codes.</p>
             </div>
             <div>
-                <a href="{{ route('admin.stalls.create') }}" class="btn btn-primary" style="margin-right: 15px;">
+                @permission('stalls', 'create')
+ <a href="{{ route('admin.stalls.create') }}" class="btn btn-primary" style="margin-right: 15px;">
                     + Create Stall
                 </a>
+ @endpermission
                 <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back to Dashboard</a>
             </div>
         </div>
@@ -269,7 +271,7 @@
                                             </a>
 
                                             <a
-                                                href="{{ route('admin.stalls.edit', $stall) }}"
+                                                @permission('stalls', 'edit') href="{{ route('admin.stalls.edit', $stall) }}"
                                                 class="action-btn"
                                             >
                                                 Edit
@@ -277,7 +279,7 @@
 
                                             <form
                                                 method="POST"
-                                                action="{{ route('admin.stalls.destroy', $stall) }}"
+                                                @permission('stalls', 'delete') action="{{ route('admin.stalls.destroy', $stall) }}"
                                                 onsubmit="return confirm('Are you sure you want to delete this stall? All related visit records may also be deleted.')"
                                             >
                                                 @csrf

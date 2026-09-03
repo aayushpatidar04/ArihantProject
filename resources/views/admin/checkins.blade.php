@@ -19,7 +19,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px
         }
 
         .admin-section {
@@ -60,46 +62,49 @@
 @endpush
 
 @section('content')
-    <div class="admin-page">
-        <div class="admin-wrap">
-            <div class="admin-header">
-                <h1>Check-Ins</h1>
-                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-                    <a href="{{ route('admin.export', ['type' => 'checkins']) }}" class="btn btn-primary" style="font-size:13px;padding:9px 16px">
-                        Export Excel
-                    </a>
-                    <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back</a>
-                </div>
-            </div>
-            <div class="admin-section">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Reg #</th>
-                            {{-- <th>Seat</th>
-                            <th>Section</th> --}}
-                            <th>Checked In At</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($checkIns as $c)
-                            <tr>
-                                <td>{{ $c->full_name }}</td>
-                                <td>{{ $c->registration_number }}</td>
-                                {{-- <td>{{ $c->seat?->seat_number ?? '-' }}</td>
-                                <td>{{ $c->seat?->section ?? '-' }}</td> --}}
-                                <td>{{ $c->checked_in_at?->format('M d, h:i A') ?? '-' }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" style="text-align:center;color:var(--muted);padding:40px">No check-ins yet.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-                <div class="pagination">{{ $checkIns->links() }}</div>
+<div class="admin-page">
+    <div class="admin-wrap">
+        <div class="admin-header">
+            <h1>Check-Ins</h1>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                @permission('checkins', 'export')
+                <a href="{{ route('admin.export', ['type' => 'checkins']) }}" class="btn btn-primary"
+                    style="font-size:13px;padding:9px 16px">
+                    Export Excel
+                </a>
+                @endpermission
+                <a href="{{ route('admin.dashboard') }}" style="color:var(--purple-1);font-size:14px">← Back</a>
             </div>
         </div>
+        <div class="admin-section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Reg #</th>
+                        <th>Seat</th>
+                        <th>Section</th>
+                        <th>Checked In At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($checkIns as $c)
+                        <tr>
+                            <td>{{ $c->full_name }}</td>
+                            <td>{{ $c->registration_number }}</td>
+                            <td>{{ $c->seat?->seat_number ?? '-' }}</td>
+                            <td>{{ $c->seat?->section ?? '-' }}</td>
+                            <td>{{ $c->checked_in_at?->format('M d, h:i A') ?? '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" style="text-align:center;color:var(--muted);padding:40px">No check-ins yet.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+            <div class="pagination">{{ $checkIns->links() }}</div>
+        </div>
     </div>
+</div>
 @endsection

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\StallController as AdminStallController;
 use App\Http\Controllers\Admin\AdminStallVisitController;
 use App\Http\Controllers\Admin\StallQuizController;
 use App\Http\Controllers\Admin\StallFeedbackController;
+use App\Http\Controllers\Admin\AdminPermissionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\PaymentController;
@@ -118,48 +119,126 @@ Route::post('/admin/login', [AdminAuthController::class, 'login'])->middleware('
 Route::get('/admin/2fa', [AdminAuthController::class, 'show2fa'])->name('admin.2fa');
 Route::post('/admin/2fa', [AdminAuthController::class, 'verify2fa'])->name('admin.2fa.submit');
 
+// Permission management (super admins only)
 Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::post('/registrations/mark-paid', [AdminController::class, 'markAsPaid'])->name('registrations.mark-paid');
-    Route::get('/registrations', [AdminController::class, 'registrations'])->name('registrations');
-    Route::get('/export', [AdminController::class, 'export'])->name('export');
-    Route::get('/checkins', [AdminController::class, 'checkIns'])->name('checkins');
-    Route::get('/event-feedback', [AdminController::class, 'eventFeedback'])->name('event-feedback');
-    // Route::get('/stalls', [AdminController::class, 'stalls'])->name('stalls');
-    Route::get('/referrals', [AdminController::class, 'referrals'])->name('referrals');
-    Route::get('/leaderboard', [AdminController::class, 'leaderboard'])->name('leaderboard');
-    Route::get('/communications', [AdminController::class, 'communications'])->name('communications');
+    Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.index');
+    Route::post('/permissions/{admin}', [AdminPermissionController::class, 'store'])->name('permissions.store');
+    Route::get('/permissions/{admin}/edit-data', [AdminPermissionController::class, 'editData'])->name('permissions.edit-data');
+});
 
+Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    // Dashboard — view only
+    Route::get('/', [AdminController::class, 'dashboard'])
+        ->middleware('permission:dashboard,view')
+        ->name('dashboard');
+
+    // Registrations — view + mark-paid action
+    Route::get('/registrations', [AdminController::class, 'registrations'])
+        ->middleware('permission:registrations,view')
+        ->name('registrations');
+    Route::post('/registrations/mark-paid', [AdminController::class, 'markAsPaid'])
+        ->middleware('permission:registrations,edit')
+        ->name('registrations.mark-paid');
+    Route::get('/export', [AdminController::class, 'export'])
+        ->middleware('permission:registrations,export')
+        ->name('export');
+
+    // Check-Ins
+    Route::get('/checkins', [AdminController::class, 'checkIns'])
+        ->middleware('permission:checkins,view')
+        ->name('checkins');
+
+    // Event Feedback
+    Route::get('/event-feedback', [AdminController::class, 'eventFeedback'])
+        ->middleware('permission:event-feedback,view')
+        ->name('event-feedback');
+
+    // Referrals
+    Route::get('/referrals', [AdminController::class, 'referrals'])
+        ->middleware('permission:referrals,view')
+        ->name('referrals');
+
+    // Leaderboard
+    Route::get('/leaderboard', [AdminController::class, 'leaderboard'])
+        ->middleware('permission:leaderboard,view')
+        ->name('leaderboard');
+
+    // Communications — view only
+    Route::get('/communications', [AdminController::class, 'communications'])
+        ->middleware('permission:communications,view')
+        ->name('communications');
+
+    /* ---------- Influencers ---------- */
     Route::prefix('influencers')
         ->name('influencers.')
+        ->middleware('permission:influencers,view')
         ->group(function () {
-            Route::get('/', [InfluencerAdminController::class,'index'])->name('index');
-            Route::get('/create', [InfluencerAdminController::class,'create'])->name('create');
-            Route::post('/', [InfluencerAdminController::class,'store'])->name('store');
-            Route::get('/{user}', [InfluencerAdminController::class,'show'])->name('show');
-            Route::get('/{user}/edit', [InfluencerAdminController::class,'edit'])->name('edit');
-            Route::put('/{user}', [InfluencerAdminController::class,'update'])->name('update');
-            Route::delete('/{user}', [InfluencerAdminController::class,'destroy'])->name('destroy');
+            Route::get('/', [InfluencerAdminController::class, 'index'])->name('index');
+            Route::get('/create', [InfluencerAdminController::class, 'create'])
+                ->middleware('permission:influencers,create')
+                ->name('create');
+            Route::post('/', [InfluencerAdminController::class, 'store'])
+                ->middleware('permission:influencers,create')
+                ->name('store');
+            Route::get('/{user}', [InfluencerAdminController::class, 'show'])->name('show');
+            Route::get('/{user}/edit', [InfluencerAdminController::class, 'edit'])
+                ->middleware('permission:influencers,edit')
+                ->name('edit');
+            Route::put('/{user}', [InfluencerAdminController::class, 'update'])
+                ->middleware('permission:influencers,edit')
+                ->name('update');
+            Route::delete('/{user}', [InfluencerAdminController::class, 'destroy'])
+                ->middleware('permission:influencers,delete')
+                ->name('destroy');
 
-            Route::post('/influencer-posts/{post}/approve', [InfluencerAdminController::class, 'approvePost'])->name('posts.approve');
-            Route::post('/influencer-posts/{post}/reject', [InfluencerAdminController::class, 'rejectPost'])->name('posts.reject');
+            Route::post('/influencer-posts/{post}/approve', [InfluencerAdminController::class, 'approvePost'])
+                ->middleware('permission:influencers,edit')
+                ->name('posts.approve');
+            Route::post('/influencer-posts/{post}/reject', [InfluencerAdminController::class, 'rejectPost'])
+                ->middleware('permission:influencers,edit')
+                ->name('posts.reject');
         });
 
-    Route::resource('stalls', AdminStallController::class);
-    Route::prefix('stalls/{stall}')->name('stalls.')->group(function () {
-        // Quiz
-        Route::post('/quiz', [StallQuizController::class, 'store'])->name('quiz.store');
-        Route::put('/quiz', [StallQuizController::class, 'update'])->name('quiz.update');
-        Route::post('/quiz/questions', [StallQuizController::class, 'storeQuestion'])->name('quiz.questions.store');
-        Route::put('/quiz/questions/{question}', [StallQuizController::class, 'updateQuestion'])->name('quiz.questions.update');
-        Route::delete('/quiz/questions/{question}', [StallQuizController::class, 'destroyQuestion'])->name('quiz.questions.destroy');
-        // Feedback
-        Route::post('/feedback/questions', [StallFeedbackController::class, 'store'])->name('feedback.questions.store');
-        Route::put('/feedback/questions/{question}', [StallFeedbackController::class, 'update'])->name('feedback.questions.update');
-        Route::delete('/feedback/questions/{question}', [StallFeedbackController::class, 'destroy'])->name('feedback.questions.destroy');
+    /* ---------- Stalls ---------- */
+    Route::resource('stalls', AdminStallController::class)
+        ->middleware('permission:stalls,view')
+        ->parameters(['stalls' => 'stall']);
 
-        Route::get('/visits', [AdminStallVisitController::class, 'index'])->name('visits.index');
-        Route::get('/visits/{visit}', [AdminStallVisitController::class, 'show'])->name('visits.show');
+    Route::prefix('stalls/{stall}')->name('stalls.')->group(function () {
+        // Quiz — create/edit/delete permissions
+        Route::post('/quiz', [StallQuizController::class, 'store'])
+            ->middleware('permission:stalls,create')
+            ->name('quiz.store');
+        Route::put('/quiz', [StallQuizController::class, 'update'])
+            ->middleware('permission:stalls,edit')
+            ->name('quiz.update');
+        Route::post('/quiz/questions', [StallQuizController::class, 'storeQuestion'])
+            ->middleware('permission:stalls,create')
+            ->name('quiz.questions.store');
+        Route::put('/quiz/questions/{question}', [StallQuizController::class, 'updateQuestion'])
+            ->middleware('permission:stalls,edit')
+            ->name('quiz.questions.update');
+        Route::delete('/quiz/questions/{question}', [StallQuizController::class, 'destroyQuestion'])
+            ->middleware('permission:stalls,delete')
+            ->name('quiz.questions.destroy');
+        // Feedback
+        Route::post('/feedback/questions', [StallFeedbackController::class, 'store'])
+            ->middleware('permission:stalls,create')
+            ->name('feedback.questions.store');
+        Route::put('/feedback/questions/{question}', [StallFeedbackController::class, 'update'])
+            ->middleware('permission:stalls,edit')
+            ->name('feedback.questions.update');
+        Route::delete('/feedback/questions/{question}', [StallFeedbackController::class, 'destroy'])
+            ->middleware('permission:stalls,delete')
+            ->name('feedback.questions.destroy');
+
+        Route::get('/visits', [AdminStallVisitController::class, 'index'])
+            ->middleware('permission:stalls,view')
+            ->name('visits.index');
+        Route::get('/visits/{visit}', [AdminStallVisitController::class, 'show'])
+            ->middleware('permission:stalls,view')
+            ->name('visits.show');
     });
 
 });

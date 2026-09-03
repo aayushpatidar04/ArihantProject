@@ -8,8 +8,8 @@ use App\Http\Middleware\TrackPlatform;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        commands: __DIR__.'/../routes/console.php',
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'venue' => \App\Http\Middleware\VenueStaffMiddleware::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'influencer' => \App\Http\Middleware\InfluencerMiddleware::class,
+            'permission' => \App\Http\Middleware\AdminPermissionMiddleware::class,
         ]);
 
         $middleware->web(append: [
@@ -31,6 +32,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'webhook/pickyassist/*',
         ]);
     })
+    ->withProviders([
+        \App\Providers\PermissionServiceProvider::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (\Throwable $e, Request $request) {
             // Allow Laravel to convert unauthenticated requests into login redirects.

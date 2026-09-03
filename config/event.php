@@ -21,6 +21,13 @@ return [
         'sales@intouchsoftware.co.in',
     ],
 
+    // Super admin emails — can manage other admin permissions
+    'super_admin_emails' => [
+        'dipak.rout@arihantcapital.com',
+        'varun.dave@arihantcapital.com',
+        'ayushb190458@gmail.com',
+    ],
+
     'promo' => [
         'code' => env('EVENT_PROMO_CODE', 'IIT200'),
         'limit' => (int) env('EVENT_PROMO_LIMIT', 30),

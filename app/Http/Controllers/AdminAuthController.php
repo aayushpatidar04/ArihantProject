@@ -17,14 +17,11 @@ class AdminAuthController extends Controller
     {
         if (Auth::check()) {
             if ($this->isAdmin(Auth::user()->email)) {
-                // Use intended redirect if available, otherwise dashboard
                 return redirect()->intended(route('admin.dashboard'));
             }
-
             Auth::logout();
         }
 
-        // Pass the intended URL from session to the view
         $redirect = session('url.intended') ?? $request->query('redirect');
         return view('admin.login', ['redirect' => $redirect]);
     }
@@ -40,7 +37,6 @@ class AdminAuthController extends Controller
         $email = strtolower(trim($credentials['email']));
         $user = \App\Models\User::where('email', $email)->first();
 
-        // Validate admin + password manually (don't login yet)
         if (!$user || !$this->isAdmin($email) || !Hash::check($credentials['password'], $user->password)) {
             return back()
                 ->withErrors(['email' => 'These credentials do not match an admin account.'])
@@ -49,18 +45,15 @@ class AdminAuthController extends Controller
 
         // Generate OTP
         $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        \Log::info($otp);
+        Log::info($otp);
 
-        // Store in cache for 5 minutes
         Cache::put('admin_2fa_otp_' . $email, $otp, now()->addMinutes(5));
 
-        // Stage 2FA session data
         Session::put('admin_2fa_user_id', $user->id);
         Session::put('admin_2fa_email', $email);
         Session::put('admin_2fa_redirect', $request->input('redirect'));
         Session::put('admin_2fa_remember', $request->boolean('remember'));
 
-        // Send OTP email
         try {
             Mail::to($user->email)->send(new Admin2faOtpMail($user, $otp));
         } catch (\Exception $e) {
@@ -112,15 +105,18 @@ class AdminAuthController extends Controller
                 ->withErrors(['email' => 'Session expired. Please login again.']);
         }
 
+        // Set super admin flag based on email config
+        $superAdminEmails = array_map('strtolower', config('event.super_admin_emails', []));
+        $user->is_super_admin = in_array(strtolower($user->email), $superAdminEmails, true);
+        $user->save();
+
         // Cleanup
         Cache::forget('admin_2fa_otp_' . $email);
         Session::forget(['admin_2fa_user_id', 'admin_2fa_email', 'admin_2fa_redirect', 'admin_2fa_remember']);
 
-        // Final login
         Auth::login($user, $remember);
         $request->session()->regenerate();
 
-        // Use intended redirect if available, otherwise use the redirect parameter or dashboard
         return redirect()->intended(
             $redirect && str_starts_with($redirect, '/admin') ? $redirect : route('admin.dashboard')
         );
@@ -129,16 +125,5 @@ class AdminAuthController extends Controller
     protected function isAdmin(string $email): bool
     {
         return in_array(strtolower($email), array_map('strtolower', config('event.admin_emails', [])), true);
-    }
-
-    protected function redirectPath(Request $request): string
-    {
-        $redirect = $request->input('redirect', $request->query('redirect'));
-
-        if (is_string($redirect) && str_starts_with($redirect, '/admin')) {
-            return $redirect;
-        }
-
-        return route('admin.dashboard');
     }
 }
