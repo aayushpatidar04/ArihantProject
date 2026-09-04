@@ -513,7 +513,7 @@
                         </div>
                     </div>
                 </div>
-            @elseif($activeSession && $activeSession->current_question_order >= 1)
+            @elseif($showAnalytics)
                 <!-- Active: Stats + Chart + Leaderboard -->
                 <div class="stats-row fade-in">
                     <div class="stat-card">
