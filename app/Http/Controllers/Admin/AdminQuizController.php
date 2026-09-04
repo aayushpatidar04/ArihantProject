@@ -143,7 +143,7 @@ class AdminQuizController extends Controller
             $session->update(['status' => 'active', 'started_at' => now()]);
         }
 
-        $session->update(['current_question_order' => $nextOrder]);
+        $session->update(['current_question_order' => $nextOrder, 'question_started_at' => now()]);
 
         broadcast(new \App\Events\Quiz\QuestionShown($session, $question))->toOthers();
 

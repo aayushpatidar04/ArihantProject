@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 
 class QuizSession extends Model
 {
-    protected $fillable = ['quiz_type', 'pin', 'status', 'current_question_order', 'created_by', 'started_at', 'ended_at'];
-    protected $casts = ['started_at' => 'datetime', 'ended_at' => 'datetime'];
+    protected $fillable = ['quiz_type', 'pin', 'status', 'current_question_order', 'created_by', 'started_at', 'ended_at', 'question_started_at'];
+    protected $casts = ['started_at' => 'datetime', 'ended_at' => 'datetime', 'question_started_at' => 'datetime'];
     protected $keyType = 'string';
     public $incrementing = false;
     protected $primaryKey = 'id';
