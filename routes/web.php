@@ -280,3 +280,32 @@ Route::get('/rajesh-shrivastav', [HomeController::class, 'rajesh_shrivastav'])->
 Route::get('/rahul-saroge', [HomeController::class, 'rahul_saroge'])->name('rahul-saroge');
 Route::get('/nikhil-bhandari', [HomeController::class, 'nikhil_bhandari'])->name('nikhil-bhandari');
 Route::get('/detail', [HomeController::class, 'detail'])->name('detail');
+
+/* ---------- Quiz Routes ---------- */
+Route::get('/quiz', [App\Http\Controllers\QuizController::class, 'index'])->name('quiz.index');
+Route::post('/api/quiz/validate-pin', [App\Http\Controllers\QuizController::class, 'validatePin'])->name('quiz.validate-pin');
+Route::post('/api/quiz/join', [App\Http\Controllers\QuizController::class, 'join'])->name('quiz.join');
+Route::post('/api/quiz/submit-answer', [App\Http\Controllers\QuizController::class, 'submitAnswer'])->name('quiz.submit-answer');
+Route::get('/quiz/results', [App\Http\Controllers\QuizController::class, 'results'])->name('quiz.results');
+Route::get('/api/quiz/session/{id}/state', [App\Http\Controllers\QuizController::class, 'sessionState'])->name('quiz.state');
+
+/* ---------- Admin Quiz Routes ---------- */
+Route::middleware(['admin'])->prefix('admin/quiz')->name('admin.quiz.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\AdminQuizController::class, 'index'])->name('index');
+    Route::post('/types', [App\Http\Controllers\Admin\AdminQuizController::class, 'createType'])->name('types');
+    Route::put('/types/{type}', [App\Http\Controllers\Admin\AdminQuizController::class, 'updateType'])->name('types.update');
+    Route::delete('/types/{type}', [App\Http\Controllers\Admin\AdminQuizController::class, 'deleteType'])->name('types.delete');
+    Route::get('/{type}/questions', [App\Http\Controllers\Admin\AdminQuizController::class, 'questions'])->name('questions');
+    Route::post('/{type}/questions', [App\Http\Controllers\Admin\AdminQuizController::class, 'storeQuestion'])->name('questions.store');
+    Route::put('/{type}/questions/{id}', [App\Http\Controllers\Admin\AdminQuizController::class, 'updateQuestion'])->name('questions.update');
+    Route::delete('/{type}/questions/{id}', [App\Http\Controllers\Admin\AdminQuizController::class, 'destroyQuestion'])->name('destroy');
+    Route::post('/{type}/questions/reorder', [App\Http\Controllers\Admin\AdminQuizController::class, 'reorderQuestions'])->name('questions.reorder');
+    Route::post('/{type}/start', [App\Http\Controllers\Admin\AdminQuizController::class, 'startSession'])->name('start');
+    Route::post('/{type}/show-question', [App\Http\Controllers\Admin\AdminQuizController::class, 'showQuestion'])->name('show-question');
+    Route::post('/{type}/prev-question', [App\Http\Controllers\Admin\AdminQuizController::class, 'prevQuestion'])->name('prev-question');
+    Route::post('/{type}/pause', [App\Http\Controllers\Admin\AdminQuizController::class, 'pause'])->name('pause');
+    Route::post('/{type}/resume', [App\Http\Controllers\Admin\AdminQuizController::class, 'resume'])->name('resume');
+    Route::post('/{type}/end', [App\Http\Controllers\Admin\AdminQuizController::class, 'end'])->name('end');
+    Route::get('/{type}/live', [App\Http\Controllers\Admin\AdminQuizController::class, 'liveDashboard'])->name('live');
+    Route::get('/{type}/results', [App\Http\Controllers\Admin\AdminQuizController::class, 'sessionResults'])->name('results');
+});
