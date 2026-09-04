@@ -109,7 +109,7 @@ class RegistrationController extends Controller
     public function submitPhone(Request $request)
     {
         $validated = $request->validate([
-            'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:waitlist_numbers,phone',
+            'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:waitlist_numbers,phone_number',
         ], [
             'phone.unique' => 'This number is already joined waitlist. Try logging in or use another number.',
         ]);
