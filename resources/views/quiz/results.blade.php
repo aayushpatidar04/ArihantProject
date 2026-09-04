@@ -80,10 +80,12 @@
                 <div class="result-rank">#{{ $results['rank'] ?? '-' }}</div>
                 <div class="result-score">{{ $results['score'] }}</div>
                 <div class="result-label">out of {{ $results['correct_count'] * 10 }} points ·
-                    {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct</div>
+                    {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct
+                </div>
                 @if($results['avg_response_time_ms'])
                     <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Avg response time:
-                        {{ number_format($results['avg_response_time_ms'] / 1000, 1) }}s</p>
+                        {{ number_format($results['avg_response_time_ms'] / 1000, 1) }}s
+                    </p>
                 @endif
                 <div style="text-align:left;margin-bottom:24px">
                     @foreach($results['breakdown'] as $b)

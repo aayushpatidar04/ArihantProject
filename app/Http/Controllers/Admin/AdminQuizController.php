@@ -163,7 +163,7 @@ class AdminQuizController extends Controller
             return response()->json(['success' => false, 'message' => 'No previous question'], 404);
         }
 
-        $session->update(['current_question_order' => $prevOrder]);
+        $session->update(['current_question_order' => $prevOrder, 'question_started_at' => now()]);
 
         broadcast(new \App\Events\Quiz\QuestionShown($session, $question))->toOthers();
 

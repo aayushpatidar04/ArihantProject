@@ -19,7 +19,10 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\EventFeedbackController;
 use App\Http\Controllers\WaitlistController;
+use App\Models\QuizSession;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 /* ---------- Public Routes ---------- */
 Route::get('/', [HomeController::class, 'index'])->name('index');
@@ -287,6 +290,7 @@ Route::post('/api/quiz/validate-pin', [App\Http\Controllers\QuizController::clas
 Route::post('/api/quiz/join', [App\Http\Controllers\QuizController::class, 'join'])->name('quiz.join');
 Route::post('/api/quiz/submit-answer', [App\Http\Controllers\QuizController::class, 'submitAnswer'])->name('quiz.submit-answer');
 Route::get('/quiz/results', [App\Http\Controllers\QuizController::class, 'results'])->name('quiz.results');
+Route::get('/quiz/leaderboard', [App\Http\Controllers\QuizController::class, 'leaderboard'])->name('quiz.leaderboard');
 Route::get('/api/quiz/session/{id}/state', [App\Http\Controllers\QuizController::class, 'sessionState'])->name('quiz.state');
 
 /* ---------- Admin Quiz Routes ---------- */
@@ -309,3 +313,33 @@ Route::middleware(['admin'])->prefix('admin/quiz')->name('admin.quiz.')->group(f
     Route::get('/{type}/live', [App\Http\Controllers\Admin\AdminQuizController::class, 'liveDashboard'])->name('live');
     Route::get('/{type}/results', [App\Http\Controllers\Admin\AdminQuizController::class, 'sessionResults'])->name('results');
 });
+
+// Public leaderboard API
+Route::get('/api/quiz/leaderboard-data', function (Request $request) {
+    $sessionId = $request->query('session');
+    if (!$sessionId)
+        return response()->json(['error' => 'session required'], 400);
+
+    $session = QuizSession::where('id', $sessionId)->first();
+    if (!$session)
+        return response()->json(['error' => 'not found'], 404);
+
+    $service = new \App\Services\QuizService();
+    $leaderboard = $service->getLeaderboard($session, 20);
+
+    $analytics = null;
+    if ($session->current_question_order > 0) {
+        $prevOrder = $session->current_question_order - 1;
+        $prevQuestion = \App\Models\QuizQuestion::where('quiz_type', $session->quiz_type)->where('order', $prevOrder)->first();
+        if ($prevQuestion) {
+            $analytics = $service->getQuestionAnalytics($session, $prevQuestion);
+        }
+    }
+
+    return response()->json([
+        'leaderboard' => $leaderboard,
+        'analytics' => $analytics,
+        'question_order' => $session->current_question_order,
+        'status' => $session->status,
+    ]);
+})->name('api.quiz.leaderboard-data');

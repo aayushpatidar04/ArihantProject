@@ -269,7 +269,8 @@
     <div class="page active" id="page-entry">
         <div class="card">
             @if(isset($session) && $session)
-                <div class="quiz-title">{{ \App\Models\QuizType::where('key', '$quizType')->value('name') ?? $quizType }}</div>
+                <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}
+                </div>
                 <h1>Enter PIN</h1>
                 <p>Enter the PIN shared by the host to join the quiz.</p>
                 <div class="error-msg" id="pinError"></div>
@@ -279,8 +280,10 @@
             @else
                 <h1>Quiz Not Active</h1>
                 <p>There is no active quiz session for
-                    <strong>{{ \App\Models\QuizType::where('key', '$quizType')->value('name') ?? $quizType }}</strong> at the moment. Please wait for
-                    the host to start the quiz.</p>
+                    <strong>{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}</strong> at
+                    the moment. Please wait for
+                    the host to start the quiz.
+                </p>
             @endif
         </div>
     </div>
@@ -288,7 +291,8 @@
     <!-- Page 2: Detail Entry -->
     <div class="page" id="page-details">
         <div class="card">
-            <div class="quiz-title">{{ \App\Models\QuizType::where('key', '$quizType')->value('name') ?? $quizType }}</div>
+            <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}
+            </div>
             <h1>Join Quiz</h1>
             <p>Enter your details to participate.</p>
             <div class="error-msg" id="detailError"></div>
@@ -302,7 +306,8 @@
     <!-- Page 3: Lobby -->
     <div class="page" id="page-lobby">
         <div class="card">
-            <div class="quiz-title">{{ \App\Models\QuizType::where('key', '$quizType')->value('name') ?? $quizType }}</div>
+            <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}
+            </div>
             <h1>You're In!</h1>
             <p>Waiting for the quiz to start...</p>
             <div class="lobby-dots"><span></span><span></span><span></span></div>
@@ -315,7 +320,7 @@
             <div class="quiz-title" id="qOrder" style="text-align:center;margin-bottom:16px"></div>
             <div id="qText" style="font-size:22px;font-weight:700;margin-bottom:20px;line-height:1.4;text-align:center">
             </div>
-                       <div class="options-grid" id="optionsGrid"></div>
+            <div class="options-grid" id="optionsGrid"></div>
             <div id="playStatus"
                 style="text-align:center;color:var(--muted);font-size:14px;margin-top:16px;display:none"></div>
         </div>
@@ -328,10 +333,12 @@
                 <div class="result-rank">#{{ $results['rank'] ?? '-' }}</div>
                 <div class="result-score">{{ $results['score'] }}</div>
                 <div class="result-label">out of {{ $results['correct_count'] * 10 }} points ·
-                    {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct</div>
+                    {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct
+                </div>
                 @if($results['avg_response_time_ms'])
                     <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Avg response time:
-                        {{ number_format($results['avg_response_time_ms'] / 1000, 1) }}s</p>
+                        {{ number_format($results['avg_response_time_ms'] / 1000, 1) }}s
+                    </p>
                 @endif
                 <div style="text-align:left;margin-bottom:24px">
                     @foreach($results['breakdown'] as $b)
@@ -409,7 +416,7 @@
                     currentQuestion = data.current_question;
                     renderQuestion(data.current_question);
                 }
-                           } catch (e) { }
+            } catch (e) { }
         }
 
         function renderQuestion(q) {
@@ -425,7 +432,7 @@
                 grid.appendChild(btn);
             });
             document.getElementById('playStatus').style.display = 'none';
-           
+
         }
 
         async function submitAnswer(optionIndex) {
@@ -436,13 +443,13 @@
                 const res = await fetch('/api/quiz/submit-answer', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' }, body: JSON.stringify({ session_id: sessionId, question_id: qId, selected_option: optionIndex }) });
                 const data = await res.json();
                 if (data.success) {
-                                        err.style.display = 'block'; err.style.color = 'var(--muted)';
+                    err.style.display = 'block'; err.style.color = 'var(--muted)';
                     err.textContent = 'Answer submitted';
                 } else { err.textContent = data.message; err.style.display = 'block'; }
             } catch (e) { err.textContent = 'Error.'; err.style.display = 'block'; }
         }
 
-       function disableOptions() { document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true); } document.getElementById('pinInput').addEventListener('keypress', e => { if (e.key === 'Enter') validatePin(); });
+        function disableOptions() { document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true); } document.getElementById('pinInput').addEventListener('keypress', e => { if (e.key === 'Enter') validatePin(); });
         @if(isset($participant) && $participant)
             showPage('page-lobby');
             initWebSocket();
