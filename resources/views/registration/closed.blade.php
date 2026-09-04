@@ -861,6 +861,10 @@
 
                         </div>
 
+                        <a href="{{ route('waitlist.create') }}" class="home-button">
+                            Join Waitlist →
+                        </a>
+
                     </div>
 
                     <div class="footer">

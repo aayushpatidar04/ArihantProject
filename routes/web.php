@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\InfluencerAdminController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\EventFeedbackController;
+use App\Http\Controllers\WaitlistController;
 use Illuminate\Support\Facades\Route;
 
 /* ---------- Public Routes ---------- */
@@ -27,6 +28,9 @@ Route::post('/logout', [HomeController::class, 'logout'])->name('logout');
 Route::get('/login', [HomeController::class, 'showLogin'])->name('login');
 Route::post('/login/otp/send', [HomeController::class, 'sendOtp'])->middleware('throttle:5,1')->name('login.otp.send');
 Route::post('/login/otp/verify', [HomeController::class, 'verifyOtp'])->middleware('throttle:10,1')->name('login.otp.verify');
+
+Route::get('/join-waitlist', [WaitlistController::class, 'create'])->name('waitlist.create');
+Route::post('/join-waitlist', [WaitlistController::class, 'store'])->name('waitlist.store');
 
 
 Route::prefix('influencer')->name('influencer.')->group(function () {

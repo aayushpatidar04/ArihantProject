@@ -3849,15 +3849,15 @@
         <h1>AI &amp; Algo Trading Conclave</h1>
         <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.</p>
 
-        {{-- <div class="hero-pills">
+        <div class="hero-pills">
             <img src="assets/images/pill-2.png" alt="Learn" class="hero-pill-img">
             <img src="assets/images/pill-3.png" alt="Experience" class="hero-pill-img">
             <img src="assets/images/pill-4.png" alt="Connect" class="hero-pill-img">
             <img src="assets/images/pill-5.png" alt="Compete" class="hero-pill-img">
             <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
-        </div> --}}
+        </div>
 
-        <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming response indore.</a></p>
+        {{-- <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming response indore.</a></p> --}}
 
         <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
