@@ -46,8 +46,8 @@ Route::prefix('influencer')->name('influencer.')->group(function () {
 /* ---------- Registration Flow ---------- */
 
 // Step 1: Phone number + client check
-// Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
-Route::get('/register', function () {return view('registration.closed'); })->name('registration.form');
+Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
+// Route::get('/register', function () {return view('registration.closed'); })->name('registration.form');
 Route::post('/register', [RegistrationController::class, 'submitPhone'])->name('registration.submit');
 
 // Step 2A: Existing client — confirm pre-filled details
@@ -147,6 +147,12 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/registrations', [AdminController::class, 'registrations'])
         ->middleware('permission:registrations,view')
         ->name('registrations');
+    Route::get('/waitlist', [AdminController::class, 'waitlist'])
+        ->middleware('permission:waitlist,view')
+        ->name('waitlist');
+    Route::get('/waitlist/export', [AdminController::class, 'exportWaitlist'])
+        ->middleware('permission:waitlist,export')
+        ->name('waitlist.export');
     Route::post('/registrations/mark-paid', [AdminController::class, 'markAsPaid'])
         ->middleware('permission:registrations,edit')
         ->name('registrations.mark-paid');

@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\Communication;
 use App\Models\EventFeedback;
 use App\Models\LeadScore;
+use App\Models\WaitlistNumber;
 use App\Services\EmailService;
 use App\Services\LeadScoringService;
 use App\Services\QrCodeService;
@@ -86,6 +87,35 @@ class AdminController extends Controller
 
         $registrations = $query->paginate(50);
         return view('admin.registrations', compact('registrations'));
+    }
+
+    public function waitlist()
+    {
+        $waitlistNumbers = WaitlistNumber::latest()->paginate(50);
+
+        return view('admin.waitlist', compact('waitlistNumbers'));
+    }
+
+    public function exportWaitlist()
+    {
+        $waitlistNumbers = WaitlistNumber::latest()->get();
+        $filename = 'waitlist-numbers-' . now()->format('Y-m-d-H-i-s') . '.csv';
+
+        return response()->streamDownload(function () use ($waitlistNumbers) {
+            $handle = fopen('php://output', 'w');
+            fwrite($handle, "\xEF\xBB\xBF");
+            fputcsv($handle, ['ID', 'Phone Number', 'Joined At']);
+
+            foreach ($waitlistNumbers as $waitlistNumber) {
+                fputcsv($handle, [
+                    $waitlistNumber->id,
+                    $waitlistNumber->phone_number,
+                    $waitlistNumber->created_at?->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
     }
 
     public function markAsPaid(Request $request)

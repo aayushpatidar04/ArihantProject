@@ -826,7 +826,7 @@
 
                     </div>
 
-                    <div class="waitlist-card">
+                    <div class="action-card">
 
                         <div class="waitlist-icon">
 

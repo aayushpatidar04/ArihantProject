@@ -7,6 +7,7 @@ use App\Models\KycDetail;
 use App\Models\Payment;
 use App\Models\Referral;
 use App\Models\User;
+use App\Models\WaitlistNumber;
 use App\Services\ClientApiService;
 use App\Services\WhatsAppService;
 use App\Services\EmailService;
@@ -60,52 +61,71 @@ class RegistrationController extends Controller
         return view('registration.form');
     }
 
-    public function submitPhone(Request $request)
-    {
-        $validated = $request->validate([
-            'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:event_registrations,phone',
-        ], [
-            'phone.unique' => 'This number is already registered. Try logging in or use another number.',
-        ]);
+    // public function submitPhone(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:event_registrations,phone',
+    //     ], [
+    //         'phone.unique' => 'This number is already registered. Try logging in or use another number.',
+    //     ]);
 
-        $phone = $validated['phone'];
+    //     $phone = $validated['phone'];
 
-        // PRIORITY 1: Check if sub-broker (free registration, no payment)
-        $isSubBroker = $this->clientApi->checkSubBroker($phone);
-        if ($isSubBroker) {
-            Session::put('reg_phone', $phone);
-            Session::put('is_subbroker', true);
-            Session::put('is_existing_client', false);
-            return redirect()->route('registration.details');
-        }
+    //     // PRIORITY 1: Check if sub-broker (free registration, no payment)
+    //     $isSubBroker = $this->clientApi->checkSubBroker($phone);
+    //     if ($isSubBroker) {
+    //         Session::put('reg_phone', $phone);
+    //         Session::put('is_subbroker', true);
+    //         Session::put('is_existing_client', false);
+    //         return redirect()->route('registration.details');
+    //     }
 
-        // PRIORITY 2: Check if existing Arihant client
-        $clientData = $this->clientApi->checkClient($phone);
-        if ($clientData) {
-            Session::put('client_users', $clientData['users']);
-            Session::put('reg_phone', $phone);
-            Session::put('is_existing_client', true);
-            return redirect()->route('registration.client.confirm');
-        }
+    //     // PRIORITY 2: Check if existing Arihant client
+    //     $clientData = $this->clientApi->checkClient($phone);
+    //     if ($clientData) {
+    //         Session::put('client_users', $clientData['users']);
+    //         Session::put('reg_phone', $phone);
+    //         Session::put('is_existing_client', true);
+    //         return redirect()->route('registration.client.confirm');
+    //     }
 
-        // PRIORITY 3: New user flow (OTP + payment)
-        $otp = random_int(100000, 999999);
-        Session::put('reg_phone', $phone);
-        Session::put('reg_otp', $otp);
-        Session::put('otp_expires', now()->addMinutes(10));
-        Session::put('is_existing_client', false);
-        Session::put('is_subbroker', false);
+    //     // PRIORITY 3: New user flow (OTP + payment)
+    //     $otp = random_int(100000, 999999);
+    //     Session::put('reg_phone', $phone);
+    //     Session::put('reg_otp', $otp);
+    //     Session::put('otp_expires', now()->addMinutes(10));
+    //     Session::put('is_existing_client', false);
+    //     Session::put('is_subbroker', false);
 
-        $this->whatsapp->sendOtpToPhone($phone, (string) $otp);
+    //     $this->whatsapp->sendOtpToPhone($phone, (string) $otp);
 
-        return redirect()->route('registration.otp');
-    }
+    //     return redirect()->route('registration.otp');
+    // }
 
     /* ============================================================
        STEP 2A: Existing Client — Select UID & Confirm Details
        ============================================================ */
 
-    public function showClientConfirm()
+    public function submitPhone(Request $request)
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:waitlist_numbers,phone',
+        ], [
+            'phone.unique' => 'This number is already joined waitlist. Try logging in or use another number.',
+        ]);
+
+        $phone = $validated['phone'];
+
+        // Save the number into waitlist_numbers table
+        WaitlistNumber::create([
+            'phone_number' => $phone,
+        ]);
+
+        // Return the closed registration view
+        return view('registration.closed');
+    }
+    
+       public function showClientConfirm()
     {
         if (Auth::check()) {
             return redirect()->route('registration.success');

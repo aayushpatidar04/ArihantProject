@@ -8,6 +8,9 @@
         class="{{ request()->routeIs('admin.registrations*') ? 'active' : '' }}">Registrations</a>
     @endpermission
 
+    <a href="{{ route('admin.waitlist') }}"
+        class="{{ request()->routeIs('admin.waitlist*') ? 'active' : '' }}">Waitlist</a>
+
     @permission('checkins', 'view')
     <a href="{{ route('admin.checkins') }}"
         class="{{ request()->routeIs('admin.checkins') ? 'active' : '' }}">Check-Ins</a>

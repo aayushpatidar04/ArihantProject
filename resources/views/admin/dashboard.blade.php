@@ -168,6 +168,8 @@
             <a href="{{ route('admin.registrations') }}">Registrations</a>
             @endpermission
 
+            <a href="{{ route('admin.waitlist') }}">Waitlist</a>
+
             @permission('checkins', 'view')
             <a href="{{ route('admin.checkins') }}">Check-Ins</a>
             @endpermission
