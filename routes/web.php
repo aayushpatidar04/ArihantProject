@@ -42,7 +42,8 @@ Route::prefix('influencer')->name('influencer.')->group(function () {
 /* ---------- Registration Flow ---------- */
 
 // Step 1: Phone number + client check
-Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
+// Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
+Route::get('/register', function () {return view('registration.closed'); })->name('registration.form');
 Route::post('/register', [RegistrationController::class, 'submitPhone'])->name('registration.submit');
 
 // Step 2A: Existing client — confirm pre-filled details
@@ -76,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
     // Step 5: Payment
     Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
     Route::post('/registration/check-promo', [RegistrationController::class, 'checkPromo'])->name('registration.check-promo');
-    Route::post('/registration/payment/create-order', [RegistrationController::class, 'createPaymentOrder'])->name('registration.payment.create-order');
+    // Route::post('/registration/payment/create-order', [RegistrationController::class, 'createPaymentOrder'])->name('registration.payment.create-order');
     Route::get('/register/thank-you', [RegistrationController::class, 'thankYou'])->name('registration.thankyou');
     // Step 6: Success
     Route::get('/register/success', [RegistrationController::class, 'success'])->name('registration.success');

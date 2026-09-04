@@ -210,10 +210,14 @@
                     value="{{ request('search') }}">
                 <select name="status">
                     <option value="" style="color: #000;">All Status</option>
-                    <option value="pending" style="color: #000;" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="paid" style="color: #000;" {{ request('status') == 'paid' ? 'selected' : '' }}>Paid</option>
-                    <option value="checked_in" style="color: #000;" {{ request('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
-                    <option value="cancelled" style="color: #000;" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                    <option value="pending" style="color: #000;" {{ request('status') == 'pending' ? 'selected' : '' }}>
+                        Pending</option>
+                    <option value="paid" style="color: #000;" {{ request('status') == 'paid' ? 'selected' : '' }}>Paid
+                    </option>
+                    <option value="checked_in" style="color: #000;"
+                        {{ request('status') == 'checked_in' ? 'selected' : '' }}>Checked In</option>
+                    <option value="cancelled" style="color: #000;" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
+                        Cancelled</option>
                 </select>
                 <button type="submit">Filter</button>
             </form>
@@ -288,7 +292,7 @@
                                         $clientBranchCodes = collect($validationData['clientlist'] ?? []);
                                     @endphp
 
-                                    @if($branchCodes->count())
+                                    @if ($branchCodes->count())
                                         {{ $branchCodes->implode(', ') }}
                                     @else
                                         <span style="color:var(--muted)">—</span>
@@ -296,16 +300,16 @@
                                 </td>
 
                                 <td style="min-width:250px;">
-                                    @if($clientBranchCodes->count())
-                                        @foreach($clientBranchCodes as $client)
+                                    @if ($clientBranchCodes->count())
+                                        @foreach ($clientBranchCodes as $client)
                                             <div style="margin-bottom:6px;">
                                                 <strong>{{ $client['BranchCode'] ?? '—' }}</strong>
-                                                @if(!empty($client['RegionCode']))
+                                                @if (!empty($client['RegionCode']))
                                                     <span style="color:var(--muted);">
                                                         — {{ $client['RegionCode'] }}
                                                     </span>
                                                 @endif
-                                                @if(!empty($client['ZoneCode']))
+                                                @if (!empty($client['ZoneCode']))
                                                     <span style="color:var(--muted);">
                                                         — {{ $client['ZoneCode'] }}
                                                     </span>
@@ -334,10 +338,11 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($r->markedPaidBy)
+                                    @if ($r->markedPaidBy)
                                         <span style="color:var(--purple-1);font-size:12px">
                                             {{ $r->markedPaidBy->name }}<br>
-                                            <span style="color:var(--muted)">{{ $r->marked_paid_at?->format('M d, h:i A') }}</span>
+                                            <span
+                                                style="color:var(--muted)">{{ $r->marked_paid_at?->format('M d, h:i A') }}</span>
                                         </span>
                                     @else
                                         <span style="color:var(--muted);font-size:12px">—</span>
@@ -364,115 +369,117 @@
                                 </td>
                                 @endcanAction
                             </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="10" style="text-align:center;color:var(--muted);padding:40px">
-                                        @canAction('registrations', 'view')
-                                        No registrations found.
-                                    @else
-                                        You do not have permission to view registrations.
-                                        @endcanAction
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                    <div class="pagination">{{ $registrations->withQueryString()->links() }}</div>
-                </div>
-
-                @canAction('registrations', 'edit')
-                <div class="modal-overlay" id="markPaidModal">
-                    <div class="modal-box">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px">
-                            <div>
-                                <h2>Mark as Paid</h2>
-                                <p style="color:var(--muted);font-size:13px;margin-top:4px">{{ $r->registration_number ?? '' }}
-                                </p>
-                            </div>
-                            <button onclick="closeMarkPaidModal()"
-                                style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;line-height:1">&times;</button>
-                        </div>
-
-                        <div class="masked-info">
-                            <p><strong>Participant:</strong> <span id="modalParticipantName">-</span></p>
-                            <p><strong>Phone:</strong> <span id="modalParticipantPhone">-</span></p>
-                            <p><strong>Type:</strong> <span id="modalParticipantType">-</span></p>
-                        </div>
-
-                        <form action="{{ route('admin.registrations.mark-paid') }}" method="POST" id="markPaidForm">
-                            @csrf
-                            <input type="hidden" name="registration_id" id="modalRegId">
-
-                            <label>Gateway Payment ID (optional for complimentary)</label>
-                            <input type="text" name="gateway_payment_id" placeholder="e.g. PAY_xxx or leave blank for free">
-
-                            <label>Payment Mode</label>
-                            <select name="payment_mode">
-                                <option value="Complimentary">Complimentary (Free)</option>
-                                <option value="Cash">Cash</option>
-                                <option value="UPI">UPI</option>
-                                <option value="Bank Transfer">Bank Transfer</option>
-                                <option value="Cheque">Cheque</option>
-                                <option value="Other">Other</option>
-                            </select>
-
-                            <label>Referral Code (12 chars, optional)</label>
-                            <input type="text" name="referral_code" id="modalReferralCode" maxlength="12"
-                                placeholder="e.g. ABC123XYZ456">
-
-                            <label>Note</label>
-                            <input type="text" name="note" placeholder="Optional note..." maxlength="500">
-
-                            <div style="display:flex;gap:10px;margin-top:8px">
-                                <button type="button" onclick="closeMarkPaidModal()"
-                                    style="flex:1;padding:12px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:var(--muted);cursor:pointer;font-weight:600">Cancel</button>
-                                <button type="submit" id="markPaidSubmitBtn"
-                                    style="flex:1;padding:12px;border-radius:12px;background:var(--purple-1);color:#fff;border:none;cursor:pointer;font-weight:600">
-                                    Mark as Paid
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                @endcanAction
+                        @empty
+                            <tr>
+                                <td colspan="10" style="text-align:center;color:var(--muted);padding:40px">
+                                    @canAction('registrations', 'view')
+                                    No registrations found.
+                                @else
+                                    You do not have permission to view registrations.
+                                    @endcanAction
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                <div class="pagination">{{ $registrations->withQueryString()->links() }}</div>
             </div>
+
+            @canAction('registrations', 'edit')
+            <div class="modal-overlay" id="markPaidModal">
+                <div class="modal-box">
+                    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px">
+                        <div>
+                            <h2>Mark as Paid</h2>
+                            <p style="color:var(--muted);font-size:13px;margin-top:4px">{{ $r->registration_number ?? '' }}
+                            </p>
+                        </div>
+                        <button onclick="closeMarkPaidModal()"
+                            style="background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;line-height:1">&times;</button>
+                    </div>
+
+                    <div class="masked-info">
+                        <p><strong>Participant:</strong> <span id="modalParticipantName">-</span></p>
+                        <p><strong>Phone:</strong> <span id="modalParticipantPhone">-</span></p>
+                        <p><strong>Type:</strong> <span id="modalParticipantType">-</span></p>
+                    </div>
+
+                    <form action="{{ route('admin.registrations.mark-paid') }}" method="POST" id="markPaidForm">
+                        @csrf
+                        <input type="hidden" name="registration_id" id="modalRegId">
+
+                        <label>Gateway Payment ID (optional for complimentary)</label>
+                        <input type="text" name="gateway_payment_id" placeholder="e.g. PAY_xxx or leave blank for free">
+
+                        <label>Payment Mode</label>
+                        <select name="payment_mode">
+                            <option value="Complimentary">Complimentary (Free)</option>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <label>Referral Code (12 chars, optional)</label>
+                        <input type="text" name="referral_code" id="modalReferralCode" maxlength="12"
+                            placeholder="e.g. ABC123XYZ456">
+
+                        <label>Note</label>
+                        <input type="text" name="note" placeholder="Optional note..." maxlength="500">
+
+                        <div style="display:flex;gap:10px;margin-top:8px">
+                            <button type="button" onclick="closeMarkPaidModal()"
+                                style="flex:1;padding:12px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:var(--muted);cursor:pointer;font-weight:600">Cancel</button>
+                            <button type="submit" id="markPaidSubmitBtn"
+                                style="flex:1;padding:12px;border-radius:12px;background:var(--purple-1);color:#fff;border:none;cursor:pointer;font-weight:600">
+                                Mark as Paid
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            @endcanAction
         </div>
+    </div>
+    </div>
 
-        <script>
-            function openMarkPaidModal(data) {
-                document.getElementById('modalRegId').value = data.id;
-                document.getElementById('modalParticipantName').textContent = data.name || '-';
-                document.getElementById('modalParticipantPhone').textContent = data.phone || '-';
-                document.getElementById('modalParticipantType').textContent = data.is_existing_client ? 'Existing Client' :
-                    'New Client';
-                document.getElementById('modalReferralCode').value = '';
-                var modal = document.getElementById('markPaidModal');
-                modal.style.display = 'flex';
-                requestAnimationFrame(function() {
-                    modal.style.opacity = '1';
-                });
-            }
-
-            function closeMarkPaidModal() {
-                var modal = document.getElementById('markPaidModal');
-                modal.style.opacity = '0';
-                setTimeout(function() {
-                    modal.style.display = 'none';
-                }, 300);
-            }
-
-            document.getElementById('markPaidForm').addEventListener('submit', function() {
-                var btn = document.getElementById('markPaidSubmitBtn');
-                btn.disabled = true;
-                btn.style.opacity = '0.6';
-                btn.style.cursor = 'not-allowed';
-                btn.textContent = 'Processing...';
+    <script>
+        function openMarkPaidModal(data) {
+            document.getElementById('modalRegId').value = data.id;
+            document.getElementById('modalParticipantName').textContent = data.name || '-';
+            document.getElementById('modalParticipantPhone').textContent = data.phone || '-';
+            document.getElementById('modalParticipantType').textContent = data.is_existing_client ? 'Existing Client' :
+                'New Client';
+            document.getElementById('modalReferralCode').value = '';
+            var modal = document.getElementById('markPaidModal');
+            modal.style.display = 'flex';
+            requestAnimationFrame(function() {
+                modal.style.opacity = '1';
             });
+        }
 
-            document.getElementById('markPaidModal').addEventListener('click', function(e) {
-                if (e.target === document.getElementById('markPaidModal')) {
-                    closeMarkPaidModal();
-                }
-            });
-        </script>
-    @endsection
+        function closeMarkPaidModal() {
+            var modal = document.getElementById('markPaidModal');
+            modal.style.opacity = '0';
+            setTimeout(function() {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        document.getElementById('markPaidForm').addEventListener('submit', function() {
+            var btn = document.getElementById('markPaidSubmitBtn');
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+            btn.textContent = 'Processing...';
+        });
+
+        document.getElementById('markPaidModal').addEventListener('click', function(e) {
+            if (e.target === document.getElementById('markPaidModal')) {
+                closeMarkPaidModal();
+            }
+        });
+    </script>
+
+@endsection
