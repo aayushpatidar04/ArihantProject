@@ -469,177 +469,173 @@
 
             atomError.style.display = 'none';
 
-            try {
+            // try {
+            //     const response = await fetch(
+            //         '{{ route("registration.payment.create-order") }}',
+            //         {
+            //             method: 'POST',
 
-                /*
-                 * Server decides the actual amount.
-                 */
-                const response = await fetch(
-                    '{{ route("registration.payment.create-order") }}',
-                    {
-                        method: 'POST',
+            //             headers: {
+            //                 'Content-Type':
+            //                     'application/json',
 
-                        headers: {
-                            'Content-Type':
-                                'application/json',
+            //                 'Accept':
+            //                     'application/json',
 
-                            'Accept':
-                                'application/json',
+            //                 'X-CSRF-TOKEN':
+            //                     '{{ csrf_token() }}'
+            //             },
 
-                            'X-CSRF-TOKEN':
-                                '{{ csrf_token() }}'
-                        },
+            //             body: JSON.stringify({
+            //                 promo_code:
+            //                     appliedPromoCode
+            //             })
+            //         }
+            //     );
 
-                        body: JSON.stringify({
-                            promo_code:
-                                appliedPromoCode
-                        })
-                    }
-                );
+            //     const data =
+            //         await response.json();
 
-                const data =
-                    await response.json();
-
-                if (!response.ok || !data.success) {
-                    throw new Error(
-                        data.message ||
-                        'Unable to create payment order.'
-                    );
-                }
+            //     if (!response.ok || !data.success) {
+            //         throw new Error(
+            //             data.message ||
+            //             'Unable to create payment order.'
+            //         );
+            //     }
 
 
-                const options = {
+            //     const options = {
 
-                    key:
-                        '{{ config("services.payment.key_id") }}',
+            //         key:
+            //             '{{ config("services.payment.key_id") }}',
 
-                    amount:
-                        data.amount * 100,
+            //         amount:
+            //             data.amount * 100,
 
-                    currency: 'INR',
+            //         currency: 'INR',
 
-                    name:
-                        'ArihantPLUS Conclave',
+            //         name:
+            //             'ArihantPLUS Conclave',
 
-                    description:
-                        data.promo_applied
-                            ? 'AI & Algo Conclave 2026 Registration - Promo'
-                            : 'AI & Algo Conclave 2026 Registration',
+            //         description:
+            //             data.promo_applied
+            //                 ? 'AI & Algo Conclave 2026 Registration - Promo'
+            //                 : 'AI & Algo Conclave 2026 Registration',
 
-                    image:
-                        'https://event.arihantplus.com/assets/images/logo.png',
+            //         image:
+            //             'https://event.arihantplus.com/assets/images/logo.png',
 
-                    order_id:
-                        data.order_id,
+            //         order_id:
+            //             data.order_id,
 
-                    handler:
-                        function (response) {
+            //         handler:
+            //             function (response) {
 
-                            const form =
-                                document.createElement('form');
+            //                 const form =
+            //                     document.createElement('form');
 
-                            form.method = 'POST';
+            //                 form.method = 'POST';
 
-                            form.action =
-                                '{{ route("razor.payment.callback", $reg->user_id) }}';
+            //                 form.action =
+            //                     '{{ route("razor.payment.callback", $reg->user_id) }}';
 
-                            form.innerHTML = `
+            //                 form.innerHTML = `
 
-                            @csrf
+            //                 @csrf
 
-                            <input
-                                type="hidden"
-                                name="razorpay_payment_id"
-                                value="${response.razorpay_payment_id}"
-                            >
+            //                 <input
+            //                     type="hidden"
+            //                     name="razorpay_payment_id"
+            //                     value="${response.razorpay_payment_id}"
+            //                 >
 
-                            <input
-                                type="hidden"
-                                name="razorpay_order_id"
-                                value="${response.razorpay_order_id}"
-                            >
+            //                 <input
+            //                     type="hidden"
+            //                     name="razorpay_order_id"
+            //                     value="${response.razorpay_order_id}"
+            //                 >
 
-                            <input
-                                type="hidden"
-                                name="razorpay_signature"
-                                value="${response.razorpay_signature}"
-                            >
+            //                 <input
+            //                     type="hidden"
+            //                     name="razorpay_signature"
+            //                     value="${response.razorpay_signature}"
+            //                 >
 
-                            <input
-                                type="hidden"
-                                name="promo_code"
-                                value="${data.promo_code ?? ''}"
-                            >
+            //                 <input
+            //                     type="hidden"
+            //                     name="promo_code"
+            //                     value="${data.promo_code ?? ''}"
+            //                 >
 
-                        `;
+            //             `;
 
-                            document.body.appendChild(form);
+            //                 document.body.appendChild(form);
 
-                            form.submit();
-                        },
+            //                 form.submit();
+            //             },
 
-                    prefill: {
-                        name:
-                            @json($reg->full_name),
+            //         prefill: {
+            //             name:
+            //                 @json($reg->full_name),
 
-                        email:
-                            @json($reg->email),
+            //             email:
+            //                 @json($reg->email),
 
-                        contact:
-                            @json($reg->phone)
-                    },
+            //             contact:
+            //                 @json($reg->phone)
+            //         },
 
-                    theme: {
-                        color: '#8b2fd9'
-                    }
-                };
-
-
-                const rzp =
-                    new Razorpay(options);
-
-                rzp.open();
+            //         theme: {
+            //             color: '#8b2fd9'
+            //         }
+            //     };
 
 
-                rzp.on(
-                    'payment.failed',
-                    function (response) {
+            //     const rzp =
+            //         new Razorpay(options);
 
-                        console.error(
-                            'Razorpay payment failed:',
-                            response
-                        );
-
-                        atomError.textContent =
-                            response.error?.description ||
-                            'Payment failed. Please try again.';
-
-                        atomError.style.display =
-                            'block';
-
-                        payBtn.disabled = false;
-
-                        payBtn.textContent =
-                            'Pay Now';
-                    });
+            //     rzp.open();
 
 
-            } catch (error) {
+            //     rzp.on(
+            //         'payment.failed',
+            //         function (response) {
 
-                console.error(error);
+            //             console.error(
+            //                 'Razorpay payment failed:',
+            //                 response
+            //             );
 
-                atomError.textContent =
-                    error.message ||
-                    'Unable to initiate payment.';
+            //             atomError.textContent =
+            //                 response.error?.description ||
+            //                 'Payment failed. Please try again.';
 
-                atomError.style.display =
-                    'block';
+            //             atomError.style.display =
+            //                 'block';
 
-                payBtn.disabled = false;
+            //             payBtn.disabled = false;
 
-                payBtn.textContent =
-                    'Pay Now';
-            }
+            //             payBtn.textContent =
+            //                 'Pay Now';
+            //         });
+
+
+            // } catch (error) {
+
+            //     console.error(error);
+
+            //     atomError.textContent =
+            //         error.message ||
+            //         'Unable to initiate payment.';
+
+            //     atomError.style.display =
+            //         'block';
+
+            //     payBtn.disabled = false;
+
+            //     payBtn.textContent =
+            //         'Pay Now';
+            // }
         };
 
     </script>
