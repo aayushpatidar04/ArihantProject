@@ -51,8 +51,8 @@
         }
 
         /* =========================
-   HEADER
-========================= */
+        HEADER
+        ========================= */
 
         .header {
             display: flex;
@@ -112,8 +112,8 @@
         }
 
         /* =========================
-   MAIN HEADING
-========================= */
+        MAIN HEADING
+        ========================= */
 
         .thank-you {
             font-size: clamp(48px, 8vw, 76px);
@@ -149,8 +149,8 @@
         }
 
         /* =========================
-   HOUSE FULL
-========================= */
+        HOUSE FULL
+        ========================= */
 
         .house-full {
             max-width: 760px;
@@ -213,8 +213,8 @@
         }
 
         /* =========================
-   DESCRIPTION
-========================= */
+        DESCRIPTION
+        ========================= */
 
         .description {
             font-size: 25px;
@@ -258,52 +258,53 @@
         }
 
         /* =========================
-   EVENT DETAILS
-========================= */
+        EVENT DETAILS
+        ========================= */
 
         .details {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            max-width: 850px;
-            margin: 0 auto 35px;
+            gap: 14px;
+            max-width: 720px;
+            margin: 0 auto 30px;
         }
 
         .detail {
-            border: 1px solid rgba(139, 47, 217, 0.28);
+            border: 1px solid rgba(139, 47, 217, 0.25);
 
             background:
                 linear-gradient(145deg,
-                    rgba(139, 47, 217, 0.09),
+                    rgba(139, 47, 217, 0.07),
                     rgba(15, 13, 20, 0.9));
 
-            border-radius: 14px;
-            padding: 20px 15px;
+            border-radius: 11px;
+
+            padding: 13px 12px;
 
             box-shadow:
                 inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .detail-icon {
-            font-size: 38px;
-            margin-bottom: 10px;
+            font-size: 27px;
+            margin-bottom: 6px;
         }
 
         .detail-label {
-            font-size: 14px;
+            font-size: 12px;
             color: #8f8f9b;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .detail-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #ffffff;
         }
 
         /* =========================
-   MESSAGE
-========================= */
+        MESSAGE
+        ========================= */
 
         .see-you {
             font-size: 28px;
@@ -327,11 +328,11 @@
         }
 
         /* =========================
-   ACTION CARD
-========================= */
+        REGISTRATION CLOSED CARD
+        ========================= */
 
         .action-card {
-            margin: 55px auto 20px;
+            margin: 45px auto 0;
             max-width: 900px;
 
             background:
@@ -343,13 +344,13 @@
 
             color: #ffffff;
 
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 18px;
+            padding: 25px 28px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 30px;
+            gap: 25px;
 
             text-align: left;
 
@@ -361,21 +362,17 @@
         .action-content {
             display: flex;
             align-items: center;
-            gap: 25px;
-        }
-
-        .action-icon {
-            font-size: 55px;
+            gap: 0;
         }
 
         .action-title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 800;
         }
 
         .action-description {
-            font-size: 18px;
-            margin-top: 7px;
+            font-size: 17px;
+            margin-top: 6px;
             color: #a7a7b3;
             line-height: 1.5;
         }
@@ -385,8 +382,8 @@
             align-items: center;
             justify-content: center;
 
-            min-width: 210px;
-            padding: 17px 28px;
+            min-width: 190px;
+            padding: 15px 25px;
 
             background:
                 linear-gradient(135deg,
@@ -396,9 +393,9 @@
             color: #ffffff;
 
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 11px;
 
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 800;
 
             box-shadow:
@@ -414,15 +411,76 @@
                 0 12px 30px rgba(139, 47, 217, 0.45);
         }
 
-        .closed-text {
-            margin-top: 20px;
-            font-size: 15px;
-            color: #777782;
+        /* =========================
+        WAITLIST CARD
+        ========================= */
+
+        .waitlist-card {
+            max-width: 900px;
+            margin: 18px auto 0;
+
+            padding: 22px 28px;
+
+            border-radius: 18px;
+
+            border: 1px solid rgba(139, 47, 217, 0.25);
+
+            background:
+                linear-gradient(135deg,
+                    rgba(139, 47, 217, 0.07),
+                    rgba(15, 13, 20, 0.9));
+
+            display: flex;
+            align-items: center;
+            gap: 22px;
+
+            text-align: left;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        .waitlist-icon {
+            width: 58px;
+            height: 58px;
+
+            flex: 0 0 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: rgba(139, 47, 217, 0.12);
+
+            color: #a855f7;
+
+            font-size: 30px;
+
+            box-shadow:
+                0 0 20px rgba(139, 47, 217, 0.12);
+        }
+
+        .waitlist-title {
+            font-size: 22px;
+            font-weight: 800;
+
+            color: #ffffff;
+        }
+
+        .waitlist-description {
+            margin-top: 5px;
+
+            font-size: 16px;
+            line-height: 1.5;
+
+            color: #9999a5;
         }
 
         /* =========================
-   FOOTER
-========================= */
+        FOOTER
+        ========================= */
 
         .footer {
             margin-top: 50px;
@@ -440,8 +498,8 @@
         }
 
         /* =========================
-   MOBILE
-========================= */
+        MOBILE
+        ========================= */
 
         @media (max-width: 700px) {
 
@@ -495,34 +553,82 @@
                 font-size: 18px;
             }
 
+            /* SMALLER EVENT DETAILS */
+
             .details {
                 grid-template-columns: 1fr;
-                gap: 12px;
+                gap: 9px;
+                max-width: 100%;
             }
 
             .detail {
                 display: flex;
                 align-items: center;
                 text-align: left;
-                gap: 15px;
+                gap: 13px;
+                padding: 11px 13px;
             }
 
             .detail-icon {
                 margin: 0;
+                font-size: 25px;
+                width: 32px;
+                text-align: center;
+                flex-shrink: 0;
             }
+
+            .detail-label {
+                font-size: 11px;
+            }
+
+            .detail-value {
+                font-size: 15px;
+            }
+
+            /* REGISTRATION CLOSED */
 
             .action-card {
                 flex-direction: column;
                 text-align: center;
-                padding: 25px 20px;
+                padding: 22px 18px;
+                gap: 20px;
             }
 
             .action-content {
                 flex-direction: column;
             }
 
+            .action-title {
+                font-size: 21px;
+            }
+
+            .action-description {
+                font-size: 15px;
+            }
+
             .home-button {
                 width: 100%;
+            }
+
+            /* WAITLIST */
+
+            .waitlist-card {
+                padding: 20px 18px;
+                gap: 15px;
+            }
+
+            .waitlist-icon {
+                width: 50px;
+                height: 50px;
+                flex-basis: 50px;
+            }
+
+            .waitlist-title {
+                font-size: 19px;
+            }
+
+            .waitlist-description {
+                font-size: 14px;
             }
 
             .footer {
@@ -539,7 +645,6 @@
 
         <div class="container">
 
-            {{-- HEADER --}}
             <div class="header">
 
                 <div class="brand">
@@ -554,7 +659,8 @@
                     </div>
 
                     <div class="brand-tagline">
-                        IDEAS &nbsp;|&nbsp; INSIGHTS &nbsp;|&nbsp; OPPORTUNITIES
+                        IDEAS &nbsp;|&nbsp; INSIGHTS &nbsp;|&nbsp;
+                        OPPORTUNITIES
                     </div>
 
                 </div>
@@ -570,8 +676,6 @@
 
             </div>
 
-
-            {{-- THANK YOU --}}
             <h1 class="thank-you">
                 THANK YOU,
                 <span class="indore">
@@ -583,8 +687,6 @@
                 We're overwhelmed by your incredible response!
             </div>
 
-
-            {{-- HOUSE FULL --}}
             <div class="house-full">
 
                 <div class="ticket-icon">
@@ -607,156 +709,172 @@
 
             </div>
 
-
-            {{-- DESCRIPTION --}}
             <div class="description">
 
                 Central India's Largest
-                <br>
+                <div>
 
-                <span class="highlight">
-                    AI &amp; Algo Trading
-                </span>
-                Conclave
-
-            </div>
-
-            <div class="event-date">
-                is all set for <strong>September 5th, 2026.</strong>
-            </div>
-
-
-            <div class="separator"></div>
-
-
-            {{-- EVENT DETAILS --}}
-            <div class="details">
-
-                <div class="detail">
-
-                    <div class="detail-icon">
-                        📅
-                    </div>
-
-                    <div>
-                        <div class="detail-label">
-                            Date
-                        </div>
-
-                        <div class="detail-value">
-                            September 5, 2026
-                        </div>
-                    </div>
+                    <span class="highlight">
+                        AI &amp; Algo Trading
+                    </span>
+                    Conclave
 
                 </div>
 
-
-                <div class="detail">
-
-                    <div class="detail-icon">
-                        🕐
-                    </div>
-
-                    <div>
-                        <div class="detail-label">
-                            Time
-                        </div>
-
-                        <div class="detail-value">
-                            10:00 AM
-                        </div>
-                    </div>
-
+                <div class="event-date">
+                    is all set for <strong>September 5th, 2026.</strong>
                 </div>
 
+                <div class="separator"></div>
 
-                <div class="detail">
+                <div class="details">
 
-                    <div class="detail-icon">
-                        📍
-                    </div>
+                    <div class="detail">
 
-                    <div>
-                        <div class="detail-label">
-                            Venue
+                        <div class="detail-icon">
+                            📅
                         </div>
 
-                        <div class="detail-value">
-                            Indore
-                        </div>
-                    </div>
+                        <div>
+                            <div class="detail-label">
+                                Date
+                            </div>
 
-                </div>
-
-            </div>
-
-
-            {{-- MESSAGE --}}
-            <div class="see-you">
-                See you tomorrow at 10 AM —
-            </div>
-
-            <div class="future-text">
-                Get ready for an exciting day of AI, Algo Trading,
-                <br class="desktop">
-                Strategy &amp; the Future of Trading.
-            </div>
-
-            <div class="remember">
-                Let's make it one to remember! 🚀
-            </div>
-
-
-            {{-- HOME ACTION --}}
-            <div class="action-card">
-
-                <div class="action-content">
-
-                    <div class="action-icon">
-                        🏠
-                    </div>
-
-                    <div>
-
-                        <div class="action-title">
-                            Registrations are closed
+                            <div class="detail-value">
+                                September 5, 2026
+                            </div>
                         </div>
 
-                        <div class="action-description">
-                            Thank you for the overwhelming response.
-                            <br>
-                            We look forward to welcoming you at the Conclave.
+                    </div>
+
+                    <div class="detail">
+
+                        <div class="detail-icon">
+                            🕐
+                        </div>
+
+                        <div>
+                            <div class="detail-label">
+                                Time
+                            </div>
+
+                            <div class="detail-value">
+                                10:00 AM
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="detail">
+
+                        <div class="detail-icon">
+                            📍
+                        </div>
+
+                        <div>
+                            <div class="detail-label">
+                                Venue
+                            </div>
+
+                            <div class="detail-value">
+                                Indore
+                            </div>
                         </div>
 
                     </div>
 
                 </div>
 
-                <a href="{{ route('index') }}" class="home-button">
-                    BACK TO HOME →
-                </a>
+                <div class="see-you">
+                    See you tomorrow at 10 AM —
+                </div>
+
+                <div class="future-text">
+                    Get ready for an exciting day of AI, Algo Trading,
+                    <div class="desktop">
+                        Strategy &amp; the Future of Trading.
+                    </div>
+
+                    <div class="remember">
+                        Let's make it one to remember! 🚀
+                    </div>
+
+                    <div class="action-card">
+
+                        <div class="action-content">
+
+                            <div>
+
+                                <div class="action-title">
+                                    Registrations are closed
+                                </div>
+
+                                <div class="action-description">
+                                    Thank you for the overwhelming response.
+                                    <br>
+                                    We look forward to welcoming you at the
+                                    Conclave.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <a href="{{ route('index') }}" class="home-button">
+                            BACK TO HOME →
+                        </a>
+
+                    </div>
+
+                    <div class="waitlist-card">
+
+                        <div class="waitlist-icon">
+
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 21V19C16 17.3431 14.6569 16 13 16H6C4.34315 16 3 17.3431 3 19V21"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+
+                                <circle cx="9.5" cy="9" r="3" stroke="currentColor" stroke-width="1.8" />
+
+                                <path d="M18 8C19.6569 8 21 9.34315 21 11C21 12.6569 19.6569 14 18 14"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+
+                                <path d="M18 16C19.6569 16 21 17.3431 21 19V21" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" />
+
+                            </svg>
+
+                        </div>
+
+                        <div>
+
+                            <div class="waitlist-title">
+                                Missed your seat?
+                            </div>
+
+                            <div class="waitlist-description">
+                                Join the waitlist for the next AI &amp; Algo Trading
+                                Conclave.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="footer">
+
+                        <span>🧠 AI</span>
+                        <span>📈 ALGO TRADING</span>
+                        <span>📊 STRATEGY</span>
+                        <span>👥 COMMUNITY</span>
+
+                    </div>
+
+                </div>
 
             </div>
-
-
-            <div class="closed-text">
-                Registrations for this event are now closed.
-            </div>
-
-
-            {{-- FOOTER --}}
-            <div class="footer">
-
-                <span>🧠 AI</span>
-                <span>📈 ALGO TRADING</span>
-                <span>📊 STRATEGY</span>
-                <span>👥 COMMUNITY</span>
-
-            </div>
-
-        </div>
-
-    </div>
 
 </body>
 

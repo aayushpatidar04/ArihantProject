@@ -4681,7 +4681,7 @@
             , {
             time: "2:10 PM – 3:10 PM"
             , title: "AI + ALGO TRADING ADVANCED"
-            , body: "Ankit Rai goes deeper into advanced AI and algo trading techniques."
+            , body: "Santosh Pasi goes deeper into advanced AI and algo trading techniques."
             , tag: "Session"
         }
             , {
@@ -4699,7 +4699,7 @@
             , {
             time: "3:45 PM – 4:15 PM"
             , title: "ALGO + AI PANEL DISCUSSION"
-            , body: "Ankit Rai, Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading."
+            , body: "Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading."
             , tag: "Panel"
         }
             , {
@@ -4765,15 +4765,15 @@
                 ]
                 , knowMore: "/santosh-pasi"
             }
-                , {
-                name: "Ankit Rai"
-                , role: "Derivatives Trader & Strategy Consultant"
-                , img: "assets/images/24.png"
-                , socials: [
-                    { type: "x", url: "https://x.com/AnkitRai259" }
-                ]
-                , knowMore: "/ankit-rai"
-            }
+            //     , {
+            //     name: "Ankit Rai"
+            //     , role: "Derivatives Trader & Strategy Consultant"
+            //     , img: "assets/images/24.png"
+            //     , socials: [
+            //         { type: "x", url: "https://x.com/AnkitRai259" }
+            //     ]
+            //     , knowMore: "/ankit-rai"
+            // }
                 , {
                 name: "Rajesh Srivastav"
                 , role: "Founder, QuantLab Technologies | Professional Derivatives Trader"

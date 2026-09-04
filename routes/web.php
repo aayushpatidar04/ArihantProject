@@ -42,8 +42,8 @@ Route::prefix('influencer')->name('influencer.')->group(function () {
 /* ---------- Registration Flow ---------- */
 
 // Step 1: Phone number + client check
-// Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
-Route::get('/register', function () {return view('registration.closed'); })->name('registration.form');
+Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
+// Route::get('/register', function () {return view('registration.closed'); })->name('registration.form');
 Route::post('/register', [RegistrationController::class, 'submitPhone'])->name('registration.submit');
 
 // Step 2A: Existing client — confirm pre-filled details
@@ -77,7 +77,7 @@ Route::middleware(['auth'])->group(function () {
     // Step 5: Payment
     Route::get('/register/payment', [RegistrationController::class, 'showPayment'])->name('registration.payment');
     Route::post('/registration/check-promo', [RegistrationController::class, 'checkPromo'])->name('registration.check-promo');
-    // Route::post('/registration/payment/create-order', [RegistrationController::class, 'createPaymentOrder'])->name('registration.payment.create-order');
+    Route::post('/registration/payment/create-order', [RegistrationController::class, 'createPaymentOrder'])->name('registration.payment.create-order');
     Route::get('/register/thank-you', [RegistrationController::class, 'thankYou'])->name('registration.thankyou');
     // Step 6: Success
     Route::get('/register/success', [RegistrationController::class, 'success'])->name('registration.success');
@@ -264,7 +264,7 @@ Route::prefix('influencer')
 Route::get('/vishal-mehta', [HomeController::class, 'vishal_mehta'])->name('vishal-mehta');
 Route::get('/saurabh-sisodia', [HomeController::class, 'saurabh_sisodia'])->name('saurabh-sisodia');
 Route::get('/santosh-pasi', [HomeController::class, 'santosh_pasi'])->name('santosh-pasi');
-Route::get('/ankit-rai', [HomeController::class, 'ankit_rai'])->name('ankit-rai');
+// Route::get('/ankit-rai', [HomeController::class, 'ankit_rai'])->name('ankit-rai');
 Route::get('/rajesh-shrivastav', [HomeController::class, 'rajesh_shrivastav'])->name('rajesh-shrivastav');
 Route::get('/rahul-saroge', [HomeController::class, 'rahul_saroge'])->name('rahul-saroge');
 Route::get('/nikhil-bhandari', [HomeController::class, 'nikhil_bhandari'])->name('nikhil-bhandari');
