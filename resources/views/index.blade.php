@@ -3857,7 +3857,7 @@
             <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
         </div> --}}
 
-        <p class="sub hero-pill-img"><a href="/register">we are officially housefull, thankyou for your overwhelming response indore.</a></p>
+        <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming response indore.</a></p>
 
         <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
