@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"
-        integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi"
-        crossorigin="anonymous"></script>
+        integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous">
+        </script>
     <style>
         :root {
             --bg: #000;
@@ -496,7 +496,8 @@
                             @foreach($leaderboard as $entry)
                                 <div class="lb-entry" data-participant-id="{{ $entry['participant_id'] }}">
                                     <div class="lb-rank rank-{{ $entry['rank'] <= 3 ? $entry['rank'] : 'other' }}">
-                                        {{ $entry['rank'] }}</div>
+                                        {{ $entry['rank'] }}
+                                    </div>
                                     <div class="lb-avatar">{{ substr($entry['name'], 0, 1) }}</div>
                                     <div class="lb-info">
                                         <div class="lb-name">{{ $entry['name'] }}</div>
@@ -552,7 +553,8 @@
                             @foreach($leaderboard as $entry)
                                 <div class="lb-entry" data-participant-id="{{ $entry['participant_id'] }}">
                                     <div class="lb-rank rank-{{ $entry['rank'] <= 3 ? $entry['rank'] : 'other' }}">
-                                        {{ $entry['rank'] }}</div>
+                                        {{ $entry['rank'] }}
+                                    </div>
                                     <div class="lb-avatar">{{ substr($entry['name'], 0, 1) }}</div>
                                     <div class="lb-info">
                                         <div class="lb-name">{{ $entry['name'] }}</div>
@@ -580,136 +582,171 @@
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
+        // === Functions (always available) ===
+
+        function showStartingOverlay(data) {
+            const existing = document.getElementById('startingOverlay');
+            if (existing) existing.remove();
+
+            const qrHtml = data.qr_url
+                ? '<img src="' + data.qr_url + '" style="width:200px;height:200px;border-radius:16px;border:3px solid #b866f7;margin:20px auto;" />'
+                : '<div style="width:200px;height:200px;background:#1e1230;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#9ca3af;border:2px dashed #b866f7;">QR Code</div>';
+
+            const overlay = document.createElement('div');
+            overlay.id = 'startingOverlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;animation:fadeIn 0.5s ease;';
+            overlay.innerHTML = '<div style="text-align:center;padding:40px;">' +
+                '<h2 style="font-family:Sora,sans-serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:8px;">Quiz is Starting!</h2>' +
+                '<p style="color:#9ca3af;font-size:16px;margin-bottom:30px;">Scan the QR code and use PIN to join</p>' +
+                qrHtml +
+                '<div style="background:#1e1230;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px 24px;margin-top:16px;">' +
+                '<p style="color:#9ca3af;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">PIN</p>' +
+                '<p style="font-size:32px;font-weight:800;color:#b866f7;letter-spacing:0.2em;font-family:monospace;">' + data.pin + '</p>' +
+                '</div>' +
+                '</div>';
+            document.body.appendChild(overlay);
+        }
+
+        function hideStartingOverlay() {
+            const overlay = document.getElementById('startingOverlay');
+            if (overlay) overlay.remove();
+        }
+
+        function loadLeaderboardPage() {
+            window.location.href = '/quiz/leaderboard';
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('responseChart');
+            if (!ctx) return;
+            const labels = @json($analytics['options'] ?? []);
+            const data = {{ Js::from($analytics['option_counts'] ?? [0, 0, 0, 0]) }};
+            const correct = @json($analytics['correct_option'] ?? -1);
+            const colors = labels.map((_, i) => i === correct ? 'rgba(40,180,100,0.8)' : 'rgba(184,102,247,0.6)');
+
+            if (responseChart) responseChart.destroy();
+            responseChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Responses',
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c.replace('0.8', '1').replace('0.6', '1')),
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+                    },
+                    animation: { duration: 500 }
+                }
+            });
+        }
+
+        function updateLeaderboard(newLeaderboard) {
+            const container = document.getElementById('leaderboardList');
+            if (!container) return;
+            const oldMap = {};
+            prevLeaderboard.forEach(e => { oldMap[e.participant_id] = e; });
+            let html = '';
+            newLeaderboard.forEach((entry, index) => {
+                const oldEntry = oldMap[entry.participant_id];
+                let changeClass = '';
+                if (oldEntry) {
+                    const oldRank = oldEntry.rank;
+                    const newRank = index + 1;
+                    if (newRank < oldRank) changeClass = 'rank-change-up';
+                    else if (newRank > oldRank) changeClass = 'rank-change-down';
+                }
+                const rankClass = entry.rank <= 3 ? 'rank-' + entry.rank : 'rank-other';
+                html += '<div class="lb-entry ' + changeClass + '" data-participant-id="' + entry.participant_id + '">' +
+                    '<div class="lb-rank ' + rankClass + '">' + entry.rank + '</div>' +
+                    '<div class="lb-avatar">' + entry.name.charAt(0).toUpperCase() + '</div>' +
+                    '<div class="lb-info"><div class="lb-name">' + entry.name + '</div>' +
+                    '<div class="lb-meta">' + entry.correct_count + ' correct · ' + entry.total_answered + ' answered</div></div>' +
+                    '<div class="lb-score"><div class="lb-score-value">' + entry.score + '</div>' +
+                    '<div class="lb-score-label">points</div></div></div>';
+            });
+            container.innerHTML = html;
+            prevLeaderboard = newLeaderboard;
+        }
+
+        function updateStats(analytics) {
+            const totalEl = document.getElementById('statTotal');
+            const correctEl = document.getElementById('statCorrect');
+            const rateEl = document.getElementById('statRate');
+            const timeEl = document.getElementById('statTime');
+            if (totalEl) totalEl.textContent = analytics.total_responded || 0;
+            if (correctEl) correctEl.textContent = analytics.correct_count || 0;
+            if (rateEl) rateEl.textContent = (analytics.correct_rate || 0) + '%';
+            if (timeEl && analytics.avg_response_time_ms) timeEl.textContent = (analytics.avg_response_time_ms / 1000).toFixed(1) + 's';
+        }
+
+        function updateChart(analytics) {
+            if (!responseChart || !analytics.option_counts) return;
+            const correct = analytics.correct_option ?? -1;
+            const labels = analytics.options || [];
+            const colors = labels.map((_, i) => i === correct ? 'rgba(40,180,100,0.8)' : 'rgba(184,102,247,0.6)');
+            responseChart.data.datasets[0].data = analytics.option_counts;
+            responseChart.data.datasets[0].backgroundColor = colors;
+            responseChart.data.datasets[0].borderColor = colors.map(c => c.replace('0.6', '1').replace('0.8', '1'));
+            responseChart.update('active');
+        }
+
+        // === Always-listen channels ===
+        const pusher = new Pusher('{{ env("PUSHER_APP_KEY", "local") }}', {
+            cluster: '{{ env("PUSHER_APP_CLUSTER", "ap2") }}',
+            forceTLS: true,
+        });
+
+        const startedChannel = pusher.subscribe('quiz.started');
+        startedChannel.bind('quiz.session.started', (data) => {
+            showStartingOverlay(data);
+        });
+
+        // === Active-session channels ===
         @if($activeSession)
             const sessionId = '{{ $activeSession->id }}';
-            const pusher = new Pusher('{{ env("PUSHER_APP_KEY", "local") }}', {
-                cluster: '{{ env("PUSHER_APP_CLUSTER", "ap2") }}',
-                forceTLS: true,
-            });
             const channel = pusher.subscribe('quiz.' + sessionId);
             const adminChannel = pusher.subscribe('admin.quiz.' + sessionId);
 
             let responseChart = null;
             let prevLeaderboard = @json($leaderboard);
 
-            function initChart() {
-                const ctx = document.getElementById('responseChart');
-                if (!ctx) return;
-                const labels = @json($analytics['options'] ?? []);
-                const data = {{ Js::from($analytics['option_counts'] ?? [0, 0, 0, 0]) }};
-                const correct = @json($analytics['correct_option'] ?? -1);
-                const colors = labels.map((_, i) => i === correct ? 'rgba(40,180,100,0.8)' : 'rgba(184,102,247,0.6)');
-
-                if (responseChart) responseChart.destroy();
-                responseChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Responses',
-                            data: data,
-                            backgroundColor: colors,
-                            borderColor: colors.map(c => c.replace('0.8', '1').replace('0.6', '1')),
-                            borderWidth: 1,
-                            borderRadius: 8
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true, ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                            x: { ticks: { color: '#9ca3af' }, grid: { display: false } }
-                        },
-                        animation: { duration: 500 }
-                    }
-                });
-            }
-
-            function updateLeaderboard(newLeaderboard) {
-                const container = document.getElementById('leaderboardList');
-                if (!container) return;
-
-                const oldMap = {};
-                prevLeaderboard.forEach(e => { oldMap[e.participant_id] = e; });
-
-                let html = '';
-                newLeaderboard.forEach((entry, index) => {
-                    const oldEntry = oldMap[entry.participant_id];
-                    let changeClass = '';
-                    if (oldEntry) {
-                        const oldRank = oldEntry.rank;
-                        const newRank = index + 1;
-                        if (newRank < oldRank) changeClass = 'rank-change-up';
-                        else if (newRank > oldRank) changeClass = 'rank-change-down';
-                    }
-                    const rankClass = entry.rank <= 3 ? 'rank-' + entry.rank : 'rank-other';
-                    html += '<div class="lb-entry ' + changeClass + '" data-participant-id="' + entry.participant_id + '">' +
-                        '<div class="lb-rank ' + rankClass + '">' + entry.rank + '</div>' +
-                        '<div class="lb-avatar">' + entry.name.charAt(0).toUpperCase() + '</div>' +
-                        '<div class="lb-info">' +
-                        '<div class="lb-name">' + entry.name + '</div>' +
-                        '<div class="lb-meta">' + entry.correct_count + ' correct · ' + entry.total_answered + ' answered</div>' +
-                        '</div>' +
-                        '<div class="lb-score">' +
-                        '<div class="lb-score-value">' + entry.score + '</div>' +
-                        '<div class="lb-score-label">points</div>' +
-                        '</div>' +
-                        '</div>';
-                });
-                container.innerHTML = html;
-                prevLeaderboard = newLeaderboard;
-            }
-
-            function updateStats(analytics) {
-                const totalEl = document.getElementById('statTotal');
-                const correctEl = document.getElementById('statCorrect');
-                const rateEl = document.getElementById('statRate');
-                const timeEl = document.getElementById('statTime');
-
-                if (totalEl) totalEl.textContent = analytics.total_responded || 0;
-                if (correctEl) correctEl.textContent = analytics.correct_count || 0;
-                if (rateEl) rateEl.textContent = (analytics.correct_rate || 0) + '%';
-                if (timeEl && analytics.avg_response_time_ms) timeEl.textContent = (analytics.avg_response_time_ms / 1000).toFixed(1) + 's';
-            }
-
-            function updateChart(analytics) {
-                if (!responseChart || !analytics.option_counts) return;
-                const correct = analytics.correct_option ?? -1;
-                const labels = analytics.options || [];
-                const colors = labels.map((_, i) => i === correct ? 'rgba(40,180,100,0.8)' : 'rgba(184,102,247,0.6)');
-                responseChart.data.datasets[0].data = analytics.option_counts;
-                responseChart.data.datasets[0].backgroundColor = colors;
-                responseChart.data.datasets[0].borderColor = colors.map(c => c.replace('0.6', '1').replace('0.8', '1'));
-                responseChart.update('active');
-            }
-
-            adminChannel.bind('quiz.answer.received', (data) => {
-                if (data.leaderboard) updateLeaderboard(data.leaderboard);
-                if (data.option_counts) {
-                    updateStats(data);
-                    updateChart(data);
-                }
-            });
-
-            adminChannel.bind('quiz.question.analytics', (data) => {
-                if (data.option_counts) {
-                    updateStats(data);
-                    updateChart(data);
-                }
-            });
-
-            adminChannel.bind('quiz.leaderboard.update', (data) => {
-                if (data.leaderboard) updateLeaderboard(data.leaderboard);
-            });
-
             channel.bind('quiz.question.shown', () => {
+                hideStartingOverlay();
                 setTimeout(() => location.reload(), 2000);
             });
 
             channel.bind('quiz.ended', () => {
-                setTimeout(() => location.reload(), 2000);
+                hideStartingOverlay();
+                const o = document.createElement('div');
+                o.id = 'quizEndedOverlay';
+                o.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;animation:fadeIn 0.5s ease;';
+                o.innerHTML = '<div style="text-align:center;padding:40px;"><div style="font-size:64px;margin-bottom:20px;">🏆</div><h2 style="font-family:Sora,sans-serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:8px;">Quiz Ended</h2><p style="color:#9ca3af;font-size:16px;margin-bottom:30px;">Loading final leaderboard...</p><div style="width:48px;height:48px;border:4px solid #b866f7;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div></div>';
+                document.body.appendChild(o);
+                setTimeout(loadLeaderboardPage, 3000);
+            });
+
+            adminChannel.bind('quiz.answer.received', (data) => {
+                if (data.leaderboard) updateLeaderboard(data.leaderboard);
+                if (data.option_counts) { updateStats(data); updateChart(data); }
+            });
+
+            adminChannel.bind('quiz.question.analytics', (data) => {
+                if (data.option_counts) { updateStats(data); updateChart(data); }
+            });
+
+            adminChannel.bind('quiz.leaderboard.update', (data) => {
+                if (data.leaderboard) updateLeaderboard(data.leaderboard);
             });
 
             @if($showAnalytics && $analytics)

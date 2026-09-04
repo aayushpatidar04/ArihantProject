@@ -53,6 +53,8 @@ class AdminQuizController extends Controller
 
         $qrPath = $this->quiz->generateQrCode($type);
 
+        broadcast(new \App\Events\Quiz\QuizStarted($session, $qrPath))->toOthers();
+
         return response()->json([
             'success' => true,
             'session_id' => $session->id,
