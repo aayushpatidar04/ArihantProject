@@ -413,12 +413,12 @@
 
                         <label>Payment Mode</label>
                         <select name="payment_mode">
-                            <option value="Complimentary">Complimentary (Free)</option>
-                            <option value="Cash">Cash</option>
-                            <option value="UPI">UPI</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="Cheque">Cheque</option>
-                            <option value="Other">Other</option>
+                            <option style="color: #000;" value="Complimentary">Complimentary (Free)</option>
+                            <option style="color: #000;" value="Cash">Cash</option>
+                            <option style="color: #000;" value="UPI">UPI</option>
+                            <option style="color: #000;" value="Bank Transfer">Bank Transfer</option>
+                            <option style="color: #000;" value="Cheque">Cheque</option>
+                            <option style="color: #000;" value="Other">Other</option>
                         </select>
 
                         <label>Referral Code (12 chars, optional)</label>
