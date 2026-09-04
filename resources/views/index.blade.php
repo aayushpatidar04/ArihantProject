@@ -4760,6 +4760,17 @@
                 , knowMore: "/saurabh-sisodia"
             }
                 , {
+                name: "Shruti Jain"
+                , role: "AI • ALGO • FINTECH | CSO ArihantPlus"
+                , img: "assets/images/shruti-jain.jpeg"
+                , socials: [
+                    // { type: "linkedin", url: "https://www.linkedin.com/in/sourabhsiso/" },
+                    // { type: "x", url: "https://x.com/sourabhsiso19?lang=en" },
+                    // { type: "instagram", url: "https://www.instagram.com/tradewithsourabhsisodiya/?hl=en" }
+                ]
+                , knowMore: "/shruti-jain"
+            }
+                , {
                 name: "Santosh Pasi"
                 , role: "Option Trader"
                 , img: "assets/images/22.png"

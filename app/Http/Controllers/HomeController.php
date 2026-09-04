@@ -164,6 +164,10 @@ class HomeController extends Controller
     {
         return view('vishal-mehta');
     }
+    public function shruti_jain()
+    {
+        return view('shruti-jain');
+    }
     public function saurabh_sisodia()
     {
         return view('saurabh-sisodia');

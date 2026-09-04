@@ -275,6 +275,7 @@ Route::get('/vishal-mehta', [HomeController::class, 'vishal_mehta'])->name('vish
 Route::get('/saurabh-sisodia', [HomeController::class, 'saurabh_sisodia'])->name('saurabh-sisodia');
 Route::get('/santosh-pasi', [HomeController::class, 'santosh_pasi'])->name('santosh-pasi');
 // Route::get('/ankit-rai', [HomeController::class, 'ankit_rai'])->name('ankit-rai');
+Route::get('/shruti-jain', [HomeController::class, 'shruti_jain'])->name('shruti-jain');
 Route::get('/rajesh-shrivastav', [HomeController::class, 'rajesh_shrivastav'])->name('rajesh-shrivastav');
 Route::get('/rahul-saroge', [HomeController::class, 'rahul_saroge'])->name('rahul-saroge');
 Route::get('/nikhil-bhandari', [HomeController::class, 'nikhil_bhandari'])->name('nikhil-bhandari');
