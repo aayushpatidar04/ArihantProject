@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Thank You, Indore! | ARIHANT PLUS AI & ALGO CONCLAVE</title>
-
     <style>
         * {
             box-sizing: border-box;
@@ -22,17 +21,20 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background:
-                radial-gradient(circle at 50% 25%,
-                    rgba(31, 65, 120, 0.65),
-                    transparent 42%),
-                linear-gradient(180deg,
-                    #061a3a 0%,
-                    #071d40 45%,
-                    #06152f 100%);
-
             color: #ffffff;
             min-height: 100vh;
+
+            background:
+                radial-gradient(circle at 50% 15%,
+                    rgba(139, 47, 217, 0.20),
+                    transparent 35%),
+                radial-gradient(circle at 10% 80%,
+                    rgba(168, 85, 247, 0.08),
+                    transparent 30%),
+                linear-gradient(180deg,
+                    #08080d 0%,
+                    #0c0912 45%,
+                    #08080d 100%);
         }
 
         .page {
@@ -48,7 +50,9 @@
             text-align: center;
         }
 
-        /* HEADER */
+        /* =========================
+   HEADER
+========================= */
 
         .header {
             display: flex;
@@ -69,7 +73,7 @@
         }
 
         .brand-title .ai {
-            color: #00a9e8;
+            color: #a855f7;
         }
 
         .brand-title .algo {
@@ -81,13 +85,14 @@
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 1.5px;
+            color: #ffffff;
         }
 
         .brand-tagline {
             margin-top: 10px;
             font-size: 11px;
             letter-spacing: 4px;
-            color: #d9dce5;
+            color: #8f8f9b;
         }
 
         .header-right {
@@ -95,17 +100,20 @@
             font-size: 13px;
             line-height: 1.7;
             letter-spacing: 4px;
-            color: #d8dce7;
+            color: #8f8f9b;
         }
 
         .header-line {
             width: 45px;
             height: 2px;
-            background: #e7bd45;
+            background: #8b2fd9;
             margin-top: 12px;
+            box-shadow: 0 0 10px rgba(139, 47, 217, 0.8);
         }
 
-        /* MAIN HEADING */
+        /* =========================
+   MAIN HEADING
+========================= */
 
         .thank-you {
             font-size: clamp(48px, 8vw, 76px);
@@ -117,34 +125,49 @@
 
         .indore {
             display: block;
-            color: #f5bd3e;
             margin-top: 5px;
+
+            background: linear-gradient(90deg,
+                    #8b2fd9,
+                    #c084fc);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .heart {
-            color: #ef3340;
+            color: #a855f7;
+            -webkit-text-fill-color: #a855f7;
         }
 
         .response {
             font-size: clamp(20px, 3vw, 28px);
+            color: #d1d1d8;
             margin: 25px auto 30px;
             line-height: 1.4;
         }
 
-        /* HOUSE FULL */
+        /* =========================
+   HOUSE FULL
+========================= */
 
         .house-full {
             max-width: 760px;
             margin: 0 auto 40px;
             padding: 22px 30px;
-            border: 2px solid #e7bd45;
+
+            border: 1px solid rgba(168, 85, 247, 0.85);
             border-radius: 20px;
 
-            background: rgba(25, 25, 29, 0.75);
+            background:
+                linear-gradient(135deg,
+                    rgba(139, 47, 217, 0.10),
+                    rgba(20, 15, 27, 0.85));
 
             box-shadow:
-                0 0 15px rgba(231, 189, 69, 0.35),
-                inset 0 0 30px rgba(0, 0, 0, 0.25);
+                0 0 30px rgba(139, 47, 217, 0.15),
+                inset 0 0 30px rgba(139, 47, 217, 0.04);
 
             display: flex;
             align-items: center;
@@ -154,13 +177,13 @@
 
         .ticket-icon {
             font-size: 55px;
-            color: #f5bd3e;
+            filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6));
         }
 
         .house-divider {
-            width: 2px;
+            width: 1px;
             height: 65px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(168, 85, 247, 0.5);
         }
 
         .house-content {
@@ -171,39 +194,53 @@
             font-size: 20px;
             letter-spacing: 4px;
             font-weight: 600;
+            color: #d6d3dc;
         }
 
         .full-text {
-            color: #f5bd3e;
             font-size: clamp(40px, 7vw, 64px);
             line-height: 1;
             font-weight: 900;
             margin-top: 5px;
+
+            background: linear-gradient(90deg,
+                    #8b2fd9,
+                    #c084fc);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* DESCRIPTION */
+        /* =========================
+   DESCRIPTION
+========================= */
 
         .description {
             font-size: 25px;
             line-height: 1.5;
             margin: 0 auto 10px;
+            color: #e7e7ec;
         }
 
         .description .highlight {
-            color: #00a9e8;
+            color: #a855f7;
             font-weight: 700;
         }
 
         .description strong {
+            color: #ffffff;
             font-weight: 800;
         }
 
         .event-date {
             font-size: 22px;
             margin-top: 10px;
+            color: #b6b6c1;
         }
 
         .event-date strong {
+            color: #ffffff;
             font-weight: 800;
         }
 
@@ -211,25 +248,40 @@
             width: 75%;
             max-width: 700px;
             height: 1px;
-            background: rgba(255, 255, 255, 0.35);
+
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(139, 47, 217, 0.6),
+                    transparent);
+
             margin: 30px auto;
         }
 
-        /* DETAILS */
+        /* =========================
+   EVENT DETAILS
+========================= */
 
         .details {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            gap: 20px;
             max-width: 850px;
             margin: 0 auto 35px;
         }
 
         .detail {
-            border: 1px solid rgba(101, 143, 207, 0.7);
-            background: rgba(12, 39, 81, 0.75);
+            border: 1px solid rgba(139, 47, 217, 0.28);
+
+            background:
+                linear-gradient(145deg,
+                    rgba(139, 47, 217, 0.09),
+                    rgba(15, 13, 20, 0.9));
+
             border-radius: 14px;
             padding: 20px 15px;
+
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .detail-icon {
@@ -239,48 +291,58 @@
 
         .detail-label {
             font-size: 14px;
-            color: #e1e5ee;
+            color: #8f8f9b;
             margin-bottom: 5px;
         }
 
         .detail-value {
             font-size: 20px;
             font-weight: 700;
+            color: #ffffff;
         }
 
-        /* SEE YOU */
+        /* =========================
+   MESSAGE
+========================= */
 
         .see-you {
             font-size: 28px;
             font-weight: 800;
             margin-top: 20px;
+            color: #ffffff;
         }
 
         .future-text {
             font-size: 21px;
             line-height: 1.5;
             margin-top: 10px;
-            color: #e6e9f0;
+            color: #a7a7b3;
         }
 
         .remember {
-            color: #f5bd3e;
+            color: #a855f7;
             font-size: 28px;
             font-weight: 800;
             margin-top: 20px;
         }
 
-        /* WAITLIST / HOME */
+        /* =========================
+   ACTION CARD
+========================= */
 
         .action-card {
             margin: 55px auto 20px;
             max-width: 900px;
 
-            background: linear-gradient(135deg,
-                    #edf3ff,
-                    #d9e5fa);
+            background:
+                linear-gradient(135deg,
+                    rgba(139, 47, 217, 0.14),
+                    rgba(18, 14, 24, 0.95));
 
-            color: #09214a;
+            border: 1px solid rgba(139, 47, 217, 0.35);
+
+            color: #ffffff;
+
             border-radius: 20px;
             padding: 30px;
 
@@ -290,6 +352,10 @@
             gap: 30px;
 
             text-align: left;
+
+            box-shadow:
+                0 15px 50px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .action-content {
@@ -310,6 +376,8 @@
         .action-description {
             font-size: 18px;
             margin-top: 7px;
+            color: #a7a7b3;
+            line-height: 1.5;
         }
 
         .home-button {
@@ -318,9 +386,13 @@
             justify-content: center;
 
             min-width: 210px;
-            padding: 18px 28px;
+            padding: 17px 28px;
 
-            background: #0b367c;
+            background:
+                linear-gradient(135deg,
+                    #7c25c7,
+                    #a855f7);
+
             color: #ffffff;
 
             text-decoration: none;
@@ -329,37 +401,47 @@
             font-size: 17px;
             font-weight: 800;
 
+            box-shadow:
+                0 8px 25px rgba(139, 47, 217, 0.3);
+
             transition: 0.2s ease;
         }
 
         .home-button:hover {
-            background: #124b9d;
             transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px rgba(139, 47, 217, 0.45);
         }
 
         .closed-text {
             margin-top: 20px;
             font-size: 15px;
-            color: #d9deea;
+            color: #777782;
         }
 
-        /* FOOTER */
+        /* =========================
+   FOOTER
+========================= */
 
         .footer {
             margin-top: 50px;
             padding-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+            border-top: 1px solid rgba(139, 47, 217, 0.15);
 
             display: flex;
             justify-content: center;
             gap: 55px;
 
-            color: #dfe4ee;
+            color: #777782;
             font-size: 13px;
             letter-spacing: 2px;
         }
 
-        /* MOBILE */
+        /* =========================
+   MOBILE
+========================= */
 
         @media (max-width: 700px) {
 
@@ -394,7 +476,7 @@
 
             .house-divider {
                 width: 60px;
-                height: 2px;
+                height: 1px;
             }
 
             .official {
