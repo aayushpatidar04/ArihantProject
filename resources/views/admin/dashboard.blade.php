@@ -194,6 +194,8 @@
             <a href="{{ route('admin.influencers.index') }}">Influencer</a>
             @endpermission
 
+            <a href="{{ route('admin.quiz.index') }}">Quiz</a>
+
             @permission('admin-management', 'view')
             <a href="{{ route('admin.permissions.index') }}"
                 style="background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.3);color:#ffd700">Permissions</a>

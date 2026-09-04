@@ -4635,7 +4635,7 @@
         // ---------- Agenda (repeatable data-driven list) ----------
         var agenda = [{
             time: "10:30 AM – 10:45 AM"
-            , title: "WELCOME SESSION"
+            , title: "Welcome Session – Event Introduction"
             , body: "Event introduction and lamp lighting to open the day."
             , tag: "Ceremony"
         }
@@ -4682,40 +4682,46 @@
             , tag: "Break"
         }
             , {
-            time: "2:10 PM – 3:10 PM"
-            , title: "AI + ALGO TRADING ADVANCED"
+            time: "2:10 PM – 2:50 PM"
+            , title: "AI + Algo Trading Advanced — Santosh Pasi"
             , body: "Santosh Pasi goes deeper into advanced AI and algo trading techniques."
             , tag: "Session"
         }
             , {
-            time: "3:10 PM – 3:30 PM"
-            , title: "SOUND HEALING EXPERIENCE"
-            , body: "A wellness interlude to reset before the final stretch of sessions."
-            , tag: "Wellness"
+            time: "2:50 PM – 3:10 PM"
+            , title: "AI + Algo Trading Advanced — Ravi Paliwal (AI Expert )"
+            , body: "Ravi Paliwal goes deeper into advanced AI and algo trading techniques."
+            , tag: "Session"
         }
             , {
-            time: "3:30 PM – 3:45 PM"
+            time: "3:10 PM – 3:40 PM"
+            , title: "Algo + AI  Panel Discussion"
+            , body: "Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading."
+            , tag: "Panel"
+        }
+            , {
+            time: "3:40 PM – 3:55 PM"
+            , title: "Q&A"
+            , body: "Open floor questions following the AI + Algo Trading panel."
+            , tag: "Q&A"
+        }
+            , {
+            time: "3:55 PM – 4:10 PM"
             , title: "QUIZ / AUDIENCE ENGAGEMENT"
             , body: "Live quiz and audience engagement with prizes up for grabs."
             , tag: "Engagement"
         }
             , {
-            time: "3:45 PM – 4:15 PM"
-            , title: "ALGO + AI PANEL DISCUSSION"
-            , body: "Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading."
-            , tag: "Panel"
-        }
-            , {
-            time: "4:15 PM – 4:30 PM"
-            , title: "Q&A"
-            , body: "Open floor questions following the Algo + AI panel."
-            , tag: "Q&A"
-        }
-            , {
-            time: "4:30 PM – 5:00 PM"
-            , title: "HOW AI IS SHAPING THE FUTURE OF TRADING"
+            time: "4:10 PM – 4:40 PM"
+            , title: "Gurus of Trading"
             , body: "A conversation with Arpit Jain & Praneet Maheshwari, alongside Arihant clients, on how AI is changing the way they trade, analyse markets, and make decisions."
             , tag: "Panel"
+        }
+            , {
+            time: "4:40 PM – 5:00 PM"
+            , title: "Sound Healing Experience"
+            , body: "A wellness interlude to reset before the final stretch of sessions."
+            , tag: "Wellness"
         }
             , {
             time: "5:00 PM"

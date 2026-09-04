@@ -295,7 +295,7 @@ Route::get('/api/quiz/session/{id}/state', [App\Http\Controllers\QuizController:
 
 /* ---------- Admin Quiz Routes ---------- */
 Route::middleware(['admin'])->prefix('admin/quiz')->name('admin.quiz.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\AdminQuizController::class, 'index'])->name('index');
+    Route::get('/', [App\Http\Controllers\Admin\AdminQuizController::class, 'index'])->middleware('permission:quiz,view')->name('index');
     Route::post('/types', [App\Http\Controllers\Admin\AdminQuizController::class, 'createType'])->name('types');
     Route::put('/types/{type}', [App\Http\Controllers\Admin\AdminQuizController::class, 'updateType'])->name('types.update');
     Route::delete('/types/{type}', [App\Http\Controllers\Admin\AdminQuizController::class, 'deleteType'])->name('types.delete');
