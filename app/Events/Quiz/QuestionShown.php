@@ -25,7 +25,7 @@ class QuestionShown implements ShouldBroadcastNow
         $this->session = $session;
         $this->question = $question;
         $this->questionOrder = $question->order;
-        $this->totalQuestions = \App\Models\QuizQuestion::where('quiz_type', $session->quiz_type)->count();
+        $this->totalQuestions = QuizQuestion::where('quiz_type', $session->quiz_type)->count();
     }
 
     public function broadcastOn(): Channel

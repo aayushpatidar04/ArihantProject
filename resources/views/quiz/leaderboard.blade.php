@@ -701,29 +701,35 @@
             responseChart.update('active');
         }
 
-        // === Always-listen channels ===
+        // === Pusher ===
         const pusher = new Pusher('{{ env("PUSHER_APP_KEY", "local") }}', {
             cluster: '{{ env("PUSHER_APP_CLUSTER", "ap2") }}',
             forceTLS: true,
         });
 
-        const startedChannel = pusher.subscribe('quiz.started');
-        startedChannel.bind('quiz.session.started', (data) => {
-            showStartingOverlay(data);
-        });
+        let sessionId = null;
+        let channel = null;
+        let adminChannel = null;
+        let responseChart = null;
+        let prevLeaderboard = @json($leaderboard);
 
-        // === Active-session channels ===
-        @if($activeSession)
-            const sessionId = '{{ $activeSession->id }}';
-            const channel = pusher.subscribe('quiz.' + sessionId);
-            const adminChannel = pusher.subscribe('admin.quiz.' + sessionId);
+        function setupSessionChannels(sId) {
+            if (sessionId === sId) return;
+            sessionId = sId;
 
-            let responseChart = null;
-            let prevLeaderboard = @json($leaderboard);
+            channel = pusher.subscribe('quiz.' + sId);
+            adminChannel = pusher.subscribe('admin.quiz.' + sId);
 
-            channel.bind('quiz.question.shown', () => {
+            // Unbind any old handlers to avoid duplicates
+            channel.unbind('quiz.question.shown');
+            channel.unbind('quiz.ended');
+            adminChannel.unbind('quiz.answer.received');
+            adminChannel.unbind('quiz.question.analytics');
+            adminChannel.unbind('quiz.leaderboard.update');
+            channel.bind('quiz.question.shown', (data) => {
+                console.log('Question shown:', data.question_order, '/', data.total_questions);
                 hideStartingOverlay();
-                setTimeout(() => location.reload(), 2000);
+                setTimeout(() => location.reload(), 500);
             });
 
             channel.bind('quiz.ended', () => {
@@ -749,10 +755,7 @@
                 if (data.leaderboard) updateLeaderboard(data.leaderboard);
             });
 
-            @if($showAnalytics && $analytics)
-                setTimeout(initChart, 100);
-            @endif
-
+            // Start polling for live updates
             setInterval(async () => {
                 try {
                     const res = await fetch('/api/quiz/leaderboard-data?session=' + sessionId);
@@ -766,6 +769,20 @@
                     }
                 } catch (e) { console.error('Poll error', e); }
             }, 3000);
+        }
+
+        const startedChannel = pusher.subscribe('quiz.started');
+        startedChannel.bind('quiz.session.started', (data) => {
+            console.log('Quiz started:', data.quiz_name, 'PIN:', data.pin);
+            showStartingOverlay(data);
+            setupSessionChannels(data.session_id);
+        });
+
+        @if($activeSession)
+            setupSessionChannels('{{ $activeSession->id }}');
+            @if($showAnalytics && $analytics)
+                setTimeout(initChart, 100);
+            @endif
         @endif
     </script>
 </body>
