@@ -461,7 +461,7 @@
          * Pay Now
          */
         payBtn.onclick = async function () {
-            // window.location.href = "{{ route('registration.form') }}";
+            window.location.href = "{{ route('registration.form') }}";
             payBtn.disabled = true;
 
             payBtn.textContent =
