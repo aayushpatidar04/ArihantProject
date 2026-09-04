@@ -39,7 +39,7 @@ return new class extends Migration {
 
         Schema::create('quiz_participants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('session_id')->constrained('quiz_sessions')->onDelete('cascade');
+            $table->uuid('session_id');
             $table->string('name');
             $table->string('email');
             $table->string('mobile');
@@ -48,11 +48,13 @@ return new class extends Migration {
 
             $table->unique(['session_id', 'email']);
             $table->index('session_id');
+
+            $table->foreign('session_id')->references('id')->on('quiz_sessions')->onDelete('cascade');
         });
 
         Schema::create('quiz_answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('session_id')->constrained('quiz_sessions')->onDelete('cascade');
+            $table->uuid('session_id');
             $table->foreignId('participant_id')->constrained('quiz_participants')->onDelete('cascade');
             $table->foreignId('question_id')->constrained('quiz_questions')->onDelete('cascade');
             $table->tinyInteger('selected_option');
@@ -63,6 +65,8 @@ return new class extends Migration {
             $table->unique(['session_id', 'participant_id', 'question_id']);
             $table->index(['session_id', 'question_id']);
             $table->index(['session_id', 'participant_id']);
+
+            $table->foreign('session_id')->references('id')->on('quiz_sessions')->onDelete('cascade');
         });
     }
 
