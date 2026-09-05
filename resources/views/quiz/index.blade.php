@@ -166,7 +166,8 @@
         }
 
         .opt-btn.selected {
-            border-color: var(--purple-1);
+            /* border-color: var(--purple-1); */
+            border-color: greenyellow;
             background: rgba(184, 102, 247, 0.12)
         }
 

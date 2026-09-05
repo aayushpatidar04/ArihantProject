@@ -504,12 +504,12 @@
                                         <div class="lb-meta">{{ $entry['email'] }}</div>
                                         <div class="lb-meta">{{ $entry['correct_count'] }} correct · {{ $entry['total_answered'] }}
                                             answered</div>
-                                        <div class="lb-meta">{{ $entry['avg_response_time_ms'] ? number_format($entry['avg_response_time_ms'] / 1000, 1) . 's' : '-' }}</div>
-                                        
+                                            
                                     </div>
                                     <div class="lb-score">
                                         <div class="lb-score-value">{{ $entry['score'] }}</div>
                                         <div class="lb-score-label">points</div>
+                                        <div class="lb-meta">Avg. response time - {{ $entry['avg_response_time_ms'] ? number_format($entry['avg_response_time_ms'] / 1000, 1) . 's' : '-' }}</div>
                                     </div>
                                 </div>
                             @endforeach
