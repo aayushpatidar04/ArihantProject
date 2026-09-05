@@ -195,12 +195,14 @@ class QuizController extends Controller
         $questions = [];
         $leaderboard = [];
         $analytics = null;
+        $participantCount = 0;
         $showAnalytics = false;
         $isCompleted = false;
 
         if ($activeSession) {
             $quizType = QuizType::where('key', $activeSession->quiz_type)->first();
             $questions = QuizQuestion::where('quiz_type', $activeSession->quiz_type)->orderBy('order')->get();
+            $participantCount = QuizParticipant::where("session_id", $activeSession->id)->count();
 
             if ($activeSession->current_question_order >= 1) {
                 $prevOrder = $activeSession->current_question_order - 1;
@@ -218,9 +220,10 @@ class QuizController extends Controller
             $questions = QuizQuestion::where('quiz_type', $lastCompleted->quiz_type)->orderBy('order')->get();
             $service = new QuizService();
             $leaderboard = $service->getLeaderboard($lastCompleted, 20);
+            $participantCount = QuizParticipant::where("session_id", $lastCompleted->id)->count();
         }
 
-        return view('quiz.leaderboard', compact('activeSession', 'lastCompleted', 'quizType', 'questions', 'leaderboard', 'analytics', 'showAnalytics', 'isCompleted'));
+        return view('quiz.leaderboard', compact('activeSession', 'lastCompleted', 'quizType', 'questions', 'leaderboard', 'analytics', 'showAnalytics', 'isCompleted', 'participantCount'));
     }
 
     public function results(Request $request)
@@ -235,7 +238,7 @@ class QuizController extends Controller
         $session = QuizSession::where('id', $sessionId)->where('status', 'completed')->firstOrFail();
         $participant = QuizParticipant::where('id', $participantId)->where('session_id', $sessionId)->firstOrFail();
 
-        $results = (new \App\Services\QuizService())->getParticipantResults($session, $participant);
+        $results = (new QuizService())->getParticipantResults($session, $participant);
 
         return view('quiz.results', compact('results', 'session'));
     }

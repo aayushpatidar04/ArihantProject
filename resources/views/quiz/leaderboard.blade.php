@@ -504,12 +504,14 @@
                                         <div class="lb-meta">{{ $entry['email'] }}</div>
                                         <div class="lb-meta">{{ $entry['correct_count'] }} correct · {{ $entry['total_answered'] }}
                                             answered</div>
-                                            
+
                                     </div>
                                     <div class="lb-score">
                                         <div class="lb-score-value">{{ $entry['score'] }}</div>
                                         <div class="lb-score-label">points</div>
-                                        <div class="lb-meta">Avg. response time - {{ $entry['avg_response_time_ms'] ? number_format($entry['avg_response_time_ms'] / 1000, 1) . 's' : '-' }}</div>
+                                        <div class="lb-meta">Avg. response time -
+                                            {{ $entry['avg_response_time_ms'] ? number_format($entry['avg_response_time_ms'] / 1000, 1) . 's' : '-' }}
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -522,6 +524,10 @@
                     <div class="stat-card">
                         <div class="stat-value" id="statTotal">{{ $analytics['total_responded'] ?? 0 }}</div>
                         <div class="stat-label">Responses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="statParticipants">{{ $participantCount ?? 0 }}</div>
+                        <div class="stat-label">Participants</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="statCorrect">{{ $analytics['correct_count'] ?? 0 }}</div>
@@ -729,6 +735,7 @@
             adminChannel.unbind('quiz.answer.received');
             adminChannel.unbind('quiz.question.analytics');
             adminChannel.unbind('quiz.leaderboard.update');
+            adminChannel.unbind('quiz.participant.joined');
             channel.bind('quiz.question.shown', (data) => {
                 console.log('Question shown:', data.question_order, '/', data.total_questions);
                 hideStartingOverlay();
@@ -756,6 +763,16 @@
 
             adminChannel.bind('quiz.leaderboard.update', (data) => {
                 if (data.leaderboard) updateLeaderboard(data.leaderboard);
+            });
+
+            adminChannel.bind('quiz.participant.joined', (data) => {
+                const el = document.getElementById('statParticipants');
+                if (el && data.total_participants) {
+                    el.textContent = data.total_participants;
+                    el.style.animation = 'none';
+                    el.offsetHeight;
+                    el.style.animation = 'pulse 0.4s ease';
+                }
             });
 
             // Start polling for live updates
