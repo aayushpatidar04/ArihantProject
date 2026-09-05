@@ -531,7 +531,7 @@
                         <div class="stat-label">Responses</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="statParticipants">{{ $participantCount ?? 0 }}</div>
+                        <div class="stat-value">{{ $participantCount ?? 0 }}</div>
                         <div class="stat-label">Participants</div>
                     </div>
                     <div class="stat-card">
