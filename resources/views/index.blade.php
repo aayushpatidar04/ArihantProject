@@ -3780,6 +3780,7 @@
                         <a href="/register/success">My Ticket</a>
                     @endauth
                     <a href="#agenda">Agenda</a>
+                    <a href="/quiz">Quizzes</a>
                 </nav>
             </div>
             <div>
@@ -3804,6 +3805,7 @@
         <a href="#home">Home</a>
         <a href="#speaker">Speaker</a>
         <a href="#agenda">Agenda</a>
+        <a href="/quiz">Quizzes</a>
 
         @auth
             <a href="/register/success">My Ticket</a>
