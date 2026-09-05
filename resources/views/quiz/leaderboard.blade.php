@@ -501,8 +501,11 @@
                                     <div class="lb-avatar">{{ substr($entry['name'], 0, 1) }}</div>
                                     <div class="lb-info">
                                         <div class="lb-name">{{ $entry['name'] }}</div>
+                                        <div class="lb-meta">{{ $entry['email'] }}</div>
                                         <div class="lb-meta">{{ $entry['correct_count'] }} correct · {{ $entry['total_answered'] }}
                                             answered</div>
+                                        <div class="lb-meta">{{ $entry['avg_response_time_ms'] ? number_format($entry['avg_response_time_ms'] / 1000, 1) . 's' : '-' }}</div>
+                                        
                                     </div>
                                     <div class="lb-score">
                                         <div class="lb-score-value">{{ $entry['score'] }}</div>
@@ -742,10 +745,10 @@
                 setTimeout(loadLeaderboardPage, 3000);
             });
 
-            adminChannel.bind('quiz.answer.received', (data) => {
-                if (data.leaderboard) updateLeaderboard(data.leaderboard);
-                if (data.option_counts) { updateStats(data); updateChart(data); }
-            });
+            // adminChannel.bind('quiz.answer.received', (data) => {
+            //     if (data.leaderboard) updateLeaderboard(data.leaderboard);
+            //     if (data.option_counts) { updateStats(data); updateChart(data); }
+            // });
 
             adminChannel.bind('quiz.question.analytics', (data) => {
                 if (data.option_counts) { updateStats(data); updateChart(data); }
