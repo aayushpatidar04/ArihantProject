@@ -251,7 +251,7 @@
         }
 
         .opt-btn:hover {
-            border-color: rgba(184, 102, 247, 0.4);
+            border-color: var(--green);
             background: rgba(184, 102, 247, 0.06);
         }
 
