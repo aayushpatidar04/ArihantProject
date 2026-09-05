@@ -126,6 +126,7 @@
                 <nav class="links">
                     <a href="{{ route('index') }}#home">Home</a>
                     <a href="{{ route('index') }}#speaker">Speaker</a>
+ <a href="/quiz">Quizzes</a>
                     {{-- <a href="{{ route('index') }}#agenda">Agenda</a> --}}
                     @auth
                         @if(auth()->user()->eventRegistrations()->exists())
@@ -158,6 +159,7 @@
         </button>
         <a href="{{ route('index') }}#home">Home</a>
         <a href="{{ route('index') }}#speaker">Speaker</a>
+ <a href="/quiz">Quizzes</a>
         {{-- <a href="{{ route('index') }}#agenda">Agenda</a> --}}
         @auth
             @if(auth()->user()->eventRegistrations()->exists())

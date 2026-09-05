@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArihantPLUS Quiz</title>
+    <title>ArihantPLUS Quizzes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -35,6 +35,96 @@
             min-height: 100vh;
         }
 
+        /* ---- LISTING PAGE ---- */
+        .listing-page {
+            min-height: 100vh;
+            padding: 60px 24px 80px;
+        }
+
+        .listing-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .listing-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .listing-header p {
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .quizzes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .quiz-card {
+            background: linear-gradient(165deg, var(--card) 0%, var(--surface) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 36px 28px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quiz-card:hover {
+            border-color: rgba(184, 102, 247, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(172, 89, 235, 0.15);
+        }
+
+        .quiz-card .icon {
+            font-size: 48px;
+            margin-bottom: 4px;
+        }
+
+        .quiz-card h2 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .quiz-card p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .quiz-card .btn {
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(184, 102, 247, 0.15);
+            color: var(--purple-1);
+            border-radius: 999px;
+            padding: 4px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-inactive {
+            background: rgba(156, 163, 175, 0.1);
+            color: var(--muted);
+        }
+
+        /* ---- JOIN PAGES (PIN / Details / Lobby / Play / Results) ---- */
         .page {
             display: none;
             min-height: 100vh;
@@ -60,13 +150,13 @@
         .card h1 {
             font-size: 28px;
             font-weight: 700;
-            margin-bottom: 8px
+            margin-bottom: 8px;
         }
 
         .card p {
             color: var(--muted);
             font-size: 14px;
-            margin-bottom: 24px
+            margin-bottom: 24px;
         }
 
         .input {
@@ -99,23 +189,24 @@
             border: none;
             cursor: pointer;
             font-family: 'Sora', sans-serif;
+            text-decoration: none;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #d43fe0, #7a1fc9);
             color: #fff;
-            width: 100%
+            width: 100%;
         }
 
         .btn-ghost {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            color: var(--muted)
+            color: var(--muted);
         }
 
         .btn:disabled {
             opacity: 0.5;
-            cursor: not-allowed
+            cursor: not-allowed;
         }
 
         .error-msg {
@@ -133,9 +224,8 @@
             font-size: 20px;
             font-weight: 700;
             color: var(--purple-1);
-            margin-bottom: 8px
+            margin-bottom: 8px;
         }
-
 
         .options-grid {
             display: grid;
@@ -162,18 +252,17 @@
 
         .opt-btn:hover {
             border-color: rgba(184, 102, 247, 0.4);
-            background: rgba(184, 102, 247, 0.06)
+            background: rgba(184, 102, 247, 0.06);
         }
 
         .opt-btn.selected {
-            /* border-color: var(--purple-1); */
             border-color: greenyellow;
-            background: rgba(184, 102, 247, 0.12)
+            background: rgba(184, 102, 247, 0.12);
         }
 
         .opt-btn:disabled {
             opacity: 0.6;
-            cursor: not-allowed
+            cursor: not-allowed;
         }
 
         .opt-letter {
@@ -186,7 +275,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 14px;
-            flex-shrink: 0
+            flex-shrink: 0;
         }
 
         .lobby-dots {
@@ -205,11 +294,11 @@
         }
 
         .lobby-dots span:nth-child(2) {
-            animation-delay: 0.2s
+            animation-delay: 0.2s;
         }
 
         .lobby-dots span:nth-child(3) {
-            animation-delay: 0.4s
+            animation-delay: 0.4s;
         }
 
         @keyframes bounce {
@@ -265,104 +354,148 @@
 </head>
 
 <body>
+    @php
+        $mode = $mode ?? 'join';
+        $quizTypeKey = $quizType ?? '';
+        $currentSession = $session ?? null;
+    @endphp
 
-    <!-- Page 1: PIN Entry -->
-    <div class="page active" id="page-entry">
-        <div class="card">
-            @if(isset($session) && $session)
-                <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}
-                </div>
-                <h1>Enter PIN</h1>
-                <p>Enter the PIN shared by the host to join the quiz.</p>
-                <div class="error-msg" id="pinError"></div>
-                <input type="text" class="input" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6"
-                    inputmode="numeric" autocomplete="off">
-                <button class="btn btn-primary" onclick="validatePin()">Join Quiz</button>
-            @else
-                <h1>Quiz Not Active</h1>
-                <p>There is no active quiz session for
-                    <strong>{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}</strong> at
-                    the moment. Please wait for
-                    the host to start the quiz.
-                </p>
-            @endif
-        </div>
-    </div>
-
-    <!-- Page 2: Detail Entry -->
-    <div class="page" id="page-details">
-        <div class="card">
-            <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}
+    <!-- ===================== LISTING PAGE ===================== -->
+    @if($mode === 'listing')
+        <div class="listing-page">
+            <div class="listing-header">
+                <h1>Quizzes</h1>
+                <p>Choose a quiz and join the fun. Enter the PIN shared by your host to participate.</p>
             </div>
-            <h1>Join Quiz</h1>
-            <p>Enter your details to participate.</p>
-            <div class="error-msg" id="detailError"></div>
-            <input type="text" class="input" id="nameInput" placeholder="Your Name" required>
-            <input type="email" class="input" id="emailInput" placeholder="Email Address" required>
-            <input type="tel" class="input" id="mobileInput" placeholder="Mobile Number" required>
-            <button class="btn btn-primary" onclick="joinQuiz()">Join Quiz</button>
-        </div>
-    </div>
-
-    <!-- Page 3: Lobby -->
-    <div class="page" id="page-lobby">
-        <div class="card">
-            <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizType)->value('name') ?? 'Quiz' }}
+            <div class="quizzes-grid">
+                @forelse($allTypes ?? [] as $type)
+                    @php
+                        $hasActive = \App\Models\QuizSession::where('quiz_type', $type->key)
+                            ->whereIn('status', ['waiting', 'active', 'paused'])
+                            ->exists();
+                     @endphp
+                    <div class="quiz-card"
+                        onclick="@if($type->is_active) window.location.href='/quiz?type={{ $type->key }}' @endif">
+                        <div class="icon">🧠</div>
+                        <span class="badge {{ $type->is_active ? '' : 'badge-inactive' }}">
+                            {{ $type->is_active ? 'Available' : 'Coming Soon' }}
+                        </span>
+                        <h2>{{ $type->name }}</h2>
+                        <p>{{ $type->description ?? 'Test your knowledge and compete with others!' }}</p>
+                        @if($type->is_active)
+                            <a href="/quiz?type={{ $type->key }}" class="btn btn-primary">Join Quiz</a>
+                        @else
+                            <button class="btn btn-primary" disabled>Coming Soon</button>
+                        @endif
+                    </div>
+                @empty
+                    <div class="card" style="grid-column: 1 / -1; max-width: 400px; margin: 0 auto;">
+                        <h1>No Quizzes Yet</h1>
+                        <p>Quizzes will be available soon. Stay tuned!</p>
+                    </div>
+                @endforelse
             </div>
-            <h1>You're In!</h1>
-            <p>Waiting for the quiz to start...</p>
-            <div class="lobby-dots"><span></span><span></span><span></span></div>
         </div>
-    </div>
+    @else
+        <!-- ===================== JOIN FLOW ===================== -->
 
-    <!-- Page 4: Quiz Play -->
-    <div class="page" id="page-play">
-        <div style="max-width:700px;width:100%;margin:0 auto;padding:20px 0">
-            <div class="quiz-title" id="qOrder" style="text-align:center;margin-bottom:16px"></div>
-            <div id="qText" style="font-size:22px;font-weight:700;margin-bottom:20px;line-height:1.4;text-align:center">
-            </div>
-            <div class="options-grid" id="optionsGrid"></div>
-            <div id="playStatus"
-                style="text-align:center;color:var(--muted);font-size:14px;margin-top:16px;display:none"></div>
-        </div>
-    </div>
-
-    <!-- Page 5: Results -->
-    <div class="page" id="page-results">
-        <div class="card">
-            @if(isset($results))
-                <div class="result-rank">#{{ $results['rank'] ?? '-' }}</div>
-                <div class="result-score">{{ $results['score'] }}</div>
-                <div class="result-label">out of {{ $results['correct_count'] * 10 }} points ·
-                    {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct
-                </div>
-                @if($results['avg_response_time_ms'])
-                    <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Avg response time:
-                        {{ number_format($results['avg_response_time_ms'] / 1000, 1) }}s
-                    </p>
+        <!-- Page 1: PIN Entry -->
+        <div class="page active" id="page-entry">
+            <div class="card">
+                @if(isset($currentSession) && $currentSession)
+                    <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizTypeKey)->value('name') ?? 'Quiz' }}
+                    </div>
+                    <h1>Enter PIN</h1>
+                    <p>Enter the PIN shared by the host to join the quiz.</p>
+                    <div class="error-msg" id="pinError"></div>
+                    <input type="text" class="input" id="pinInput" placeholder="Enter 6-digit PIN" maxlength="6"
+                        inputmode="numeric" autocomplete="off">
+                    <button class="btn btn-primary" onclick="validatePin()">Join Quiz</button>
+                @else
+                    <div style="font-size:48px;margin-bottom:16px">🧠</div>
+                    <h1>{{ \App\Models\QuizType::where('key', $quizTypeKey)->value('name') ?? 'Quiz' }}</h1>
+                    <p>There is no active quiz session at the moment. Please wait for the host to start the quiz.</p>
+                    <a href="/quiz" class="btn btn-ghost" style="margin-top:8px">Back to All Quizzes</a>
                 @endif
-                <div style="text-align:left;margin-bottom:24px">
-                    @foreach($results['breakdown'] as $b)
-                        <div class="breakdown-item">
-                            <span class="break-icon">{{ $b['is_correct'] ? '✅' : '❌' }}</span>
-                            <span
-                                style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $b['question_text'] }}</span>
-                            <span
-                                style="font-size:11px;color:var(--muted)">{{ $b['response_time_ms'] ? number_format($b['response_time_ms'] / 1000, 1) . 's' : '-' }}</span>
-                        </div>
-                    @endforeach
-                </div>
-                <a href="/quiz?type={{ $session->quiz_type ?? '' }}" class="btn btn-ghost">Back to Quiz</a>
-            @else
-                <h1>Results Not Available</h1>
-                <p>Quiz results will appear here after the quiz ends.</p>
-            @endif
+            </div>
         </div>
-    </div>
+
+        <!-- Page 2: Detail Entry -->
+        <div class="page" id="page-details">
+            <div class="card">
+                <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizTypeKey)->value('name') ?? 'Quiz' }}
+                </div>
+                <h1>Join Quiz</h1>
+                <p>Enter your details to participate.</p>
+                <div class="error-msg" id="detailError"></div>
+                <input type="text" class="input" id="nameInput" placeholder="Your Name" required>
+                <input type="email" class="input" id="emailInput" placeholder="Email Address" required>
+                <input type="tel" class="input" id="mobileInput" placeholder="Mobile Number" required>
+                <button class="btn btn-primary" onclick="joinQuiz()">Join Quiz</button>
+            </div>
+        </div>
+
+        <!-- Page 3: Lobby -->
+        <div class="page" id="page-lobby">
+            <div class="card">
+                <div class="quiz-title">{{ \App\Models\QuizType::where('key', $quizTypeKey)->value('name') ?? 'Quiz' }}
+                </div>
+                <h1>You're In!</h1>
+                <p>Waiting for the quiz to start...</p>
+                <div class="lobby-dots"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+
+        <!-- Page 4: Quiz Play -->
+        <div class="page" id="page-play">
+            <div style="max-width:700px;width:100%;margin:0 auto;padding:20px 0">
+                <div class="quiz-title" id="qOrder" style="text-align:center;margin-bottom:16px"></div>
+                <div id="qText" style="font-size:22px;font-weight:700;margin-bottom:20px;line-height:1.4;text-align:center">
+                </div>
+                <div class="options-grid" id="optionsGrid"></div>
+                <div id="playStatus"
+                    style="text-align:center;color:var(--muted);font-size:14px;margin-top:16px;display:none"></div>
+            </div>
+        </div>
+
+        <!-- Page 5: Results -->
+        <div class="page" id="page-results">
+            <div class="card">
+                @if(isset($results))
+                    <div class="result-rank">#{{ $results['rank'] ?? '-' }}</div>
+                    <div class="result-score">{{ $results['score'] }}</div>
+                    <div class="result-label">out of {{ $results['correct_count'] * 10 }} points ·
+                        {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct
+                    </div>
+                    @if($results['avg_response_time_ms'])
+                        <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Avg response time:
+                            {{ number_format($results['avg_response_time_ms'] / 1000, 1) }}s
+                        </p>
+                    @endif
+                    <div style="text-align:left;margin-bottom:24px">
+                        @foreach($results['breakdown'] as $b)
+                            <div class="breakdown-item">
+                                <span class="break-icon">{{ $b['is_correct'] ? '✅' : '❌' }}</span>
+                                <span
+                                    style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $b['question_text'] }}</span>
+                                <span
+                                    style="font-size:11px;color:var(--muted)">{{ $b['response_time_ms'] ? number_format($b['response_time_ms'] / 1000, 1) . 's' : '-' }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                    <a href="/quiz" class="btn btn-ghost">All Quizzes</a>
+                @else
+                    <h1>Results Not Available</h1>
+                    <p>Quiz results will appear here after the quiz ends.</p>
+                    <a href="/quiz" class="btn btn-ghost" style="margin-top:16px">All Quizzes</a>
+                @endif
+            </div>
+        </div>
+    @endif
 
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
-        let sessionId = null, quizType = '{{ $quizType ?? "" }}', participantId = null, currentQuestion = null;
+        let sessionId = null, quizType = '{{ $quizTypeKey }}', participantId = null, currentQuestion = null;
 
         function showPage(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
@@ -400,7 +533,6 @@
         function initWebSocket() {
             const pusher = new Pusher('{{ env("PUSHER_APP_KEY", "local") }}', {
                 cluster: '{{ env("PUSHER_APP_CLUSTER", "ap2") }}', forceTLS: true,
-                // Using Pusher cloud (no custom wsHost)
             });
             const channel = pusher.subscribe('quiz.' + sessionId);
             channel.bind('quiz.question.shown', (data) => { currentQuestion = data; renderQuestion(data); });
@@ -433,7 +565,6 @@
                 grid.appendChild(btn);
             });
             document.getElementById('playStatus').style.display = 'none';
-
         }
 
         async function submitAnswer(optionIndex) {

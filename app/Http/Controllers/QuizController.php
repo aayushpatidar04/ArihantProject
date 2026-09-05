@@ -16,20 +16,31 @@ class QuizController extends Controller
     public function index(Request $request)
     {
         $quizType = $request->query('type');
-        $quizTypes = \App\Models\QuizType::orderBy('sort_order')->pluck('name', 'key')->toArray();
+        $allTypes = \App\Models\QuizType::where('is_active', true)->orderBy('sort_order')->get();
+        $quizTypes = $allTypes->pluck('name', 'key')->toArray();
 
-        if (!$quizType || !isset($quizTypes[$quizType])) {
-            $activeSession = QuizSession::whereIn('status', ['waiting', 'active', 'paused'])->first();
-            return view('quiz.index', ['quizTypes' => $quizTypes, 'quizType' => $quizType, 'session' => $activeSession]);
+        // No type param => show quiz listing page
+        if (!$quizType) {
+            return view('quiz.index', [
+                'quizTypes' => $quizTypes,
+                'allTypes' => $allTypes,
+                'quizType' => null,
+                'session' => null,
+                'mode' => 'listing',
+            ]);
+        }
+
+        // Invalid type => redirect to listing
+        if (!isset($quizTypes[$quizType])) {
+            return redirect('/quiz');
         }
 
         $session = QuizSession::where('quiz_type', $quizType)
             ->whereIn('status', ['waiting', 'active', 'paused'])
             ->first();
 
-        return view('quiz.index', ['quizTypes' => $quizTypes, 'quizType' => $quizType, 'session' => $session]);
+        return view('quiz.index', ['quizTypes' => $quizTypes, 'quizType' => $quizType, 'session' => $session, 'mode' => 'join']);
     }
-
     public function validatePin(Request $request)
     {
         $request->validate(['quiz_type' => 'required|string', 'pin' => 'required|string|size:6']);
@@ -112,11 +123,11 @@ class QuizController extends Controller
             ->where('question_id', $question->id)
             ->first();
         $startedAt = $session->question_started_at;
-        
+
         $responseMs = $startedAt
             ? max(0, now()->timestamp * 1000 - $startedAt->timestamp * 1000)
             : 0;
-        
+
         if ($existing) {
             $existing->update([
                 'selected_option' => (int) $request->selected_option,
@@ -177,42 +188,42 @@ class QuizController extends Controller
     }
 
     public function leaderboard(Request $request)
- {
- $activeSession = QuizSession::whereIn('status', ['waiting', 'active', 'paused'])->orderByDesc('started_at')->first();
- $lastCompleted = QuizSession::where('status', 'completed')->orderByDesc('ended_at')->first();
- $quizType = null;
- $questions = [];
- $leaderboard = [];
- $analytics = null;
- $showAnalytics = false;
- $isCompleted = false;
+    {
+        $activeSession = QuizSession::whereIn('status', ['waiting', 'active', 'paused'])->orderByDesc('started_at')->first();
+        $lastCompleted = QuizSession::where('status', 'completed')->orderByDesc('ended_at')->first();
+        $quizType = null;
+        $questions = [];
+        $leaderboard = [];
+        $analytics = null;
+        $showAnalytics = false;
+        $isCompleted = false;
 
- if ($activeSession) {
- $quizType = QuizType::where('key', $activeSession->quiz_type)->first();
- $questions = QuizQuestion::where('quiz_type', $activeSession->quiz_type)->orderBy('order')->get();
+        if ($activeSession) {
+            $quizType = QuizType::where('key', $activeSession->quiz_type)->first();
+            $questions = QuizQuestion::where('quiz_type', $activeSession->quiz_type)->orderBy('order')->get();
 
- if ($activeSession->current_question_order >= 1) {
- $prevOrder = $activeSession->current_question_order - 1;
- $prevQuestion = $questions->firstWhere('order', $prevOrder);
- if ($prevQuestion) {
- $showAnalytics = true;
- $service = new QuizService();
- $analytics = $service->getQuestionAnalytics($activeSession, $prevQuestion);
- $leaderboard = $service->getLeaderboard($activeSession, 20);
- }
- }
- } elseif ($lastCompleted) {
- $isCompleted = true;
- $quizType = QuizType::where('key', $lastCompleted->quiz_type)->first();
- $questions = QuizQuestion::where('quiz_type', $lastCompleted->quiz_type)->orderBy('order')->get();
- $service = new QuizService();
- $leaderboard = $service->getLeaderboard($lastCompleted, 20);
- }
+            if ($activeSession->current_question_order >= 1) {
+                $prevOrder = $activeSession->current_question_order - 1;
+                $prevQuestion = $questions->firstWhere('order', $prevOrder);
+                if ($prevQuestion) {
+                    $showAnalytics = true;
+                    $service = new QuizService();
+                    $analytics = $service->getQuestionAnalytics($activeSession, $prevQuestion);
+                    $leaderboard = $service->getLeaderboard($activeSession, 20);
+                }
+            }
+        } elseif ($lastCompleted) {
+            $isCompleted = true;
+            $quizType = QuizType::where('key', $lastCompleted->quiz_type)->first();
+            $questions = QuizQuestion::where('quiz_type', $lastCompleted->quiz_type)->orderBy('order')->get();
+            $service = new QuizService();
+            $leaderboard = $service->getLeaderboard($lastCompleted, 20);
+        }
 
- return view('quiz.leaderboard', compact('activeSession', 'lastCompleted', 'quizType', 'questions', 'leaderboard', 'analytics', 'showAnalytics', 'isCompleted'));
- }
+        return view('quiz.leaderboard', compact('activeSession', 'lastCompleted', 'quizType', 'questions', 'leaderboard', 'analytics', 'showAnalytics', 'isCompleted'));
+    }
 
- public function results(Request $request)
+    public function results(Request $request)
     {
         $sessionId = $request->query('session');
         $participantId = Session::get('quiz_participant_id');
