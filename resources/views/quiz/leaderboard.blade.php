@@ -487,6 +487,11 @@
                 </div>
             </div>
 
+            <div class="stat-card">
+                <div class="stat-value" id="statParticipants">{{ $participantCount ?? 0 }}</div>
+                <div class="stat-label">Participants</div>
+            </div>
+
             @if($isCompleted)
                 <!-- Completed: Overall Leaderboard Only -->
                 <div class="dashboard-grid fade-in">
