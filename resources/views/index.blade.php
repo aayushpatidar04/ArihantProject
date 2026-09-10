@@ -3986,9 +3986,9 @@
         {{-- <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming
                 response indore.</a></p> --}}
 
-        {{-- <div class="hero-visual">
+        <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
-            <div class="info-card">
+            {{-- <div class="info-card">
                 <div class="info-fields">
                     <div class="info-field">
                         <span class="ic">
@@ -4017,12 +4017,12 @@
                         <div>Venue<br><strong id="venueText">Marriott Hotel, Indore</strong></div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="hero-broadcast-partner">
                 <span class="hero-broadcast-label">Broadcast Partner</span>
                 <img src="assets/images/media-partner-etnow.jpeg" alt="ET Now Swadesh">
             </div>
-        </div> --}}
+        </div>
     </section>
 
     {{-- <section class="pricing-sec" id="pricing">
