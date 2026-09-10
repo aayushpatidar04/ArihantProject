@@ -23,7 +23,8 @@
     <title>ArihantPLUS — Central India's Largest AI &amp; Algo Conclave</title>
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <meta property="og:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
-    <meta property="og:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta property="og:description"
+        content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
     <meta property="og:image" content="https://event.arihantplus.com/assets/images/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -31,7 +32,8 @@
     <meta property="og:url" content="https://event.arihantplus.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ArihantPLUS — Central India's Largest AI &amp; Algo Conclave">
-    <meta name="twitter:description" content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
+    <meta name="twitter:description"
+        content="Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.">
     <meta name="twitter:image" content="https://event.arihantplus.com/assets/images/og-image.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
@@ -340,10 +342,10 @@
             padding: 64px 24px 0;
             text-align: center;
             background:
-              radial-gradient(ellipse 620px 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
-              linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
-              url('assets/images/skyline.png') center bottom / cover no-repeat,
-              linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
+                radial-gradient(ellipse 620px 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
+                linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
+                url('assets/images/skyline.png') center bottom / cover no-repeat,
+                linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
             position: relative;
             overflow: hidden;
         }
@@ -351,10 +353,10 @@
         @media(max-width:700px) {
             .hero {
                 background:
-                  radial-gradient(ellipse 92% 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
-                  linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
-                  url('assets/images/skyline.png') center bottom / cover no-repeat,
-                  linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
+                    radial-gradient(ellipse 92% 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
+                    linear-gradient(180deg, rgba(6, 2, 8, 0.4) 0%, rgba(6, 2, 8, 0.2) 40%, rgba(6, 2, 8, 0.08) 68%, rgba(6, 2, 8, 0.4) 100%),
+                    url('assets/images/skyline.png') center bottom / cover no-repeat,
+                    linear-gradient(180deg, #060208 0%, #0a0410 55%, #12081d 100%);
             }
         }
 
@@ -458,7 +460,7 @@
             }
         }
 
-        .hero>*:not(.hero-beam):not(.hero-sparkles):not(.hero-video) {
+        .hero>*:not(.hero-beam):not(.hero-sparkles):not(.hero-video):not(.diagonal-ticker) {
             position: relative;
             z-index: 2;
         }
@@ -561,7 +563,7 @@
             letter-spacing: -.01em;
         }
 
-                .hero p.sub {
+        .hero p.sub {
             max-width: 680px;
             margin: 22px auto 0;
             color: #D5D5D5;
@@ -570,7 +572,7 @@
             text-transform: capitalize;
         }
 
-       .hero-tagline {
+        .hero-tagline {
             font-size: clamp(36px, 5.2vw, 52px);
             font-weight: 700;
             color: #F5CDFF;
@@ -611,6 +613,7 @@
                 padding: 6px 14px;
             }
         }
+
         .hero-pill-img {
             height: 29px;
             width: auto;
@@ -3758,6 +3761,109 @@
             }
         }
     </style>
+    <style>
+        /* ---------- DIAGONAL RIBBON TICKER ---------- */
+        .diagonal-ticker {
+            position: relative;
+            left: 50%;
+            width: 145%;
+            transform: translateX(-50%) rotate(-5deg);
+            transform-origin: center;
+            margin: 30px 0 -6px;
+            background: #f5e400;
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .diagonal-ticker-track {
+            display: flex;
+            width: max-content;
+            animation: diagonalTickerScroll 16s linear infinite !important;
+            animation-duration: 16s !important;
+            animation-iteration-count: infinite !important;
+            will-change: transform;
+        }
+
+        .diagonal-ticker-group {
+            display: flex;
+            flex-shrink: 0;
+        }
+
+        .diagonal-ticker-item {
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+            color: #1a1300;
+            padding: 9px 24px;
+        }
+
+        .diagonal-ticker-item::after {
+            content: "•";
+            margin-left: 24px;
+            color: #1a1300;
+            opacity: .55;
+        }
+
+        @keyframes diagonalTickerScroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Tablet */
+        @media(max-width:900px) {
+            .diagonal-ticker {
+                margin: 24px 0 -4px;
+                transform: translateX(-50%) rotate(-6deg);
+            }
+
+            .diagonal-ticker-item {
+                font-size: 13px;
+                padding: 8px 18px;
+            }
+        }
+
+        /* Mobile */
+        @media(max-width:700px) {
+            .diagonal-ticker {
+                width: 170%;
+                margin: 18px 0 -2px;
+                transform: translateX(-50%) rotate(-8deg);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+            }
+
+            .diagonal-ticker-track {
+                animation-duration: 12s;
+            }
+
+            .diagonal-ticker-item {
+                font-size: 11px;
+                font-weight: 700;
+                padding: 7px 14px;
+            }
+
+            .diagonal-ticker-item::after {
+                margin-left: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .diagonal-ticker-track {
+                animation: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -3847,9 +3953,10 @@
                 <div class="lbl">Minutes</div>
             </div>
         </div>
-                <p class="hero-tagline">Central India's Largest</p>
+        <p class="hero-tagline">Central India's Largest</p>
         <h1>AI &amp; Algo Trading Conclave</h1>
-        <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the markets, manage risk and build smarter strategies.</p>
+        <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the
+            markets, manage risk and build smarter strategies.</p>
 
         <div class="hero-pills">
             <img src="assets/images/pill-2.png" alt="Learn" class="hero-pill-img">
@@ -3859,7 +3966,25 @@
             <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
         </div>
 
-        {{-- <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming response indore.</a></p> --}}
+        <div class="diagonal-ticker" aria-hidden="true">
+            <div class="diagonal-ticker-track">
+                <div class="diagonal-ticker-group">
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                </div>
+                <div class="diagonal-ticker-group">
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
+                </div>
+            </div>
+        </div>
+
+        {{-- <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming
+                response indore.</a></p> --}}
 
         <div class="hero-visual">
             <img src="assets/images/skyline.png" alt="City skyline">
@@ -4135,7 +4260,7 @@
         <div class="value-inner wrap">
             <div class="value-left value-left-card">
                 <h2>One Day.<br>Massive Value.</h2>
-                
+
                 <ul class="value-checklist">
                     <li><span class="check">✓</span> Live AI + Algo Demos</li>
                     <li><span class="check">✓</span> AI + Algo Cheat Sheet</li>
@@ -4171,7 +4296,8 @@
                             <path d="M7 17L17 7M7 7h10v10" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <h3>Regular Entry</h3> <br> <h3>For Non-Arihant users</h3>
+                    <h3>Regular Entry</h3> <br>
+                    <h3>For Non-Arihant users</h3>
                     <div class="value-price-row">
                         <span class="price-old">₹999</span>
                         <span class="price-new">₹599</span>
@@ -4787,15 +4913,15 @@
                 ]
                 , knowMore: "/santosh-pasi"
             }
-            //     , {
-            //     name: "Ankit Rai"
-            //     , role: "Derivatives Trader & Strategy Consultant"
-            //     , img: "assets/images/24.png"
-            //     , socials: [
-            //         { type: "x", url: "https://x.com/AnkitRai259" }
-            //     ]
-            //     , knowMore: "/ankit-rai"
-            // }
+                //     , {
+                //     name: "Ankit Rai"
+                //     , role: "Derivatives Trader & Strategy Consultant"
+                //     , img: "assets/images/24.png"
+                //     , socials: [
+                //         { type: "x", url: "https://x.com/AnkitRai259" }
+                //     ]
+                //     , knowMore: "/ankit-rai"
+                // }
                 , {
                 name: "Rajesh Srivastav"
                 , role: "Founder, QuantLab Technologies | Professional Derivatives Trader"
@@ -5080,6 +5206,31 @@
 
             // Data-driven gallery — swap the img paths for real event photos later.
             var galleryItems = [{
+                img: "assets/images/gallery/18.jpeg"
+                , name: "AI & Algo Panel Discussion"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/19.jpeg"
+                , name: "Meet the ArihantPlus Robot"
+                , label: "Experience"
+            }
+                , {
+                img: "assets/images/gallery/20.jpeg"
+                , name: "Together on the Conclave Stage"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/21.jpeg"
+                , name: "Bringing Market Minds Together"
+                , label: "Conclave"
+            }
+                , {
+                img: "assets/images/gallery/22.jpeg"
+                , name: "A Room Full of Energy"
+                , label: "Community"
+            }
+                , {
                 img: "assets/images/gallery/1.jpg"
                 , name: "Opening Keynote — AI Trading Summit"
                 , label: "Conclave"
