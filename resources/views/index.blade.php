@@ -628,8 +628,8 @@
 
         .hero-visual {
             position: relative;
-            margin-top: 44px;
-            height: 420px;
+            /* margin-top: 44px; */
+            height: 300px;
         }
 
         .hero-visual img {
