@@ -737,7 +737,7 @@ class AdminController extends Controller
 
     protected function exportGeneralFeedback()
     {
-        $feedback = EventFeedback::with(['registration.leadScore'])->latest()->get();
+        $feedback = Feedback::latest()->get();
 
         return $this->downloadCsv('general-feedback', [
             'Name', 'Email', 'Phone', 'City', 'Submitted At', 'Experience',
