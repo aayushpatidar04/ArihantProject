@@ -580,6 +580,7 @@ class AdminController extends Controller
     {
         return match ($request->query('type')) {
             'feedback' => $this->exportFeedback(),
+            'general-feedback' => $this->exportGeneralFeedback(),
             'leadscore' => $this->exportLeadScores(),
             'checkins' => $this->exportCheckIns(),
             'referrals' => $this->exportReferrals(),
@@ -726,6 +727,35 @@ class AdminController extends Controller
                     $item->networking_rating,
                     $item->recommendation,
                     $item->registration?->leadScore?->social_score ?? 0,
+                    $item->most_valuable_session,
+                    $item->liked_most,
+                    $item->improvements,
+                ]);
+            }
+        });
+    }
+
+    protected function exportGeneralFeedback()
+    {
+        $feedback = EventFeedback::with(['registration.leadScore'])->latest()->get();
+
+        return $this->downloadCsv('general-feedback', [
+            'Name', 'Email', 'Phone', 'City', 'Submitted At', 'Experience',
+            'Session Quality', 'Content Usefulness', 'Networking', 'Recommendation',
+            'Most Valuable Session', 'Liked Most', 'Improvements',
+        ], function ($handle) use ($feedback) {
+            foreach ($feedback as $item) {
+                fputcsv($handle, [
+                    $item->full_name ?? '',
+                    $item->email ?? '',
+                    $item->phone ?? '',
+                    $item->city ?? '',
+                    $item->created_at?->format('d M Y, h:i A') ?? '',
+                    $item->experience_rating,
+                    $item->session_quality,
+                    $item->content_usefulness,
+                    $item->networking_rating,
+                    $item->recommendation,
                     $item->most_valuable_session,
                     $item->liked_most,
                     $item->improvements,

@@ -115,7 +115,7 @@
             <h1>Event Feedback</h1>
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
                 @permission('event-feedback', 'export')
-                <a href="{{ route('admin.export', ['type' => 'feedback']) }}" class="btn btn-primary"
+                <a href="{{ route('admin.export', ['type' => 'general-feedback']) }}" class="btn btn-primary"
                     style="font-size:13px;padding:9px 16px">
                     Export Excel
                 </a>
@@ -137,7 +137,6 @@
                         <th>Content Usefulness</th>
                         <th>Networking</th>
                         <th>Recommendation</th>
-                        <th>Feedback Score</th>
                         <th>Most Valuable Session</th>
                         <th>Liked Most</th>
                         <th>Improvements</th>
@@ -158,7 +157,6 @@
                             <td>{{ $item->content_usefulness }}</td>
                             <td>{{ $item->networking_rating }}</td>
                             <td>{{ $item->recommendation }}</td>
-                            <td class="score">{{ $item->registration?->leadScore?->social_score ?? 0 }}/20</td>
                             <td class="answer">{!! nl2br(e($item->most_valuable_session)) !!}</td>
                             <td class="answer">{!! nl2br(e($item->liked_most)) !!}</td>
                             <td class="answer">{!! nl2br(e($item->improvements)) !!}</td>
