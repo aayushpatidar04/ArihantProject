@@ -200,6 +200,8 @@
             <a href="{{ route('admin.permissions.index') }}"
                 style="background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.3);color:#ffd700">Permissions</a>
             @endpermission
+
+            <a href="{{ route('admin.general-feedback') }}">General Feedback</a>
         </div>
 
         @canAction('registrations', 'view')

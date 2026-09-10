@@ -11,6 +11,7 @@ use App\Models\Seat;
 use App\Models\Payment;
 use App\Models\Communication;
 use App\Models\EventFeedback;
+use App\Models\Feedback;
 use App\Models\LeadScore;
 use App\Models\WaitlistNumber;
 use App\Services\EmailService;
@@ -456,6 +457,14 @@ class AdminController extends Controller
             ->paginate(50);
 
         return view('admin.event-feedback', compact('feedback'));
+    }
+
+    public function generalFeedback()
+    {
+        $feedback = Feedback::latest()
+            ->paginate(50);
+
+        return view('admin.general-feedback', compact('feedback'));
     }
 
     public function stalls()

@@ -79,6 +79,8 @@ Route::get('/disclaimer', function () {
     return view('registration.disclaimer');
 })->name('disclaimer');
 
+Route::get('/event-feedback', [EventFeedbackController::class, 'eventFeedback'])->name('event-feedback');
+Route::post('/event-feedback-store', [EventFeedbackController::class, 'eventFeedbackStore'])->name('event-feedback-store');
 
 Route::middleware(['auth'])->group(function () {
     // Step 5: Payment
@@ -172,6 +174,10 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::get('/event-feedback', [AdminController::class, 'eventFeedback'])
         ->middleware('permission:event-feedback,view')
         ->name('event-feedback');
+
+    // General Feedback
+    Route::get('/general-feedback', [AdminController::class, 'generalFeedback'])
+        ->name('general-feedback');
 
     // Referrals
     Route::get('/referrals', [AdminController::class, 'referrals'])

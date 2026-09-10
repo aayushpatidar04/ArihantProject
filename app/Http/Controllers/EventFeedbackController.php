@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventFeedback;
+use App\Models\Feedback;
 use App\Services\LeadScoringService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -139,5 +140,109 @@ class EventFeedbackController extends Controller
         return redirect()
             ->route('event.feedback')
             ->with('success', 'Thank you for your valuable feedback!');
+    }
+
+    public function eventFeedback()
+    {   
+        return view('event-feedback.general');
+    }
+
+    public function eventFeedbackStore(Request $request)
+    {
+        if (Feedback::where('email', $request->email)->exists() || Feedback::where('phone', $request->phone)->exists()) {
+            return redirect()
+                ->route('index')
+                ->with('error', 'You have already submitted your feedback.');
+        }
+
+        $validated = $request->validate([
+            'full_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
+
+            'phone' => [
+                'required',
+                'string',
+                'max:20',
+            ],
+
+            'city' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'experience_rating' => [
+                'required',
+                'integer',
+                'between:1,5',
+            ],
+
+            'session_quality' => [
+                'required',
+                'in:Excellent,Very Good,Good,Average,Poor',
+            ],
+
+            'content_usefulness' => [
+                'required',
+                'in:Extremely Useful,Very Useful,Useful,Slightly Useful,Not Useful',
+            ],
+
+            'networking_rating' => [
+                'required',
+                'in:Excellent,Very Good,Good,Average,Poor,Not Applicable',
+            ],
+
+            'most_valuable_session' => [
+                'required',
+                'string',
+                'max:2000',
+            ],
+
+            'liked_most' => [
+                'required',
+                'string',
+                'max:2000',
+            ],
+
+            'improvements' => [
+                'required',
+                'string',
+                'max:2000',
+            ],
+
+            'recommendation' => [
+                'required',
+                'in:Definitely Yes,Probably Yes,Maybe,Probably No,Definitely No',
+            ],
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            Feedback::create([
+                'full_name' => $validated['full_name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'],
+                'city' => $validated['city'],
+                'experience_rating' => $validated['experience_rating'],
+                'session_quality' => $validated['session_quality'],
+                'content_usefulness' => $validated['content_usefulness'],
+                'networking_rating' => $validated['networking_rating'],
+                'most_valuable_session' => $validated['most_valuable_session'],
+                'liked_most' => $validated['liked_most'],
+                'improvements' => $validated['improvements'],
+                'recommendation' => $validated['recommendation'],
+            ]);
+
+        });
+
+        return view('event-feedback.thank-you');
     }
 }
