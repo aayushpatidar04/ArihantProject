@@ -563,7 +563,7 @@
                     <a href="/quiz">Quizzes</a>
                     @auth
                         @if(auth()->user()->eventRegistrations()->exists())
-                            <a href="{{ route('registration.success') }}">My Ticket</a>
+                            <a href="{{ route('registration.finbridge-success') }}">My Ticket</a>
                         @endif
                     @endauth
                 </nav>
@@ -600,7 +600,7 @@
         <a href="/quiz">Quizzes</a>
         @auth
             @if(auth()->user()->eventRegistrations()->exists())
-                <a href="{{ route('registration.success') }}">My Ticket</a>
+                <a href="{{ route('registration.finbridge-success') }}">My Ticket</a>
             @endif
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
