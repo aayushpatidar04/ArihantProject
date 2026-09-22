@@ -24,7 +24,7 @@
             <div class="error">{{ $errors->first() }}</div>
         @endif
 
-        <form action="{{ route('venue.login.post') }}" method="POST">
+        <form action="{{ route('finbridge-venue.login.post') }}" method="POST">
             @csrf
             <input type="password" name="pin" placeholder="••••" maxlength="10" required autofocus>
             <button type="submit">Unlock Scanner</button>
