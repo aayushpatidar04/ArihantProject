@@ -606,6 +606,7 @@ class AdminController extends Controller
             'leadscore' => $this->exportLeadScores(),
             'checkins' => $this->exportCheckIns(),
             'referrals' => $this->exportReferrals(),
+            'finbridge-registrations' => $this->exportFinbridge(),
             default => $this->exportRegistrations(),
         };
     }
@@ -717,6 +718,98 @@ class AdminController extends Controller
                     $r->marked_paid_at
                     ? $r->marked_paid_at->format('d M Y, h:i A')
                     : '',
+
+                    $r->created_at
+                    ? $r->created_at->format('d M Y, h:i A')
+                    : '',
+                ]);
+            }
+
+            fclose($handle);
+
+        }, 200, $headers);
+    }
+
+    protected function exportFinbridge()
+    {
+        $registrations = FinbridgeRegistration::latest()
+            ->get();
+
+        $filename = 'registrations-' . now()->format('Y-m-d-H-i-s') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        $columns = [
+            'Reg #',
+            'Name',
+            'Client Type',
+            'Email',
+            'Phone',
+            'Type',
+            'Status',
+            'Platform',
+            'Date',
+        ];
+
+        return response()->stream(function () use ($registrations, $columns) {
+
+            $handle = fopen('php://output', 'w');
+
+            /*
+             * UTF-8 BOM so Excel correctly recognizes
+             * UTF-8 characters.
+             */
+            fwrite($handle, "\xEF\xBB\xBF");
+
+            // Header row
+            fputcsv($handle, $columns);
+
+            // Data rows
+            foreach ($registrations as $r) {
+
+                $clientType = $r->is_subbroker
+                    ? 'Sub-broker'
+                    : ($r->is_existing_client
+                        ? 'Existing Client'
+                        : 'New Client');
+
+                $validationData = is_array($r->client_validation_data)
+                    ? $r->client_validation_data
+                    : json_decode($r->client_validation_data ?? '{}', true);
+
+                $branchCodes = collect($validationData['branchlist'] ?? [])
+                    ->pluck('BranchCode')
+                    ->filter()
+                    ->unique()
+                    ->values()
+                    ->implode(', ');
+
+                $clientBranchCodes = collect($validationData['clientlist'] ?? [])
+                    ->map(function ($client) {
+                        return implode(' — ', array_filter([
+                            $client['BranchCode'] ?? null,
+                            $client['RegionCode'] ?? null,
+                            $client['ZoneCode'] ?? null,
+                        ]));
+                    })
+                    ->filter()
+                    ->implode("\n");
+
+                fputcsv($handle, [
+                    $r->registration_number,
+                    $r->full_name,
+                    $clientType,
+                    $r->email,
+                    $r->phone,
+                    ucfirst($r->type),
+                    str_replace('_', ' ', ucfirst($r->status)),
+                    $r->platform,
 
                     $r->created_at
                     ? $r->created_at->format('d M Y, h:i A')
