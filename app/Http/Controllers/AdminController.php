@@ -606,8 +606,8 @@ class AdminController extends Controller
             'leadscore' => $this->exportLeadScores(),
             'checkins' => $this->exportCheckIns(),
             'referrals' => $this->exportReferrals(),
-            'finbridge-registrations' => $this->exportFinbridge(),
-            default => $this->exportRegistrations(),
+            'registrations' => $this->exportRegistrations(),
+            default => $this->exportFinbridge(),
         };
     }
 
@@ -735,7 +735,7 @@ class AdminController extends Controller
         $registrations = FinbridgeRegistration::latest()
             ->get();
 
-        $filename = 'registrations-' . now()->format('Y-m-d-H-i-s') . '.csv';
+        $filename = 'finbridge-registrations-' . now()->format('Y-m-d-H-i-s') . '.csv';
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
