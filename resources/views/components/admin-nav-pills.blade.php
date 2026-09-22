@@ -41,6 +41,11 @@
         class="{{ request()->routeIs('admin.influencers*') ? 'active' : '' }}">Influencer</a>
     @endpermission
 
+    @permission('registrations', 'view')
+    <a href="{{ route('admin.finbridge-registrations') }}"
+        class="{{ request()->routeIs('admin.finbridge-registrations*') ? 'active' : '' }}">Finbridge Registrations</a>
+    @endpermission
+
     @permission('admin-management', 'view')
     <a href="{{ route('admin.permissions.index') }}"
         class="{{ request()->routeIs('admin.permissions*') ? 'active' : '' }}"

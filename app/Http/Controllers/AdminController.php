@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventRegistration;
+use App\Models\FinbridgeRegistration;
 use App\Models\User;
 use App\Models\StallVisit;
 use App\Models\Referral;
@@ -506,6 +507,27 @@ class AdminController extends Controller
     {
         $communications = Communication::with('registration')->latest()->paginate(50);
         return view('admin.communications', compact('communications'));
+    }
+
+    public function finbridgeRegistrations(Request $request)
+    {
+        $query = FinbridgeRegistration::with(['user'])->latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('registration_number', 'like', "%{$search}%");
+            });
+        }
+
+        $registrations = $query->paginate(50);
+        return view('admin.finbridge-registrations', compact('registrations'));
     }
 
     protected function getTopReferrers(int $limit = 10, bool $paginate = false)

@@ -339,7 +339,7 @@
 
         /* ---------- HERO ---------- */
         .hero {
-            padding: 64px 24px 0;
+            padding: 42px 24px 22px;
             text-align: center;
             background:
                 radial-gradient(ellipse 620px 640px at 50% 0%, rgba(6, 2, 8, 0.96) 0%, rgba(6, 2, 8, 0.9) 45%, rgba(6, 2, 8, 0.55) 68%, rgba(6, 2, 8, 0.15) 85%, transparent 100%),
@@ -555,12 +555,25 @@
         }
 
         .hero h1 {
-            font-size: clamp(34px, 5.5vw, 60px);
-            font-weight: 700;
+            font-size: clamp(32px, 5.5vw, 64px);
+            font-weight: 800;
             line-height: 1.08;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             letter-spacing: -.01em;
+        }
+
+        @media(max-width:700px) {
+            .hero h1 {
+                font-size: clamp(24px, 7vw, 36px);
+            }
+        }
+
+        .hero h1 .thank-you {
+            display: inline-block;
+            color: #f5cdff;
+            text-shadow: 0 0 30px rgba(56, 214, 245, 0.45);
+            margin-bottom: 4px;
         }
 
         .hero p.sub {
@@ -628,8 +641,12 @@
 
         .hero-visual {
             position: relative;
-            /* margin-top: 44px; */
-            height: 300px;
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            padding-bottom: 24px;
         }
 
         .hero-visual img {
@@ -644,11 +661,70 @@
             display: none;
         }
 
+        .hero-visual .info-card {
+            position: static;
+            transform: none;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-primary-alt {
+            background: #ff6a1a;
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(255, 106, 26, 0.4);
+        }
+
+        .btn-primary-alt:hover {
+            box-shadow: 0 12px 32px rgba(255, 106, 26, 0.55);
+        }
+
+        .btn-secondary {
+            background: rgba(20, 16, 24, 0.7);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(40, 34, 46, 0.85);
+        }
+
         @media(max-width:700px) {
             .hero-visual {
-                margin-top: 28px;
-                height: auto;
+                margin-top: 22px;
+                gap: 16px;
+                padding-bottom: 16px;
             }
+
+            .hero-cta-group {
+                gap: 10px;
+            }
+
+            .hero-cta-group .btn {
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+
+        .status-fields .info-field {
+            gap: 0;
+        }
+
+        .status-fields .info-field strong {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .status-fields .info-field.status strong {
+            color: #b866f7;
         }
 
         /* ---------- INFO CARD (date / time / venue pill) ---------- */
@@ -2531,8 +2607,7 @@
             background: radial-gradient(circle, rgba(201, 47, 208, 0.35), transparent 70%);
         }
 
-        .videos-sec::after {
-            content: "";
+        .bottom-glow {
             position: absolute;
             bottom: 0;
             left: 50%;
@@ -3864,6 +3939,497 @@
             }
         }
     </style>
+    <style>
+        /* ---------- NEXT DESTINATION ---------- */
+        .next-dest-sec {
+            padding: 70px 24px;
+            background: var(--bg);
+        }
+
+        .next-dest-card {
+            max-width: var(--max);
+            margin: 0 auto;
+            background: linear-gradient(160deg, rgba(28, 16, 38, 0.92) 0%, rgba(10, 5, 15, 0.97) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 28px;
+            padding: 56px 56px;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .next-dest-card::after {
+            content: "";
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 60%;
+            height: 90%;
+            background: radial-gradient(ellipse at center, rgba(120, 140, 255, 0.16) 0%, rgba(184, 102, 247, 0.08) 45%, transparent 75%);
+            filter: blur(40px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .next-dest-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            padding: 1.5px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.05) 55%, rgba(216, 110, 255, 0.35) 85%, rgba(224, 110, 255, 0.6) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .next-dest-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .next-dest-left .eyebrow-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--purple-1);
+            margin-bottom: 14px;
+        }
+
+        .next-dest-left h2 {
+            font-size: clamp(32px, 4.4vw, 52px);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -.01em;
+            color: #fff;
+        }
+
+        .next-dest-left p {
+            color: var(--muted);
+            font-size: 15.5px;
+            line-height: 1.6;
+            margin-top: 18px;
+            max-width: 440px;
+        }
+
+        .next-dest-left .btn {
+            margin-top: 28px;
+        }
+
+        .next-dest-right {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 16px;
+        }
+
+        .next-dest-stat {
+            background: #0d0712;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px 20px;
+        }
+
+        .next-dest-stat .stat-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .next-dest-stat .stat-label svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--purple-1);
+            fill: none;
+            flex-shrink: 0;
+        }
+
+        .next-dest-stat .stat-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .next-dest-map {
+            grid-column: 1 / -1;
+            position: relative;
+            min-height: 220px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #0a0510;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .next-dest-map::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(45deg, rgba(184, 102, 247, 0.08) 25%, transparent 25%, transparent 75%, rgba(184, 102, 247, 0.08) 75%),
+                linear-gradient(45deg, rgba(184, 102, 247, 0.08) 25%, transparent 25%, transparent 75%, rgba(184, 102, 247, 0.08) 75%);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            opacity: .5;
+        }
+
+        .next-dest-map::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(6, 2, 8, 0.55) 75%);
+        }
+
+        .next-dest-map-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .next-dest-map-text .map-line1 {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .next-dest-map-text .map-line2 {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: var(--muted-2);
+            margin-top: 6px;
+        }
+
+        @media(max-width:900px) {
+            .next-dest-card {
+                grid-template-columns: 1fr;
+                padding: 40px 28px;
+                gap: 32px;
+            }
+
+            .next-dest-left p {
+                max-width: 100%;
+            }
+        }
+
+        @media(max-width:600px) {
+            .next-dest-sec {
+                padding: 50px 16px;
+            }
+
+            .next-dest-card {
+                padding: 30px 20px;
+                border-radius: 22px;
+            }
+
+            .next-dest-right {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .next-dest-map {
+                min-height: 160px;
+            }
+        }
+
+        /* ---------- EVENT HIGHLIGHTS ---------- */
+        .highlights-sec {
+            padding: 70px 24px;
+            background: var(--bg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlights-card {
+            max-width: var(--max);
+            margin: 0 auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 48px 0 40px;
+            position: relative;
+        }
+
+        .highlights-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .highlights-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .highlights-top .eyebrow-label {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--purple-1);
+            margin-bottom: 14px;
+        }
+
+        .highlights-top h2 {
+            font-size: clamp(30px, 4vw, 46px);
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -.01em;
+            color: #fff;
+        }
+
+        .highlights-top p {
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.6;
+            max-width: 360px;
+        }
+
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .highlights-stat {
+            padding: 28px 24px;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .highlights-stat:last-child {
+            border-right: none;
+        }
+
+        .highlights-stat .stat-num {
+            font-size: clamp(24px, 2.6vw, 32px);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -.01em;
+        }
+
+        .highlights-stat .stat-label {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        @media(max-width:900px) {
+            .highlights-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .highlights-stat {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .highlights-stat:nth-child(2n) {
+                border-right: none;
+            }
+        }
+
+        @media(max-width:600px) {
+            .highlights-sec {
+                padding: 50px 16px;
+            }
+
+            .highlights-card {
+                padding: 32px 0 28px;
+            }
+
+            .highlights-top {
+                margin-bottom: 28px;
+            }
+
+            .highlights-top p {
+                max-width: 100%;
+            }
+
+            .highlights-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ---------- FINBRIDGE MODAL ---------- */
+        .finbridge-card {
+            max-width: 420px;
+            padding: 40px 34px 34px;
+            text-align: left;
+        }
+
+        .finbridge-eyebrow {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 18px;
+        }
+
+        .finbridge-title {
+            position: relative;
+            z-index: 1;
+            font-family: 'Sora', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.28;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .finbridge-sub {
+            position: relative;
+            z-index: 1;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--muted);
+            margin-bottom: 26px;
+        }
+
+        .finbridge-details {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .finbridge-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: border-color .2s ease, background .2s ease;
+        }
+
+        .finbridge-row.highlight {
+            background: rgba(184, 102, 247, 0.12);
+            border-color: rgba(184, 102, 247, 0.4);
+        }
+
+        .finbridge-ic {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .finbridge-ic svg {
+            width: 18px;
+            height: 18px;
+            stroke: #f4edfb;
+        }
+
+        .finbridge-ic-accent {
+            background: var(--btn-grad);
+        }
+
+        .finbridge-ic-accent svg {
+            stroke: #fff;
+        }
+
+        .finbridge-row div {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .finbridge-row strong {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .finbridge-row.highlight strong {
+            color: var(--purple-1);
+        }
+
+        .finbridge-row span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .finbridge-cta {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        @media(max-width:480px) {
+            .finbridge-card {
+                padding: 32px 22px 26px;
+                border-radius: 22px;
+            }
+
+            .finbridge-title {
+                font-size: 20px;
+            }
+        }
+
+        /* ---------- INTERACTIVE INDIA MAP ---------- */
+        .leaflet-city-tooltip {
+            background: rgba(10, 5, 16, 0.95) !important;
+            border: 1px solid rgba(184, 102, 247, 0.4) !important;
+            border-radius: 10px !important;
+            padding: 6px 12px !important;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
+            color: #f6f3fa;
+            font-family: 'AktivGrotesk', sans-serif;
+        }
+
+        .leaflet-city-tooltip::before {
+            border-top-color: rgba(184, 102, 247, 0.4) !important;
+        }
+
+        .leaflet-container {
+            background: #060208 !important;
+            border-radius: 16px;
+        }
+
+        #leafletMap .leaflet-tile-pane {
+            filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(0.9) saturate(0.5);
+        }
+
+        .leaflet-control-attribution {
+            background: rgba(6, 2, 8, 0.6) !important;
+            color: rgba(230, 220, 240, 0.4) !important;
+            font-size: 9px !important;
+            padding: 2px 6px !important;
+            border-radius: 6px 0 0 0 !important;
+        }
+
+        .leaflet-control-attribution a {
+            color: rgba(184, 102, 247, 0.6) !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -3883,7 +4449,7 @@
                     <a href="#home">Home</a>
                     <a href="#speaker">Speaker</a>
                     @auth
-                        <a href="/register/success">My Ticket</a>
+                        <a href="/register/finbridge-success">My Ticket</a>
                     @endauth
                     <a href="#agenda">Agenda</a>
                     <a href="/quiz">Quizzes</a>
@@ -3897,7 +4463,7 @@
                     </form>
                 @else
                     <a href="/login" class="btn btn-primary nav-cta">Login</a>
-                    <a href="/register" class="btn btn-primary nav-cta">Claim Your Spot</a>
+                    <a href="/join-waitlist" class="btn btn-primary nav-cta">Claim your spot for Next Conclave</a>
                 @endauth
             </div>
             <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
@@ -3914,14 +4480,14 @@
         <a href="/quiz">Quizzes</a>
 
         @auth
-            <a href="/register/success">My Ticket</a>
+            <a href="/register/finbridge-success">My Ticket</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-ghost" style="width:100%;margin-top:10px">Logout</button>
             </form>
         @else
             <a href="/login" class="btn btn-primary">Login</a>
-            <a href="/register" class="btn btn-primary">Claim Your Spot</a>
+            <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a>
         @endauth
     </div>
 
@@ -3937,90 +4503,121 @@
         <div class="hero-video-veil" aria-hidden="true"></div>
 
 
-        <img src="assets/images/head-logo.png" alt="AI & Algo Conclave" class="hero-conclave-logo">
-        <span class="eyebrow">#liveevent</span>
-        <div class="countdown">
-            <div class="cbox">
-                <div class="num" id="cd-days">28</div>
-                <div class="lbl">Days</div>
-            </div>
-            <div class="cbox">
-                <div class="num" id="cd-hours">12</div>
-                <div class="lbl">Hours</div>
-            </div>
-            <div class="cbox">
-                <div class="num" id="cd-mins">24</div>
-                <div class="lbl">Minutes</div>
-            </div>
-        </div>
-        <p class="hero-tagline">Central India's Largest</p>
-        <h1>AI &amp; Algo Trading Conclave</h1>
-        <p class="sub">Discover how artificial intelligence is transforming trading — and learn to use it to read the
-            markets, manage risk and build smarter strategies.</p>
-
-        <div class="hero-pills">
-            <img src="assets/images/pill-2.png" alt="Learn" class="hero-pill-img">
-            <img src="assets/images/pill-3.png" alt="Experience" class="hero-pill-img">
-            <img src="assets/images/pill-4.png" alt="Connect" class="hero-pill-img">
-            <img src="assets/images/pill-5.png" alt="Compete" class="hero-pill-img">
-            <img src="assets/images/pill-1.png" alt="Win" class="hero-pill-img">
-        </div>
-
-        <div class="diagonal-ticker" aria-hidden="true">
-            <div class="diagonal-ticker-track">
-                <div class="diagonal-ticker-group">
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                </div>
-                <div class="diagonal-ticker-group">
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                    <span class="diagonal-ticker-item">We've Wrapped Up an Incredible Day.</span>
-                </div>
-            </div>
-        </div>
+        <span class="eyebrow">ARIHANTPLUS PRESENTS</span>
+        <h1><span class="thank-you">Thank You</span><br>for making the AI &amp; <br>Algo Trading <br>Conclave <br> a
+            grand success</h1>
+        <p class="sub">Your ideas, energy and participation made the day memorable. Ready for what comes next.</p>
 
         {{-- <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming
                 response indore.</a></p> --}}
 
         <div class="hero-visual">
-            <img src="assets/images/skyline.png" alt="City skyline">
             {{-- <div class="info-card">
-                <div class="info-fields">
+                <div class="info-fields status-fields">
                     <div class="info-field">
-                        <span class="ic">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="5" width="18" height="16" rx="2" />
-                                <path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round" />
-                            </svg>
-                        </span>
-                        <div>Date<br><strong>5 September 2026</strong></div>
+                        <div><strong>September 5, 2026</strong></div>
                     </div>
                     <div class="info-field">
-                        <span class="ic">
-                            <svg viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="9" />
-                                <path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </span>
-                        <div>Time<br><strong>10:30 AM - 5:00 PM</strong></div>
+                        <div><strong>Indore</strong></div>
                     </div>
-                    <div class="info-field" id="venueField">
-                        <span class="ic">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M3 11l18-7-7 18-2.5-7.5L3 11z" stroke-linejoin="round" />
-                            </svg>
-                        </span>
-                        <div>Venue<br><strong id="venueText">Marriott Hotel, Indore</strong></div>
+                    <div class="info-field status">
+                        <div><strong>Successfully Concluded</strong></div>
                     </div>
                 </div>
             </div> --}}
-            <div class="hero-broadcast-partner">
+
+            {{-- <div class="hero-broadcast-partner">
                 <span class="hero-broadcast-label">Broadcast Partner</span>
                 <img src="assets/images/media-partner-etnow.jpeg" alt="ET Now Swadesh">
+            </div> --}}
+        </div>
+        <div class="hero-cta-group">
+            <button type="button" class="btn btn-primary" id="finbridgeBtn">Meet us at Finbridge Expo Ahmedabad</button>
+        </div>
+
+    </section>
+
+    <section class="next-dest-sec">
+        <div class="next-dest-card">
+            <div class="next-dest-left">
+                <span class="eyebrow-label">Next Destination</span>
+                <h2>City to be Revealed</h2>
+                <p>The next AI &amp; Algo Trading experience is coming. Be the first to know when the city and date are
+                    announced.</p>
+                <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a>
+            </div>
+
+            <div class="next-dest-right">
+                <div class="next-dest-stat">
+                    <div class="stat-label">
+                        <svg viewBox="0 0 24 24" stroke-width="1.8">
+                            <rect x="3" y="5" width="18" height="16" rx="2" />
+                            <path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round" />
+                        </svg>
+                        Date
+                    </div>
+                    <div class="stat-value">Not Revealed Yet</div>
+                </div>
+                <div class="next-dest-stat">
+                    <div class="stat-label">
+                        <svg viewBox="0 0 24 24" stroke-width="1.8">
+                            <path d="M12 21s7-7.2 7-12a7 7 0 10-14 0c0 4.8 7 12 7 12z" />
+                            <circle cx="12" cy="9" r="2.4" />
+                        </svg>
+                        City
+                    </div>
+                    <div class="stat-value" id="cityStatValue">Coming Soon</div>
+                </div>
+
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+                <div class="next-dest-map" id="indiaMapWrap"
+                    style="padding:0; overflow:hidden; min-height:280px; border-radius:16px; position:relative;">
+                    <div id="leafletMap" style="width:100%; height:280px; border-radius:16px;"></div>
+                    <div id="mapDefaultHint" style="
+                        position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+                        z-index:1000; background:rgba(10,5,16,0.88); border:1px solid rgba(184,102,247,0.4);
+                        border-radius:10px; padding:8px 18px; white-space:nowrap; pointer-events:none;
+                        backdrop-filter:blur(8px);">
+                        <div
+                            style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a79bb5;">
+                            Interactive Map</div>
+                        <div style="font-size:11px;color:#7c7188;margin-top:2px;">Tap a city to preview our next stop
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="highlights-sec">
+        <div class="bottom-glow" aria-hidden="true"></div>
+        <div class="highlights-card wrap">
+            <div class="highlights-top">
+                <div>
+                    <span class="eyebrow-label">The Experience</span>
+                    <h2>Event Highlights</h2>
+                </div>
+                <p>A full day of AI, algo trading, options strategies, product reveals and networking.</p>
+            </div>
+
+            <div class="highlights-grid">
+                <div class="highlights-stat">
+                    <div class="stat-num">300+</div>
+                    <div class="stat-label">Attendees</div>
+                </div>
+                <div class="highlights-stat">
+                    <div class="stat-num">AI</div>
+                    <div class="stat-label">Trading Sessions</div>
+                </div>
+                <div class="highlights-stat">
+                    <div class="stat-num">ALGO</div>
+                    <div class="stat-label">Live Demonstrations</div>
+                </div>
+                <div class="highlights-stat">
+                    <div class="stat-num">5+</div>
+                    <div class="stat-label">Product Reveals</div>
+                </div>
             </div>
         </div>
     </section>
@@ -4108,7 +4705,7 @@
             </div>
         </div>
 
-        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+        <div class="center-btn"><a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a></div>
     </section> --}}
 
     <div class="learn-get-wrap">
@@ -4117,7 +4714,7 @@
 
         <section class="learn" id="learn">
             <div class="section-head purple">
-                <h2>What You'll Experience</h2>
+                <h2>Conclave Experience</h2>
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
@@ -4155,7 +4752,7 @@
 
         <section class="get">
             <div class="section-head">
-                <h2>What you'll get</h2>
+                <h2>Conclave Takeaways</h2>
             </div>
             <div class="grid6 wrap" style="padding:0;">
                 <div class="card">
@@ -4193,7 +4790,7 @@
                 </div>
             </div>
             <div class="center-btn left">
-                <a href="/register" class="btn btn-primary">Claim your spot</a>
+                <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a>
             </div>
         </section>
     </div>
@@ -4214,12 +4811,12 @@
             <div class="agenda-wrap" id="agenda-list"></div>
         </div>
 
-        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+        <div class="center-btn"><a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a></div>
     </section>
 
     <section class="panel-sec" id="speaker">
         <div class="section-head">
-            <h2>Meet Our Speakers</h2>
+            <h2>Meet Our Past Speakers</h2>
         </div>
 
         <div class="panelist-slider-wrap">
@@ -4239,7 +4836,7 @@
             </button>
         </div>
 
-        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+        <div class="center-btn"><a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a></div>
     </section>
 
     <section class="partner-sec" id="media-partner">
@@ -4274,7 +4871,7 @@
             </div>
 
             <div class="value-right">
-                <a href="/register" class="value-card">
+                <a href="/join-waitlist" class="value-card">
                     <div class="value-card-top">
                         <span class="value-icon"><img src="assets/images/icon-1.png" alt="ArihantPlus users"></span>
                         <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -4289,7 +4886,7 @@
                     <div class="value-gst">Incl 18% GST</div>
                 </a>
 
-                <a href="/register" class="value-card">
+                <a href="/join-waitlist" class="value-card">
                     <div class="value-card-top">
                         <span class="value-icon"><img src="assets/images/icon-2.png" alt="Standard Entry"></span>
                         <svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -4309,7 +4906,7 @@
         </div>
 
         <div class="value-cta-row">
-            <a href="/register" class="btn btn-primary">Claim Your Spot</a>
+            <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a>
         </div>
     </section>
 
@@ -4339,7 +4936,7 @@
             <button type="button" class="gallery-more-btn" id="galleryLoadMore">Load More</button>
         </div>
 
-        <div class="center-btn"><a href="/register" class="btn btn-primary">Claim your spot</a></div>
+        <div class="center-btn"><a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a></div>
     </section>
 
     <section class="videos-sec" id="videos">
@@ -4391,7 +4988,7 @@
         <div class="wrap-inner">
             <h2>Ready To Trade<br>Smarter?</h2>
             <p>Join the masterclass and discover how experienced traders think, analyse and act in changing markets.</p>
-            <a href="/register" class="btn btn-white">Reserve Your Spot</a>
+            <a href="/join-waitlist" class="btn btn-white">Reserve Your Spot</a>
 
             <div class="orb-stage">
                 <div class="orb-wobble">
@@ -4550,8 +5147,8 @@
                 <span>Limited Seats.</span>
                 <strong>Book Yours Now.</strong>
             </div>
-            <a href="{{ route('registration.form') }}" class="mobile-sticky-btn">
-                Claim your spot
+            <a href="{{ route('waitlist.create') }}" class="mobile-sticky-btn">
+                Claim your spot for Next Conclave
             </a>
         </div>
     </div>
@@ -4627,6 +5224,97 @@
         </div>
     </div>
 
+    <div class="modal-overlay finbridge-modal" id="finbridgeModal">
+        <div class="modal-card finbridge-card">
+            <div class="modal-close" id="finbridgeModalClose" role="button" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 4l16 16M20 4L4 20" />
+                </svg>
+            </div>
+
+            <span class="eyebrow finbridge-eyebrow">ARIHANT AT FINBRIDGE</span>
+            <h3 class="finbridge-title">Trading. Investing.<br>Technology. All Under One Roof.</h3>
+            <p class="finbridge-sub">Come meet the Arihant team, explore smarter trading &amp; investing tools, discover
+                our latest market solutions, and experience what's next in the world of markets.</p>
+
+            <div class="finbridge-details">
+                <div class="finbridge-row">
+                    <span class="finbridge-ic">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <rect x="3" y="5" width="18" height="16" rx="2" />
+                            <path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round" />
+                        </svg>
+                    </span>
+                    <div>
+                        <strong>26 – 27 September 2026</strong>
+                        <span>Event Dates</span>
+                    </div>
+                </div>
+
+                <div class="finbridge-row">
+                    <span class="finbridge-ic">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M12 7v5l3.5 2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <div>
+                        <strong>10:00 AM – 6:00 PM</strong>
+                        <span>Timing</span>
+                    </div>
+                </div>
+
+                <div class="finbridge-row">
+                    <span class="finbridge-ic">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M12 21s7-7.2 7-12a7 7 0 10-14 0c0 4.8 7 12 7 12z" />
+                            <circle cx="12" cy="9" r="2.4" />
+                        </svg>
+                    </span>
+                    <div>
+                        <strong>EKA Club, Kankaria, Ahmedabad</strong>
+                        <span>Venue</span>
+                    </div>
+                </div>
+
+                <div class="finbridge-row highlight">
+                    <span class="finbridge-ic finbridge-ic-accent">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M5 3v18M5 4h11l-2.5 3.5L16 11H5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </span>
+                    <div>
+                        <strong>Stall No. 8</strong>
+                        <span>We're waiting to meet you!</span>
+                    </div>
+                </div>
+            </div>
+
+            @php
+                $today = \Carbon\Carbon::today();
+                $start = \Carbon\Carbon::create(2026, 9, 26);
+                $end = \Carbon\Carbon::create(2026, 9, 27);
+                $isActive = $today->between($start, $end);
+            @endphp
+
+            @if($isActive)
+                <!-- Active link -->
+                <a href="/register" class="btn btn-primary finbridge-cta">
+                    Meet Us at Finbridge
+                </a>
+            @else
+                <!-- Disabled button -->
+                <button class="btn btn-primary finbridge-cta" title="Available on 26–27 Sept only" disabled style="cursor: not-allowed;">
+                    Meet Us at Finbridge
+                </button>
+            @endif
+
+
+
+        </div>
+    </div>
+
+    {{--
     <script>
         // ---------- Reserve / Claim modal ----------
         (function () {
@@ -5459,6 +6147,637 @@
 
         })();
 
+    </script> --}}
+
+    <script>
+        // ---------- Finbridge modal ----------
+        (function () {
+            var overlay = document.getElementById('finbridgeModal');
+            var openBtn = document.getElementById('finbridgeBtn');
+            var closeBtn = document.getElementById('finbridgeModalClose');
+            if (!overlay || !openBtn || !closeBtn) return;
+
+            function openModal() {
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            openBtn.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
+
+
+        // ---------- Leaflet India Map ----------
+        (function () {
+            var leafletScript = document.createElement('script');
+            leafletScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+            leafletScript.onload = function () {
+                var map = L.map('leafletMap', {
+                    center: [22.5, 80],
+                    zoom: 4,
+                    zoomControl: false,
+                    attributionControl: true,
+                    scrollWheelZoom: false,
+                    dragging: true,
+                });
+
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    minZoom: 3,
+                    attribution: '&copy; OpenStreetMap contributors',
+                }).addTo(map);
+
+                var cityStatValue = document.getElementById('cityStatValue');
+                var defaultHint = document.getElementById('mapDefaultHint');
+
+                var cities = [
+                    { name: 'Delhi', lat: 28.6139, lng: 77.2090 },
+                    { name: 'Gurugram', lat: 28.4595, lng: 77.0266 },
+                    { name: 'Jaipur', lat: 26.9124, lng: 75.7873 },
+                    { name: 'Ahmedabad', lat: 23.0225, lng: 72.5714 },
+                    { name: 'Bhopal', lat: 23.2599, lng: 77.4126 },
+                    { name: 'Kolkata', lat: 22.5726, lng: 88.3639 },
+                    { name: 'Bangalore', lat: 12.9716, lng: 77.5946 },
+                ];
+
+                var pulseIcon = L.divIcon({
+                    className: '',
+                    html: '<div style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#d43fe0,#7a1fc9);border:2px solid rgba(255,255,255,0.85);box-shadow:0 0 0 0 rgba(184,102,247,0.55);animation:pinPulse 2.4s ease-out infinite;"></div>',
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7],
+                });
+
+                cities.forEach(function (c) {
+                    var marker = L.marker([c.lat, c.lng], { icon: pulseIcon })
+                        .addTo(map)
+                        .bindTooltip(
+                            '<span style="font-size:12px;font-weight:700;color:#fff;">' + c.name + '</span><br>' +
+                            '<span style="font-size:10.5px;color:#b866f7;">Date Reveals Soon</span>',
+                            { direction: 'top', offset: [0, -8], className: 'leaflet-city-tooltip' }
+                        );
+
+                    marker.on('click', function () {
+                        if (cityStatValue) cityStatValue.textContent = c.name;
+                        if (defaultHint) defaultHint.style.display = 'none';
+                        map.setView([c.lat, c.lng], 6, { animate: true });
+                    });
+                });
+            };
+            document.head.appendChild(leafletScript);
+        })();
+
+        // ---------- Reserve / Claim modal ----------
+        (function () {
+            var overlay = document.getElementById('reserveModal');
+            var closeBtn = document.getElementById('modalClose');
+            if (!overlay) return;
+
+            function openModal() {
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
+
+        // ---------- Benefits modal ----------
+        (function () {
+            var overlay = document.getElementById('benefitsModal');
+            var openBtn = document.getElementById('benefitsBtn');
+            var closeBtn = document.getElementById('benefitsModalClose');
+            if (!overlay || !openBtn || !closeBtn) return;
+
+            function openModal() {
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+            openBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                openModal();
+            });
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
+
+        // ---------- Mobile menu toggle ----------
+        (function () {
+            var btn = document.getElementById('menuToggle');
+            var menu = document.getElementById('mobileMenu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function () {
+                var isOpen = menu.classList.toggle('open');
+                btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            });
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    menu.classList.remove('open');
+                    btn.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                });
+            });
+        })();
+
+        // ---------- Slow down fireworks playback ----------
+        (function () {
+            var v = document.querySelector('.hero-video');
+            if (v) v.playbackRate = 0.6;
+        })();
+
+        // ---------- Hero sparkles ----------
+        (function () {
+            var host = document.getElementById('hero-sparkles');
+            if (!host) return;
+            var positions = [
+                { top: '6%', left: '30%' },
+                { top: '3%', left: '42%' },
+                { top: '10%', left: '55%' },
+                { top: '2%', left: '66%' },
+                { top: '14%', left: '22%' },
+                { top: '8%', left: '75%' }
+            ];
+            positions.forEach(function (p, i) {
+                var s = document.createElement('span');
+                s.className = 'spark';
+                s.style.top = p.top;
+                s.style.left = p.left;
+                s.style.animationDelay = (i * 0.5) + 's';
+                s.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6z"/></svg>';
+                host.appendChild(s);
+            });
+        })();
+
+        // ---------- Countdown (FIXED: no longer crashes on pages without the countdown boxes) ----------
+        (function () {
+            var target = new Date(2026, 8, 5, 10, 0, 0); // 5 September 2026, 10:00 AM
+            function tick() {
+                var daysEl = document.getElementById('cd-days');
+                var hoursEl = document.getElementById('cd-hours');
+                var minsEl = document.getElementById('cd-mins');
+                if (!daysEl || !hoursEl || !minsEl) return; // countdown markup not present on this page — skip safely
+                var now = new Date();
+                var diff = Math.max(0, target - now);
+                var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var h = Math.floor(diff / (1000 * 60 * 60) % 24);
+                var m = Math.floor(diff / (1000 * 60) % 60);
+                daysEl.textContent = String(d).padStart(2, '0');
+                hoursEl.textContent = String(h).padStart(2, '0');
+                minsEl.textContent = String(m).padStart(2, '0');
+            }
+            tick();
+            setInterval(tick, 1000 * 30);
+        })();
+
+        // ---------- Agenda (repeatable data-driven list) ----------
+        var agenda = [
+            { time: "10:30 AM – 10:45 AM", title: "Welcome Session – Event Introduction", body: "Event introduction and lamp lighting to open the day.", tag: "Ceremony" },
+            { time: "10:45 AM – 11:05 AM", title: "SPECIAL ADDRESS", body: "An address from Arihant Leadership setting the tone for the conclave.", tag: "Address" },
+            { time: "11:05 AM – 11:45 AM", title: "ALGO TRADING BASICS + LIVE WORKSHOP", body: "Vishal Mehta walks through the fundamentals of algo trading with a live, hands-on workshop.", tag: "Workshop" },
+            { time: "11:45 AM – 12:00 PM", title: "AI TRADING BASICS: MCP & PROMPTS", body: "A primer on using MCP and prompts for AI-assisted trading, led by an AI expert.", tag: "Session" },
+            { time: "12:00 PM – 12:25 PM", title: "PANEL DISCUSSION: AI + ALGO TRADING", body: "Vishal Mehta, Saurabh Sisodiya, Swati Jain and Rahul Saroge discuss where AI and algo trading meet.", tag: "Panel" },
+            { time: "12:25 PM – 12:40 PM", title: "Q&A", body: "Open floor questions following the AI + Algo Trading panel.", tag: "Q&A" },
+            { time: "12:40 PM – 1:10 PM", title: "ARIHANTPLUS ALGO PRODUCT EXPERIENCE", body: "Rajesh Srivastav takes attendees through the ArihantPlus algo product hands-on.", tag: "Demo" },
+            { time: "1:10 PM – 2:10 PM", title: "LUNCH BREAK + NETWORKING", body: "A break to refuel and connect with fellow traders and speakers.", tag: "Break" },
+            { time: "2:10 PM – 2:50 PM", title: "AI + Algo Trading Advanced — Santosh Pasi", body: "Santosh Pasi goes deeper into advanced AI and algo trading techniques.", tag: "Session" },
+            { time: "2:50 PM – 3:10 PM", title: "AI + Algo Trading Advanced — Ravi Paliwal (AI Expert )", body: "Ravi Paliwal goes deeper into advanced AI and algo trading techniques.", tag: "Session" },
+            { time: "3:10 PM – 3:40 PM", title: "Algo + AI  Panel Discussion", body: "Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading.", tag: "Panel" },
+            { time: "3:40 PM – 3:55 PM", title: "Q&A", body: "Open floor questions following the AI + Algo Trading panel.", tag: "Q&A" },
+            { time: "3:55 PM – 4:10 PM", title: "QUIZ / AUDIENCE ENGAGEMENT", body: "Live quiz and audience engagement with prizes up for grabs.", tag: "Engagement" },
+            { time: "4:10 PM – 4:40 PM", title: "Gurus of Trading", body: "A conversation with Arpit Jain & Praneet Maheshwari, alongside Arihant clients, on how AI is changing the way they trade, analyse markets, and make decisions.", tag: "Panel" },
+            { time: "4:40 PM – 5:00 PM", title: "Sound Healing Experience", body: "A wellness interlude to reset before the final stretch of sessions.", tag: "Wellness" },
+            { time: "5:00 PM", title: "NATIONAL ANTHEM + CLOSING", body: "A closing note and national anthem to wrap up the day, with all guests and attendees.", tag: "Closing" }
+        ];
+
+        var agendaHTML = agenda.map(function (a) {
+            return '<div class="agenda-item">' +
+                '<div class="agenda-time">' + a.time + '</div>' +
+                '<div class="agenda-body"><h4>' + a.title + '</h4><p>' + a.body + '</p></div>' +
+                '<div class="pill">' + a.tag + '</div>' +
+                '</div>';
+        }).join('');
+        var agendaListEl = document.getElementById('agenda-list');
+        if (agendaListEl) agendaListEl.innerHTML = agendaHTML;
+
+        (function () {
+            var panelists = [
+                {
+                    name: "Vishal Mehta", role: "Algo Trader | Market Educator", img: "assets/images/21.png",
+                    socials: [
+                        { type: "youtube", url: "https://www.youtube.com/@vishalmehta_cmt" },
+                        { type: "x", url: "https://x.com/vishalmehta29" },
+                        { type: "linkedin", url: "https://www.linkedin.com/in/vishalmehta-cmt/" },
+                        { type: "instagram", url: "https://www.instagram.com/vishal_mehta_cmt/" }
+                    ],
+                    knowMore: "/vishal-mehta"
+                },
+                {
+                    name: "Saurabh Sisodia", role: "Data Driven Trader", img: "assets/images/23.png",
+                    socials: [
+                        { type: "linkedin", url: "https://www.linkedin.com/in/sourabhsiso/" },
+                        { type: "x", url: "https://x.com/sourabhsiso19?lang=en" },
+                        { type: "instagram", url: "https://www.instagram.com/tradewithsourabhsisodiya/?hl=en" }
+                    ],
+                    knowMore: "/saurabh-sisodia"
+                },
+                {
+                    name: "Shruti Jain", role: "AI • ALGO • FINTECH | CSO ArihantPlus", img: "assets/images/shruti-jain.jpeg",
+                    socials: [],
+                    knowMore: "/shruti-jain"
+                },
+                {
+                    name: "Santosh Pasi", role: "Option Trader", img: "assets/images/22.png",
+                    socials: [{ type: "x", url: "https://x.com/SantoshPasi?lang=ens" }],
+                    knowMore: "/santosh-pasi"
+                },
+                {
+                    name: "Rajesh Srivastav", role: "Founder, QuantLab Technologies | Professional Derivatives Trader", img: "assets/images/25.png",
+                    socials: [],
+                    knowMore: "/rajesh-shrivastav"
+                },
+                {
+                    name: "Rahul Saraoge", role: "Founder & Mentor, 5 Circles | Stock Market & Trading Expert", img: "assets/images/26.png",
+                    socials: [
+                        { type: "instagram", url: "https://instagram.com/trade_with_rahulsaraoge" },
+                        { type: "youtube", url: "https://www.youtube.com/@tradewithrahulsaraoge" },
+                        { type: "x", url: "https://x.com/Rahul_Saraoge" }
+                    ],
+                    knowMore: "/rahul-saroge"
+                },
+                {
+                    name: "Nikhil Bhandari", role: "Co-Founder, Stratzy | Systematic Trading & Investment Professional", img: "assets/images/neee.png",
+                    socials: [
+                        { type: "linkedin", url: "https://www.linkedin.com/in/iamnikhilbhandari" },
+                        { type: "x", url: "https://x.com/inikhilbhandari" }
+                    ],
+                    knowMore: "/nikhil-bhandari"
+                }
+            ];
+            var track = document.getElementById('panelistTrack');
+            if (!track) return;
+
+            var socialSVGs = {
+                instagram: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>',
+                x: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M4 4l16 16M20 4L4 20"/></svg>',
+                linkedin: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10v7M7 7v.01M11 17v-4.5a2 2 0 014-.2M15 17v-4.5"/></svg>',
+                youtube: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg>'
+            };
+
+            track.innerHTML = panelists.map(function (p) {
+                var socialLinks = (p.socials || []).map(function (s) {
+                    var icon = socialSVGs[s.type];
+                    if (!icon) return '';
+                    return '<a href="' + s.url + '" target="_blank" aria-label="' + p.name + ' ' + s.type + '">' + icon + '</a>';
+                }).join('');
+
+                return '<div class="panelist-slide">' +
+                    '<div class="panelist-photo-card">' +
+                    '<div class="panelist-photo-mask">' +
+                    '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy">' +
+                    '<div class="panelist-photo-shade"></div>' +
+                    '<div class="panelist-info">' +
+                    '<div class="panelist-social">' + socialLinks + '</div>' +
+                    '<h4>' + p.name + '</h4><span>' + p.role + '</span>' +
+                    '<a href="' + p.knowMore + '" class="panelist-know-btn">Know More</a>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            var prevBtn = document.getElementById('panelistPrev');
+            var nextBtn = document.getElementById('panelistNext');
+            if (!prevBtn || !nextBtn) return;
+
+            function cardStep() {
+                var slide = track.querySelector('.panelist-slide');
+                if (!slide) return 0;
+                var gap = parseFloat(getComputedStyle(track).gap) || 24;
+                return slide.getBoundingClientRect().width + gap;
+            }
+
+            function updateArrows() {
+                var max = track.scrollWidth - track.clientWidth - 2;
+                prevBtn.disabled = track.scrollLeft <= 2;
+                nextBtn.disabled = max <= 2 || track.scrollLeft >= max;
+            }
+
+            prevBtn.addEventListener('click', function () {
+                track.scrollBy({ left: -cardStep(), behavior: 'smooth' });
+            });
+            nextBtn.addEventListener('click', function () {
+                track.scrollBy({ left: cardStep(), behavior: 'smooth' });
+            });
+            track.addEventListener('scroll', updateArrows);
+            window.addEventListener('resize', updateArrows);
+            updateArrows();
+        })();
+
+        // ---------- FAQ ----------
+        var faqs = [
+            { q: "Who should attend this conclave?", a: "Anyone curious about how AI and algorithmic trading are changing the markets — whether you're a complete beginner or already trading. No prior coding or algo experience is required." },
+            { q: "Do I need any trading experience to attend?", a: "No. The sessions are designed to be followed by both beginners and experienced traders — from live, hands-on walkthroughs to deeper discussions for those already trading." },
+            { q: "Will this be practical, or just theory?", a: "Practical. You'll build a live AI research routine on your own phone, watch a trading strategy get built and back tested live on stage, and walk away with tools you can use the same evening." },
+            { q: "What exactly will I get after attending?", a: "A set of ready-to-use AI prompts, a strategy template from the live build session, access to a free AI toolkit and partner subscription, and a certificate of participation." },
+            { q: "Do I need to bring a laptop?", a: "No laptop needed — most hands-on sessions are designed to be followed along on your phone. We'll share specific instructions closer to the event date." },
+            { q: "Is there a certificate of participation?", a: "Yes, all attendees receive a certificate at the end of the day." },
+            { q: "Will there be food and breaks included?", a: "Yes! Your ticket includes complimentary lunch, high tea, and snack breaks throughout the event." },
+            { q: "Is there an entertainment/experience element, or is it only sessions?", a: "Yes — beyond the sessions, we've planned an experiential element to make this more than just a lecture-style event. Details will be shared closer to the date." },
+            { q: "What is the difference between a client and a non-client?", a: "A Client is an individual who trades through Arihant Capital and enjoys the privileges and benefits associated with our events and financial offerings. A Non-Client is an individual who is eligible to avail of these privileges and benefits upon associating with Arihant Capital." },
+            { q: "Are there any partner/sponsor stalls at the event?", a: "Yes, you'll have access to an Experience Zone with partner stalls where you can explore tools and platforms relevant to AI and algo trading." },
+            { q: "What is the refund/cancellation policy?", a: "We follow a No Refund Policy." },
+            { q: "Can everyone access Stratzy?", a: "No. Stratzy access is exclusively available to clients who have an account with Arihant." }
+        ];
+        var faqListEl = document.getElementById('faq-list');
+        if (faqListEl) {
+            faqListEl.innerHTML = faqs.map(function (f, i) {
+                return '<div class="faq-item' + (i === 1 ? ' open' : '') + '">' +
+                    '<div class="faq-q" onclick="this.parentElement.classList.toggle(\'open\')">' +
+                    '<span class="dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span>' +
+                    '<h4>' + f.q + '</h4>' +
+                    '</div>' +
+                    '<div class="faq-a">' + f.a + '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        // ---------- Video Sessions ----------
+        (function () {
+            var frameWrap = document.getElementById('videoFrameWrap');
+            var playlistHost = document.getElementById('videoPlaylist');
+            var tagEl = document.getElementById('videoTag');
+            var titleEl = document.getElementById('videoTitle');
+            if (!frameWrap || !playlistHost) return;
+
+            var videos = [
+                { id: "yqxc18lRPCo", title: "How to Research & Trade Using AI", tag: "Featured", duration: "0:00" },
+                { id: "7KVdASoLPAs", title: "Connect Your Demat to AI", tag: "Featured", duration: "0:00" },
+                { id: "w_mtfEx-rCI", title: "What If Your Next Investment Decision Had An AI Thinking With You?", tag: "AI Insight", duration: "12:10" },
+                { id: "ADQXJmZYFOc", title: "अरिहंतप्लस MCP को AI चैटबॉट्स से कनेक्ट करना सीखें", tag: "Tutorial", duration: "15:47" },
+                { id: "BKACdyjnx8w", title: "Don't Miss Trades! Auto-Login To Stratzy Algo Via ArihantPlus", tag: "Quick Tip", duration: "24:02" },
+                { id: "rUTS-bKB5W4", title: "How To Setup Algo Strategies Via ArihantPlus App", tag: "Tutorial", duration: "9:35" }
+            ];
+
+            var playSVG = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            var currentIndex = 0;
+
+            function thumbUrl(id) {
+                return 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+            }
+
+            function hasRealId(id) {
+                return !!id && id.indexOf('YOUR_VIDEO_ID') !== 0;
+            }
+
+            function renderFrame(index, autoplay) {
+                var v = videos[index];
+                if (!v) return;
+                currentIndex = index;
+                tagEl.textContent = v.tag;
+                titleEl.textContent = v.title;
+
+                if (autoplay && hasRealId(v.id)) {
+                    frameWrap.innerHTML = '<iframe src="https://www.youtube.com/embed/' + v.id + '?autoplay=1&rel=0" ' +
+                        'title="' + v.title + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+                        'allowfullscreen></iframe>';
+                } else if (hasRealId(v.id)) {
+                    frameWrap.innerHTML =
+                        '<img src="' + thumbUrl(v.id) + '" alt="' + v.title + '">' +
+                        '<div class="video-shade"></div>' +
+                        '<div class="video-play-btn">' + playSVG + '</div>';
+                } else {
+                    frameWrap.innerHTML =
+                        '<div class="video-shade"></div>' +
+                        '<div class="video-play-btn">' + playSVG + '</div>';
+                }
+
+                Array.prototype.forEach.call(playlistHost.querySelectorAll('.video-playlist-item'), function (el, i) {
+                    el.classList.toggle('active', i === index);
+                });
+            }
+
+            playlistHost.innerHTML = videos.map(function (v, i) {
+                var thumbImg = hasRealId(v.id) ? '<img src="' + thumbUrl(v.id) + '" alt="' + v.title + '" loading="lazy">' : '';
+                return '<div class="video-playlist-item' + (i === 0 ? ' active' : '') + '" data-index="' + i + '">' +
+                    '<div class="video-thumb">' +
+                    thumbImg +
+                    '<div class="video-thumb-play">' + playSVG + '</div>' +
+                    '</div>' +
+                    '<div class="video-meta">' +
+                    '<h4>' + v.title + '</h4>' +
+                    '<span>' + v.tag + ' · ' + v.duration + '</span>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            renderFrame(0, false);
+
+            frameWrap.addEventListener('click', function () {
+                renderFrame(currentIndex, true);
+            });
+
+            playlistHost.querySelectorAll('.video-playlist-item').forEach(function (el) {
+                el.addEventListener('click', function () {
+                    var idx = parseInt(el.getAttribute('data-index'), 10);
+                    renderFrame(idx, true);
+                });
+            });
+        })();
+
+        // ---------- Event Gallery ----------
+        (function () {
+            var grid = document.getElementById('gallery-grid');
+            var loadMoreBtn = document.getElementById('galleryLoadMore');
+            if (!grid) return;
+
+            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var BATCH_SIZE = 8;
+
+            var galleryItems = [
+                { img: "assets/images/gallery/18.jpeg", name: "AI & Algo Panel Discussion", label: "Conclave" },
+                { img: "assets/images/gallery/19.jpeg", name: "Meet the ArihantPlus Robot", label: "Experience" },
+                { img: "assets/images/gallery/20.jpeg", name: "Together on the Conclave Stage", label: "Conclave" },
+                { img: "assets/images/gallery/21.jpeg", name: "Bringing Market Minds Together", label: "Conclave" },
+                { img: "assets/images/gallery/22.jpeg", name: "A Room Full of Energy", label: "Community" },
+                { img: "assets/images/gallery/1.jpg", name: "Opening Keynote — AI Trading Summit", label: "Conclave" },
+                { img: "assets/images/gallery/2.jpg", name: "Live AI Screening Demo", label: "Workshop" },
+                { img: "assets/images/gallery/3.jpg", name: "Networking Lounge", label: "Community" },
+                { img: "assets/images/gallery/4.jpg", name: "Panel Discussion On Algo Trading", label: "Conclave" },
+                { img: "assets/images/gallery/5.jpg", name: "Algo Trading Bootcamp", label: "Workshop" },
+                { img: "assets/images/gallery/6.jpg", name: "Trader Meetup Mixer", label: "Community" },
+                { img: "assets/images/gallery/7.jpg", name: "Award Ceremony", label: "Conclave" },
+                { img: "assets/images/gallery/8.jpg", name: "Hands-On Charting Session", label: "Workshop" },
+                { img: "assets/images/gallery/9.jpg", name: "Community Q&A", label: "Community" },
+                { img: "assets/images/gallery/10.jpg", name: "Expert Fireside Chat", label: "Conclave" },
+                { img: "assets/images/gallery/11.jpg", name: "Strategy Building Workshop", label: "Workshop" },
+                { img: "assets/images/gallery/12.jpg", name: "Closing Celebration", label: "Community" },
+                { img: "assets/images/gallery/13.jpg", name: "Behind The Scenes", label: "Community" },
+                { img: "assets/images/gallery/14.jpg", name: "Trading Floor Walkthrough", label: "Conclave" },
+                { img: "assets/images/gallery/15.jpg", name: "Speaker Meet & Greet", label: "Workshop" },
+                { img: "assets/images/gallery/16.jpg", name: "Attendee Highlights", label: "Community" },
+                { img: "assets/images/gallery/17.jpg", name: "Group Photo", label: "Conclave" }
+            ];
+
+            var zoomSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.35-4.35" stroke-linecap="round"/><path d="M10.5 8v5M8 10.5h5" stroke-linecap="round"/></svg>';
+
+            grid.innerHTML = galleryItems.map(function (item, i) {
+                return '<div class="gallery-item' + (i >= BATCH_SIZE ? ' hidden' : '') + '" data-index="' + i + '">' +
+                    '<img src="' + item.img + '" alt="' + item.name + '" loading="lazy">' +
+                    '<div class="gallery-shade"></div>' +
+                    '<div class="gallery-zoom-hint">' + zoomSVG + '</div>' +
+                    '<div class="gallery-overlay">' +
+                    '<span class="gallery-cat">' + item.label + '</span>' +
+                    '<h4>' + item.name + '</h4>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+
+            var itemEls = Array.prototype.slice.call(grid.querySelectorAll('.gallery-item'));
+            var shownCount = Math.min(BATCH_SIZE, itemEls.length);
+
+            if (loadMoreBtn && shownCount >= itemEls.length) {
+                loadMoreBtn.classList.add('hidden');
+            }
+
+            if (reduceMotion || !('IntersectionObserver' in window)) {
+                itemEls.forEach(function (el) {
+                    if (!el.classList.contains('hidden')) el.classList.add('reveal');
+                });
+            } else {
+                var revealCount = 0;
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.style.transitionDelay = Math.min(revealCount * 70, 420) + 'ms';
+                            entry.target.classList.add('reveal');
+                            revealCount++;
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+                itemEls.forEach(function (el) {
+                    if (!el.classList.contains('hidden')) io.observe(el);
+                });
+            }
+
+            if (loadMoreBtn) {
+                loadMoreBtn.addEventListener('click', function () {
+                    var next = itemEls.slice(shownCount, shownCount + BATCH_SIZE);
+                    next.forEach(function (el, i) {
+                        el.classList.remove('hidden');
+                        el.style.transitionDelay = Math.min(i * 70, 420) + 'ms';
+                        if (reduceMotion) {
+                            el.classList.add('reveal');
+                        } else {
+                            setTimeout(function () {
+                                el.classList.add('reveal');
+                            }, 20);
+                        }
+                    });
+                    shownCount += next.length;
+                    if (shownCount >= itemEls.length) {
+                        loadMoreBtn.classList.add('hidden');
+                    }
+                });
+            }
+
+            var lightbox = document.getElementById('galleryLightbox');
+            var lightboxImg = document.getElementById('lightboxImg');
+            var lightboxCat = document.getElementById('lightboxCat');
+            var lightboxName = document.getElementById('lightboxName');
+            var lightboxCounter = document.getElementById('lightboxCounter');
+            var lightboxClose = document.getElementById('lightboxClose');
+            var lightboxPrev = document.getElementById('lightboxPrev');
+            var lightboxNext = document.getElementById('lightboxNext');
+            var currentIndex = 0;
+
+            function visibleIndexes() {
+                var list = [];
+                itemEls.forEach(function (el, idx) {
+                    if (!el.classList.contains('hidden')) list.push(idx);
+                });
+                return list;
+            }
+
+            function showLightbox(dataIndex) {
+                var item = galleryItems[dataIndex];
+                if (!item) return;
+                currentIndex = dataIndex;
+                lightboxImg.src = item.img;
+                lightboxImg.alt = item.name;
+                lightboxCat.textContent = item.label;
+                lightboxName.textContent = item.name;
+                var vis = visibleIndexes();
+                var pos = vis.indexOf(dataIndex) + 1;
+                lightboxCounter.textContent = (pos > 0 ? pos : 1) + ' / ' + (vis.length || galleryItems.length);
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            function step(dir) {
+                var vis = visibleIndexes();
+                if (vis.length === 0) return;
+                var pos = vis.indexOf(currentIndex);
+                if (pos === -1) pos = 0;
+                var nextPos = (pos + dir + vis.length) % vis.length;
+                showLightbox(vis[nextPos]);
+            }
+
+            itemEls.forEach(function (el) {
+                el.addEventListener('click', function () {
+                    showLightbox(parseInt(el.getAttribute('data-index'), 10));
+                });
+            });
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightboxPrev.addEventListener('click', function () { step(-1); });
+            lightboxNext.addEventListener('click', function () { step(1); });
+            lightbox.addEventListener('click', function (e) {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (!lightbox.classList.contains('open')) return;
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') step(-1);
+                if (e.key === 'ArrowRight') step(1);
+            });
+        })();
     </script>
 </body>
 

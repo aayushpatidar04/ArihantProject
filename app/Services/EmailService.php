@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\Communication;
 use App\Models\EventRegistration;
+use App\Models\FinbridgeRegistration;
 use App\Mail\EventConfirmationMail;
+use App\Mail\FinBridgeConfirmationMail;
 use App\Mail\EventDayQrMail;
 use App\Mail\SeatConfirmationMail;
 use Illuminate\Support\Facades\Mail;
@@ -39,6 +41,15 @@ class EmailService
         } catch (\Exception $e) {
             Log::error('Email confirmation failed: ' . $e->getMessage());
             // $this->logCommunication($registration, 'confirmation', 'Registration confirmation', 'failed', $e->getMessage());
+        }
+    }
+
+    public function sendFinbridgeConfirmation(FinbridgeRegistration $registration, string $qrImagePath): void
+    {
+        try {
+            Mail::to($registration->email)->send(new FinBridgeConfirmationMail($registration, $qrImagePath));
+        } catch (\Exception $e) {
+            Log::error('Email confirmation failed: ' . $e->getMessage());
         }
     }
 

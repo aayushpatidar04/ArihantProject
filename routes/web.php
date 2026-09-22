@@ -52,10 +52,13 @@ Route::prefix('influencer')->name('influencer.')->group(function () {
 Route::get('/register', [RegistrationController::class, 'showForm'])->name('registration.form');
 // Route::get('/register', function () {return view('registration.closed'); })->name('registration.form');
 Route::post('/register', [RegistrationController::class, 'submitPhone'])->name('registration.submit');
+Route::post('/finbridge-register', [RegistrationController::class, 'submitFinBridgePhone'])->name('registration.finbridge-submit');
 
 // Step 2A: Existing client — confirm pre-filled details
 Route::get('/register/confirm', [RegistrationController::class, 'showClientConfirm'])->name('registration.client.confirm');
 Route::post('/register/confirm', [RegistrationController::class, 'submitClientConfirm'])->name('registration.client.confirm.submit');
+Route::get('/register/finbridge-confirm', [RegistrationController::class, 'showFinbridgeClientConfirm'])->name('registration.finbridge-client.confirm');
+Route::post('/register/finbridge-confirm', [RegistrationController::class, 'submitFinbridgeClientConfirm'])->name('registration.finbridge-client.confirm.submit');
 
 // Step 2B: New user — OTP verification
 Route::get('/register/otp', [RegistrationController::class, 'showOtp'])->name('registration.otp');
@@ -64,7 +67,9 @@ Route::post('/register/otp/resend', [RegistrationController::class, 'resendOtp']
 
 // Step 3: New user — fill details (after OTP)
 Route::get('/register/details', [RegistrationController::class, 'showDetails'])->name('registration.details');
+Route::get('/register/finbridge-details', [RegistrationController::class, 'showFinBridgeDetails'])->name('registration.finbridge-details');
 Route::post('/register/details', [RegistrationController::class, 'submitDetails'])->name('registration.details.submit');
+Route::post('/register/finbridge-details', [RegistrationController::class, 'submitFinBridgeDetails'])->name('registration.finbridge-details.submit');
 
 Route::get('/event-policy', function () {
     return view('registration.policy');
@@ -90,6 +95,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/register/thank-you', [RegistrationController::class, 'thankYou'])->name('registration.thankyou');
     // Step 6: Success
     Route::get('/register/success', [RegistrationController::class, 'success'])->name('registration.success');
+    Route::get('/register/finbridge-success', [RegistrationController::class, 'FinBridgesuccess'])->name('registration.finbridge-success');
 
     /* ---------- Stalls ---------- */
     Route::get('/stalls', [StallController::class, 'index'])->name('stalls.index');
@@ -109,6 +115,9 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/venue/login', [CheckInController::class, 'showVenueLogin'])->name('venue.login');
 Route::post('/venue/login', [CheckInController::class, 'venueLogin'])->name('venue.login.post');
+Route::get('/finbridge-venue/login', [CheckInController::class, 'showFinbridgeVenueLogin'])->name('finbridge-venue.login');
+Route::post('/finbridge-venue/login', [CheckInController::class, 'finbridgeVenueLogin'])->name('finbridge-venue.login.post');
+
 Route::middleware(['venue'])->group(function () {
     Route::get('/checkin/scanner', [CheckInController::class, 'scanner'])->name('checkin.scanner');
     Route::post('/checkin/validate', [CheckInController::class, 'validateQr'])->name('checkin.validate');
@@ -117,6 +126,10 @@ Route::middleware(['venue'])->group(function () {
     Route::get('/checkout/scanner', [CheckOutController::class, 'scanner'])->name('checkout.scanner');
     Route::post('/checkout/validate', [CheckOutController::class, 'validateQr'])->name('checkout.validate');
     Route::post('/checkout', [CheckOutController::class, 'checkOut'])->name('checkout.perform');
+
+    Route::get('/finbridge/scanner', [CheckInController::class, 'finbridgeScanner'])->name('finbridge.scanner');
+    Route::post('/finbridge/validate', [CheckInController::class, 'finbridgeValidateQr'])->name('finbridge.validate');
+    Route::post('finbridge/confirmed', [CheckInController::class, 'finbridgeConfirmed'])->name('finbridge.confirmed');
 });
 /* ---------- Payment Callback ---------- */
 Route::post('/payment/callback/{id}', [RegistrationController::class, 'paymentCallback'])->name('payment.callback');
@@ -264,7 +277,12 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
         Route::get('/visits/{visit}', [AdminStallVisitController::class, 'show'])
             ->middleware('permission:stalls,view')
             ->name('visits.show');
+
     });
+
+    Route::get('/finbridge-registrations', [AdminController::class, 'finbridgeRegistrations'])
+        // ->middleware('permission:registrations,view')
+        ->name('finbridge-registrations');
 
 });
 

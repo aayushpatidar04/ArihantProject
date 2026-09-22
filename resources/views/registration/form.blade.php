@@ -315,7 +315,7 @@
                         style="margin: 0 0 0 5px; font-style: italic;"><u>Click here to Login</u></a></div>
             @endif
 
-            <form action="{{ route('registration.submit') }}" method="POST" id="phoneForm">
+            <form action="{{ route('registration.finbridge-submit') }}" method="POST" id="phoneForm">
                 @csrf
                 <div class="phone-wrap">
                     <span class="phone-prefix">+91</span>

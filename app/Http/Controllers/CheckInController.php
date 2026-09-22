@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EventRegistration;
 use App\Models\QrCode;
+use App\Models\FinbridgeQrCode;
 use App\Services\SeatAllocationService;
 use App\Services\WhatsAppService;
 use App\Services\EmailService;
@@ -32,6 +33,23 @@ class CheckInController extends Controller
         if ($request->pin === config('event.venue_pin')) {
             session(['venue_authenticated' => true]);
             return redirect()->route('checkin.scanner');
+        }
+
+        return back()->withErrors(['pin' => 'Invalid PIN']);
+    }
+
+    public function showFinbridgeVenueLogin()
+    {
+        return view('finbridge.venue_login');
+    }
+
+    public function finbridgeVenueLogin(Request $request)
+    {
+        $request->validate(['pin' => 'required|string']);
+
+        if ($request->pin === config('event.venue_pin')) {
+            session(['venue_authenticated' => true]);
+            return redirect()->route('finbridge.scanner');
         }
 
         return back()->withErrors(['pin' => 'Invalid PIN']);
@@ -134,5 +152,67 @@ class CheckInController extends Controller
         $reg = EventRegistration::where('registration_number', $request->reg)->firstOrFail();
         $seat = $reg->seat;
         return view('checkin.confirmation', compact('reg', 'seat'));
+    }
+
+    public function finbridgeScanner()
+    {
+        return view('finbridge.scanner');
+    }
+
+    public function finbridgeValidateQr(Request $request)
+    {
+        $request->validate(['code' => 'required|string|size:32']);
+        $qr = FinbridgeQrCode::where('code', $request->code)
+            ->where('purpose', 'goodies')
+            ->where('is_used', false)
+            ->with('registration')
+            ->first();
+
+        if (!$qr) {
+            return response()->json(['valid' => false, 'message' => 'Invalid or already used QR code.'], 404);
+        }
+
+        $reg = $qr->registration;
+
+        return response()->json([
+            'valid' => true,
+            'registration_id' => $reg->id,
+            'name' => $reg->full_name,
+            'email' => $reg->email,
+            'phone' => $reg->phone,
+            'city' => $reg->city,
+            'registration_number' => $reg->registration_number,
+            'type' => $reg->type,
+            'is_existing_client' => $reg->is_existing_client,
+            'qr_code' => $qr->code,
+            'message' => 'Participant found. Ready to give goodies.',
+        ]);
+    }
+
+    public function finbridgeConfirmed(Request $request)
+    {
+        $request->validate(['code' => 'required|string|size:32']);
+
+        $qr = FinbridgeQrCode::where('code', $request->code)
+            ->where('purpose', 'goodies')
+            ->where('is_used', false)
+            ->with('registration')
+            ->first();
+
+        if (!$qr) {
+            return response()->json(['success' => false, 'message' => 'QR code already used or invalid.'], 404);
+        }
+
+        $reg = $qr->registration;
+        $reg->update(['status' => 'confirmed']);
+
+        // Mark QR as used
+        $qr->update(['is_used' => true, 'used_at' => now()]);
+
+        return response()->json([
+            'success' => true,
+            'name' => $reg->full_name,
+            'message' => 'Goodies collected successfully.',
+        ]);
     }
 }

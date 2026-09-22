@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\EventRegistration;
+use App\Models\FinbridgeRegistration;
 use App\Models\QrCode as QrCodeModel;
+use App\Models\FinbridgeQrCode;
 use App\Models\Stall;
 use Illuminate\Support\Facades\Storage;
 use Endroid\QrCode\QrCode;
@@ -42,6 +44,38 @@ class QrCodeService
             'code' => $shortCode,
             'image_path' => $path,
             'purpose' => 'entry',
+        ]);
+    }
+
+    public function generateGoodiesQr(FinbridgeRegistration $registration): FinbridgeQrCode
+    {
+        $code = hash('sha256', $registration->id . '|' . $registration->registration_number . '|goodies');
+        $shortCode = substr($code, 0, 32);
+
+        $path = "qrcodes/{$registration->id}_goodies.png";
+
+        $existing = FinbridgeQrCode::where('finbridge_registration_id', $registration->id)
+            ->where('purpose', 'goodies')
+            ->first();
+
+        // If record exists but file missing, regenerate image
+        if ($existing) {
+            if (!Storage::disk('public')->exists($existing->image_path)) {
+                $qrImage = $this->generateImage($shortCode);
+                Storage::disk('public')->put($existing->image_path, $qrImage);
+            }
+            return $existing;
+        }
+
+        // Normal case: create new record + image
+        $qrImage = $this->generateImage($shortCode);
+        Storage::disk('public')->put($path, $qrImage);
+
+        return FinbridgeQrCode::create([
+            'finbridge_registration_id' => $registration->id,
+            'code' => $shortCode,
+            'image_path' => $path,
+            'purpose' => 'goodies',
         ]);
     }
 

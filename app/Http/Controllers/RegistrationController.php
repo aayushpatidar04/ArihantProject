@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventRegistration;
+use App\Models\FinbridgeRegistration;
 use App\Models\KycDetail;
 use App\Models\Payment;
 use App\Models\Referral;
@@ -124,8 +125,41 @@ class RegistrationController extends Controller
         // Return the closed registration view
         return view('registration.closed');
     }
-    
-       public function showClientConfirm()
+
+    public function submitFinBridgePhone(Request $request)
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string|regex:/^[0-9]{10}$/|unique:finbridge_registrations,phone',
+        ], [
+            'phone.unique' => 'This number is already registered. Try logging in or use another number.',
+        ]);
+
+        $phone = $validated['phone'];
+
+        // PRIORITY 2: Check if existing Arihant client
+        $clientData = $this->clientApi->checkClient($phone);
+        if ($clientData) {
+            Session::put('client_users', $clientData['users']);
+            Session::put('reg_phone', $phone);
+            Session::put('is_existing_client', true);
+            return redirect()->route('registration.finbridge-client.confirm');
+        }
+
+        // PRIORITY 3: New user flow (OTP + payment)
+        $otp = random_int(100000, 999999);
+
+        Session::put('reg_phone', $phone);
+        Session::put('reg_otp', $otp);
+        Session::put('otp_expires', now()->addMinutes(10));
+        Session::put('is_existing_client', false);
+        Session::put('is_subbroker', false);
+
+        $this->whatsapp->sendOtpToPhone($phone, (string) $otp);
+
+        return redirect()->route('registration.otp');
+    }
+
+    public function showClientConfirm()
     {
         if (Auth::check()) {
             return redirect()->route('registration.success');
@@ -283,6 +317,103 @@ class RegistrationController extends Controller
         return redirect()->route('registration.payment');
     }
 
+    public function showFinbridgeClientConfirm()
+    {
+        if (Auth::check()) {
+            return redirect()->route('registration.finbridge-success');
+        }
+        if (!Session::get('is_existing_client') || !Session::has('client_users')) {
+            return redirect()->route('registration.form');
+        }
+
+        return view('registration.finbridge-client_confirm', [
+            'client_users' => Session::get('client_users'),
+            'phone' => Session::get('reg_phone'),
+        ]);
+    }
+
+    public function submitFinbridgeClientConfirm(Request $request)
+    {
+        if (!Session::get('is_existing_client') || !Session::has('client_users')) {
+            return redirect()->route('registration.form');
+        }
+
+        $request->validate([
+            'selected_uid' => 'required|string',
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:finbridge_registrations,email',
+            'phone' => 'required|unique:event_registrations,phone',
+            'city' => 'required|string|max:100',
+            'type' => 'required|in:investor,trader',
+        ]);
+
+        $clientUsers = Session::get('client_users');
+        $selectedUser = collect($clientUsers)->firstWhere('uid', $request->selected_uid);
+
+        if (!$selectedUser) {
+            return back()->withErrors(['selected_uid' => 'Invalid client ID selected.']);
+        }
+
+        $user = User::updateOrCreate([
+            'email' => $request->email,
+        ], [
+            'name' => $request->full_name,
+            'password' => Hash::make('ArihantCapitals'),
+        ]);
+
+        $reg = FinbridgeRegistration::create([
+            'user_id' => $user->id,
+            'registration_number' => 'ARI-' . now()->format('Y') . '-' . strtoupper(Str::random(6)),
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'city' => $request->city,
+            'type' => $request->type,
+            'is_existing_client' => true,
+            'status' => 'pending',
+            'otp_verified_at' => now(),
+            'kyc_completed_at' => now(),
+            'platform' => Session::get('registration_platform'),
+        ]);
+
+        $existingQr = $reg->qrCodes()->where('purpose', 'goodies')->first();
+
+        if (!$existingQr) {
+            $qr = $this->qr->generateGoodiesQr($reg); // new method
+            $qrUrl = asset('storage/' . $qr->image_path);
+
+            // $this->whatsapp->sendFinbridgeQrImage($reg, $qrUrl);
+            $this->email->sendFinbridgeConfirmation($reg, $qr->image_path);
+        }
+
+        // Push lead to CRM (fire-and-forget)
+        try {
+            $crmResponse = Http::withHeaders([
+                'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
+                'Content-Type' => 'application/json',
+            ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
+                        'name' => $reg->full_name,
+                        'mobileNumber' => $reg->phone,
+                        'email' => $reg->email,
+                        'city' => $reg->city,
+                        'sourceUrl' => 'https://event.arihantplus.com', // or your event landing page
+                        'source' => 'Fin bridge Expo Ahemdabad',
+                        'clientType' => $reg->is_existing_client ? 'Existing Client' : 'New Client',
+                    ]);
+
+        } catch (\Exception $e) {
+            Log::error('CRM lead push failed: ' . $e->getMessage(), [
+                'reg_id' => $reg->id,
+            ]);
+        }
+
+        Auth::login($user);
+
+        Session::forget(['client_users', 'reg_phone', 'is_existing_client', 'reg_referred_by', 'registration_platform']);
+
+        return redirect()->route('registration.finbridge-success');
+    }
+
     /* ============================================================
        STEP 2B: New User — OTP Verification
        ============================================================ */
@@ -315,7 +446,8 @@ class RegistrationController extends Controller
         Session::put('phone_verified', true);
         Session::forget(['reg_otp', 'otp_expires']);
 
-        return redirect()->route('registration.details');
+        // return redirect()->route('registration.details');
+        return redirect()->route('registration.finbridge-details');
     }
 
     public function resendOtp()
@@ -357,6 +489,22 @@ class RegistrationController extends Controller
         }
 
         return view('registration.details', ['is_subbroker' => false]);
+    }
+
+    public function showFinBridgeDetails()
+    {
+        if (Auth::check()) {
+            return redirect()->route('registration.success');
+        }
+        $phoneVerified = Session::get('phone_verified');
+        $isExisting = Session::get('is_existing_client');
+
+        // New users need OTP verified
+        if ($isExisting || !$phoneVerified) {
+            return redirect()->route('registration.form');
+        }
+
+        return view('registration.details-finbridge', ['is_subbroker' => false]);
     }
 
     public function submitDetails(Request $request)
@@ -464,7 +612,7 @@ class RegistrationController extends Controller
 
         // Push lead to CRM (fire-and-forget)
         try {
-            $crmResponse = \Illuminate\Support\Facades\Http::withHeaders([
+            $crmResponse = Http::withHeaders([
                 'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
                 'Content-Type' => 'application/json',
             ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
@@ -498,6 +646,76 @@ class RegistrationController extends Controller
 
         Session::forget(['reg_phone', 'phone_verified', 'reg_referred_by', 'registration_platform']);
         return redirect()->route('registration.payment');
+    }
+
+    public function submitFinBridgeDetails(Request $request)
+    {
+        if (Session::get('is_existing_client') || !Session::get('phone_verified')) {
+            return redirect()->route('registration.form');
+        }
+
+        $validated = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:finbridge_registrations,email',
+            'city' => 'required|string|max:100',
+            'type' => 'required|in:investor,trader'
+        ]);
+
+        $user = User::updateOrCreate([
+            'email' => $validated['email']
+        ], [
+            'name' => $validated['full_name'],
+            'password' => Hash::make('ArihantCapitals'),
+        ]);
+
+        $reg = FinbridgeRegistration::create([
+            'user_id' => $user->id,
+            'registration_number' => 'ARI-' . now()->format('Y') . '-' . strtoupper(Str::random(6)),
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
+            'phone' => Session::get('reg_phone'),
+            'city' => $validated['city'],
+            'type' => $validated['type'],
+            'status' => 'pending',
+            'otp_verified_at' => now(),
+            'kyc_completed_at' => now(),
+        ]);
+
+        $existingQr = $reg->qrCodes()->where('purpose', 'goodies')->first();
+
+        if (!$existingQr) {
+            $qr = $this->qr->generateGoodiesQr($reg); // new method
+            $qrUrl = asset('storage/' . $qr->image_path);
+
+            // $this->whatsapp->sendFinbridgeQrImage($reg, $qrUrl);
+            $this->email->sendFinbridgeConfirmation($reg, $qr->image_path);
+        }
+
+        // Push lead to CRM (fire-and-forget)
+        try {
+            $crmResponse = Http::withHeaders([
+                'Authorization' => 'Bearer 62c6067304882a00a922dcb4d89c51aab7c812f1d4371badedc531b5f737f8d3',
+                'Content-Type' => 'application/json',
+            ])->post('https://ekycadminapi.arihantcapital.com/api/users/admin/createEventLead', [
+                        'name' => $reg->full_name,
+                        'mobileNumber' => $reg->phone,
+                        'email' => $reg->email,
+                        'city' => $reg->city,
+                        'sourceUrl' => 'https://event.arihantplus.com',
+                        'source' => 'Fin Bridge Ahemdabad',
+                        'clientType' => $reg->is_existing_client ? 'Existing Client' : 'New Client',
+                    ]);
+
+        } catch (\Exception $e) {
+            Log::error('CRM lead push failed: ' . $e->getMessage(), [
+                'reg_id' => $reg->id,
+            ]);
+        }
+
+        Auth::login($user);
+
+        Session::forget(['reg_phone', 'phone_verified', 'reg_referred_by', 'registration_platform']);
+        return redirect()->route('registration.finbridge-success');
     }
 
     /* ============================================================
@@ -1145,6 +1363,21 @@ class RegistrationController extends Controller
 
         $qr = $reg->qrCodes()->where('purpose', 'entry')->first();
         return view('registration.success', compact('reg', 'qr'));
+    }
+
+    public function FinBridgesuccess()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('index');
+        }
+
+        $reg = FinbridgeRegistration::where('user_id', Auth::id())
+            ->latest()
+            ->first();
+
+
+        $qr = $reg->qrCodes()->where('purpose', 'goodies')->first();
+        return view('registration.finbridge-success', compact('reg', 'qr'));
     }
 
     /* ============================================================
