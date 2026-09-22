@@ -582,7 +582,7 @@
             color: #D5D5D5;
             font-size: clamp(15px, 1.7vw, 18px);
             line-height: 1.6;
-            text-transform: capitalize;
+            /* text-transform: capitalize; */
         }
 
         .hero-tagline {
@@ -4503,10 +4503,10 @@
         <div class="hero-video-veil" aria-hidden="true"></div>
 
 
-        <span class="eyebrow">ARIHANTPLUS PRESENTS</span>
+        {{-- <span class="eyebrow">ARIHANTPLUS PRESENTS</span> --}}
         <h1><span class="thank-you">Thank You</span><br>for making the AI &amp; <br>Algo Trading <br>Conclave <br> a
             grand success</h1>
-        <p class="sub">Your ideas, energy and participation made the day memorable. Ready for what comes next.</p>
+        <p class="sub">Your Ideas, Energy and Participation made the day memorable. Get ready for what comes next.</p>
 
         {{-- <p class="btn btn-primary"><a href="/register">we are officially housefull, thankyou for your overwhelming
                 response indore.</a></p> --}}
@@ -6362,22 +6362,22 @@
 
         // ---------- Agenda (repeatable data-driven list) ----------
         var agenda = [
-            { time: "10:30 AM – 10:45 AM", title: "Welcome Session – Event Introduction", body: "Event introduction and lamp lighting to open the day.", tag: "Ceremony" },
-            { time: "10:45 AM – 11:05 AM", title: "SPECIAL ADDRESS", body: "An address from Arihant Leadership setting the tone for the conclave.", tag: "Address" },
-            { time: "11:05 AM – 11:45 AM", title: "ALGO TRADING BASICS + LIVE WORKSHOP", body: "Vishal Mehta walks through the fundamentals of algo trading with a live, hands-on workshop.", tag: "Workshop" },
-            { time: "11:45 AM – 12:00 PM", title: "AI TRADING BASICS: MCP & PROMPTS", body: "A primer on using MCP and prompts for AI-assisted trading, led by an AI expert.", tag: "Session" },
-            { time: "12:00 PM – 12:25 PM", title: "PANEL DISCUSSION: AI + ALGO TRADING", body: "Vishal Mehta, Saurabh Sisodiya, Swati Jain and Rahul Saroge discuss where AI and algo trading meet.", tag: "Panel" },
-            { time: "12:25 PM – 12:40 PM", title: "Q&A", body: "Open floor questions following the AI + Algo Trading panel.", tag: "Q&A" },
-            { time: "12:40 PM – 1:10 PM", title: "ARIHANTPLUS ALGO PRODUCT EXPERIENCE", body: "Rajesh Srivastav takes attendees through the ArihantPlus algo product hands-on.", tag: "Demo" },
-            { time: "1:10 PM – 2:10 PM", title: "LUNCH BREAK + NETWORKING", body: "A break to refuel and connect with fellow traders and speakers.", tag: "Break" },
-            { time: "2:10 PM – 2:50 PM", title: "AI + Algo Trading Advanced — Santosh Pasi", body: "Santosh Pasi goes deeper into advanced AI and algo trading techniques.", tag: "Session" },
-            { time: "2:50 PM – 3:10 PM", title: "AI + Algo Trading Advanced — Ravi Paliwal (AI Expert )", body: "Ravi Paliwal goes deeper into advanced AI and algo trading techniques.", tag: "Session" },
-            { time: "3:10 PM – 3:40 PM", title: "Algo + AI  Panel Discussion", body: "Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading.", tag: "Panel" },
-            { time: "3:40 PM – 3:55 PM", title: "Q&A", body: "Open floor questions following the AI + Algo Trading panel.", tag: "Q&A" },
-            { time: "3:55 PM – 4:10 PM", title: "QUIZ / AUDIENCE ENGAGEMENT", body: "Live quiz and audience engagement with prizes up for grabs.", tag: "Engagement" },
-            { time: "4:10 PM – 4:40 PM", title: "Gurus of Trading", body: "A conversation with Arpit Jain & Praneet Maheshwari, alongside Arihant clients, on how AI is changing the way they trade, analyse markets, and make decisions.", tag: "Panel" },
-            { time: "4:40 PM – 5:00 PM", title: "Sound Healing Experience", body: "A wellness interlude to reset before the final stretch of sessions.", tag: "Wellness" },
-            { time: "5:00 PM", title: "NATIONAL ANTHEM + CLOSING", body: "A closing note and national anthem to wrap up the day, with all guests and attendees.", tag: "Closing" }
+            { time: "10:30 AM – 10:45 AM", title: "Welcome Session – Event Introduction", body: "Event introduction and lamp lighting to open the day.", tag: "Closed" },
+            { time: "10:45 AM – 11:05 AM", title: "SPECIAL ADDRESS", body: "An address from Arihant Leadership setting the tone for the conclave.", tag: "Closed" },
+            { time: "11:05 AM – 11:45 AM", title: "ALGO TRADING BASICS + LIVE WORKSHOP", body: "Vishal Mehta walks through the fundamentals of algo trading with a live, hands-on workshop.", tag: "Closed" },
+            { time: "11:45 AM – 12:00 PM", title: "AI TRADING BASICS: MCP & PROMPTS", body: "A primer on using MCP and prompts for AI-assisted trading, led by an AI expert.", tag: "Closed" },
+            { time: "12:00 PM – 12:25 PM", title: "PANEL DISCUSSION: AI + ALGO TRADING", body: "Vishal Mehta, Saurabh Sisodiya, Swati Jain and Rahul Saroge discuss where AI and algo trading meet.", tag: "Closed" },
+            { time: "12:25 PM – 12:40 PM", title: "Q&A", body: "Open floor questions following the AI + Algo Trading panel.", tag: "Closed" },
+            { time: "12:40 PM – 1:10 PM", title: "ARIHANTPLUS ALGO PRODUCT EXPERIENCE", body: "Rajesh Srivastav takes attendees through the ArihantPlus algo product hands-on.", tag: "Closed" },
+            { time: "1:10 PM – 2:10 PM", title: "LUNCH BREAK + NETWORKING", body: "A break to refuel and connect with fellow traders and speakers.", tag: "Closed" },
+            { time: "2:10 PM – 2:50 PM", title: "AI + Algo Trading Advanced — Santosh Pasi", body: "Santosh Pasi goes deeper into advanced AI and algo trading techniques.", tag: "Closed" },
+            { time: "2:50 PM – 3:10 PM", title: "AI + Algo Trading Advanced — Ravi Paliwal (AI Expert )", body: "Ravi Paliwal goes deeper into advanced AI and algo trading techniques.", tag: "Closed" },
+            { time: "3:10 PM – 3:40 PM", title: "Algo + AI  Panel Discussion", body: "Santosh Pasi, Nikhil Bhandari and Kavita Jain discuss the road ahead for algo and AI trading.", tag: "Closed" },
+            { time: "3:40 PM – 3:55 PM", title: "Q&A", body: "Open floor questions following the AI + Algo Trading panel.", tag: "Closed" },
+            { time: "3:55 PM – 4:10 PM", title: "QUIZ / AUDIENCE ENGAGEMENT", body: "Live quiz and audience engagement with prizes up for grabs.", tag: "Closed" },
+            { time: "4:10 PM – 4:40 PM", title: "Gurus of Trading", body: "A conversation with Arpit Jain & Praneet Maheshwari, alongside Arihant clients, on how AI is changing the way they trade, analyse markets, and make decisions.", tag: "Closed" },
+            { time: "4:40 PM – 5:00 PM", title: "Sound Healing Experience", body: "A wellness interlude to reset before the final stretch of sessions.", tag: "Closed" },
+            { time: "5:00 PM", title: "NATIONAL ANTHEM + CLOSING", body: "A closing note and national anthem to wrap up the day, with all guests and attendees.", tag: "Closed" }
         ];
 
         var agendaHTML = agenda.map(function (a) {
