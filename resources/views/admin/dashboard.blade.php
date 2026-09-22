@@ -202,6 +202,10 @@
             @endpermission
 
             <a href="{{ route('admin.general-feedback') }}">General Feedback</a>
+
+            @permission('registrations', 'view')
+            <a href="{{ route('admin.finbridge-registrations') }}">Finbridge Registrations</a>
+            @endpermission
         </div>
 
         @canAction('registrations', 'view')
