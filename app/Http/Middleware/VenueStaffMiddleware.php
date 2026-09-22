@@ -17,7 +17,7 @@ class VenueStaffMiddleware
         }
 
         if (session('venue_authenticated') !== true) {
-            return redirect()->route('venue.login');
+            return redirect()->route('finbridge-venue.login');
         }
 
         return $next($request);
