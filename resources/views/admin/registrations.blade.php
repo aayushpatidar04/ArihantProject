@@ -196,7 +196,7 @@
                 <h1>All Registrations</h1>
                 <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                     @permission('registrations', 'export')
-                        <a href="{{ route('admin.export', request()->query()) }}" class="btn btn-primary"
+                        <a href="{{ route('admin.export', ['type' => 'registrations']) }}" class="btn btn-primary"
                             style="font-size:13px;padding:9px 16px">
                             <i class="fas fa-file-excel" style="margin-right:6px;"></i> Export Excel
                         </a>

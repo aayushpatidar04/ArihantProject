@@ -606,8 +606,8 @@ class AdminController extends Controller
             'leadscore' => $this->exportLeadScores(),
             'checkins' => $this->exportCheckIns(),
             'referrals' => $this->exportReferrals(),
-            'registrations' => $this->exportRegistrations(),
-            default => $this->exportFinbridge(),
+            'finbridge-registrations' => $this->exportFinbridge(),
+            default => $this->exportRegistrations(),
         };
     }
 
