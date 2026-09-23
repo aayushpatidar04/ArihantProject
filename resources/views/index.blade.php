@@ -5000,7 +5000,7 @@
             <h2>Invite &amp; Earn</h2>
             <p>The best traders don't learn alone. Bring your circle, get rewarded for it.</p>
             {{-- <a href="#" class="btn btn-ghost" id="benefitsBtn">Benefits</a> --}}
-            <a href="https://www.arihantplus.com/refer-and-earn" class="btn btn-ghost" id="benefitsBtn">Try Now</a>
+            <a href="https://www.arihantplus.com/refer-and-earn" class="btn btn-ghost" target="_blank">Try Now</a>
             @auth
                 <a href="https://www.arihantplus.com/refer-and-earn" class="btn btn-primary">Refer a friend</a>
             @endauth
