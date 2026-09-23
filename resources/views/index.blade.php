@@ -4514,7 +4514,7 @@
             </form>
         @else
             <a href="/login" class="btn btn-primary">Login</a>
-            <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a>
+            {{-- <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a> --}}
         @endauth
     </div>
 
@@ -5337,9 +5337,9 @@
                 </a>
             @else
                 <!-- Disabled button -->
-                <button class="btn btn-primary finbridge-cta" title="Available on 26–27 Sept only" disabled style="cursor: not-allowed;">
+                {{-- <button class="btn btn-primary finbridge-cta" title="Available on 26–27 Sept only" disabled style="cursor: not-allowed;">
                     Meet Us at Finbridge
-                </button>
+                </button> --}}
             @endif
 
 
