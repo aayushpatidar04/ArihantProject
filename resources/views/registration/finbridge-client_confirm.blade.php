@@ -40,7 +40,7 @@
             <div class="alert alert-error" style="margin-bottom:20px">{{ $errors->first() }}</div>
         @endif
 
-        <form action="{{ route('registration.dinbridge-client.confirm.submit') }}" method="POST">
+        <form action="{{ route('registration.finbridge-client.confirm.submit') }}" method="POST">
             @csrf
 
             <div style="margin-bottom:24px">
