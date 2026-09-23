@@ -668,11 +668,38 @@
 
         .hero-cta-group {
             display: flex;
+            flex-direction: column;        /* stack label above button */
+            align-items: center;           /* center both horizontally */
             justify-content: center;
             flex-wrap: wrap;
-            gap: 14px;
+            gap: 12px;
             position: relative;
             z-index: 2;
+        }
+
+        .hero-cta-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #6f42c1;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5); }
+            70%  { box-shadow: 0 0 0 8px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
         }
 
         .btn-primary-alt {
@@ -4463,7 +4490,7 @@
                     </form>
                 @else
                     <a href="/login" class="btn btn-primary nav-cta">Login</a>
-                    <a href="/join-waitlist" class="btn btn-primary nav-cta">Claim your spot for Next Conclave</a>
+                    {{-- <a href="/join-waitlist" class="btn btn-primary nav-cta">Claim your spot for Next Conclave</a> --}}
                 @endauth
             </div>
             <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
@@ -4503,6 +4530,7 @@
         <div class="hero-video-veil" aria-hidden="true"></div>
 
 
+        <img src="assets/images/head-logo.png" alt="AI & Algo Conclave" class="hero-conclave-logo">
         {{-- <span class="eyebrow">ARIHANTPLUS PRESENTS</span> --}}
         <h1><span class="thank-you">Thank You</span><br>for making the AI &amp; <br>Algo Trading <br>Conclave <br> a
             grand success</h1>
@@ -4532,7 +4560,12 @@
             </div> --}}
         </div>
         <div class="hero-cta-group">
-            <button type="button" class="btn btn-primary" id="finbridgeBtn">Meet us at Finbridge Expo Ahmedabad</button>
+            <span class="hero-cta-label">
+                <span class="live-dot"></span> Next Event
+            </span>
+            <button type="button" class="btn btn-primary" id="finbridgeBtn">
+                Meet us at Finbridge Expo Ahmedabad
+            </button>
         </div>
 
     </section>
@@ -4542,8 +4575,7 @@
             <div class="next-dest-left">
                 <span class="eyebrow-label">Next Destination</span>
                 <h2>City to be Revealed</h2>
-                <p>The next AI &amp; Algo Trading experience is coming. Be the first to know when the city and date are
-                    announced.</p>
+                <p>We’re coming to your city next! Stay tuned as we reveal the destination and date for our next AI & Algo Trading experience.</p>
                 <a href="/join-waitlist" class="btn btn-primary">Claim your spot for Next Conclave</a>
             </div>
 
@@ -4967,7 +4999,8 @@
             <img class="sphere-img sphere-img-base" src="assets/images/16.png" alt="" aria-hidden="true">
             <h2>Invite &amp; Earn</h2>
             <p>The best traders don't learn alone. Bring your circle, get rewarded for it.</p>
-            <a href="#" class="btn btn-ghost" id="benefitsBtn">Benefits</a>
+            {{-- <a href="#" class="btn btn-ghost" id="benefitsBtn">Benefits</a> --}}
+            <a href="https://www.arihantplus.com/refer-and-earn" class="btn btn-ghost" id="benefitsBtn">Try Now</a>
             @auth
                 <a href="https://www.arihantplus.com/refer-and-earn" class="btn btn-primary">Refer a friend</a>
             @endauth
@@ -5141,7 +5174,7 @@
     </footer>
 
     {{-- Sticky Mobile CTA --}}
-    <div class="mobile-sticky-cta">
+    {{-- <div class="mobile-sticky-cta">
         <div class="mobile-sticky-inner">
             <div class="mobile-sticky-text">
                 <span>Limited Seats.</span>
@@ -5151,7 +5184,7 @@
                 Claim your spot for Next Conclave
             </a>
         </div>
-    </div>
+    </div> --}}
 
     <div class="modal-overlay" id="reserveModal">
         <div class="modal-card">
