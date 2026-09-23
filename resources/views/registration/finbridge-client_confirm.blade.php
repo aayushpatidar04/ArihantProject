@@ -4,10 +4,6 @@
 
 @push('styles')
     <style>
-        option {
-            color: #000000 !important;
-        }
-
         .reg-page {
             min-height: 100vh;
             padding: 80px 24px 60px;
