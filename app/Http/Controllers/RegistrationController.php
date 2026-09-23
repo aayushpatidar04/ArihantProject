@@ -382,7 +382,7 @@ class RegistrationController extends Controller
             $qr = $this->qr->generateGoodiesQr($reg); // new method
             $qrUrl = asset('storage/' . $qr->image_path);
 
-            // $this->whatsapp->sendFinbridgeQrImage($reg, $qrUrl);
+            $this->whatsapp->sendFinbridgeQrImage($reg, $qrUrl);
             $this->email->sendFinbridgeConfirmation($reg, $qr->image_path);
         }
 
@@ -687,7 +687,7 @@ class RegistrationController extends Controller
             $qr = $this->qr->generateGoodiesQr($reg); // new method
             $qrUrl = asset('storage/' . $qr->image_path);
 
-            // $this->whatsapp->sendFinbridgeQrImage($reg, $qrUrl);
+            $this->whatsapp->sendFinbridgeQrImage($reg, $qrUrl);
             $this->email->sendFinbridgeConfirmation($reg, $qr->image_path);
         }
 
