@@ -685,7 +685,7 @@
             font-weight: 600;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #6f42c1;
+            color: #ffffff;
         }
 
         .live-dot {
