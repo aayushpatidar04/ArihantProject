@@ -7,6 +7,7 @@
         option {
             color: #000000 !important;
         }
+
         .reg-page {
             min-height: 100vh;
             padding: 80px 24px 60px;
@@ -122,6 +123,35 @@
             .reg-card {
                 padding: 28px 22px
             }
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #e9e4f0;
+            transition: border-color 0.2s;
+        }
+
+        .checkbox-option:hover {
+            border-color: #6f42c1;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            accent-color: #6f42c1;
         }
     </style>
 @endpush

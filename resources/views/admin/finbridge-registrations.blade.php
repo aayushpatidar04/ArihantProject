@@ -277,7 +277,7 @@
                                     Has Demat - {{ $r->interest ? 'Yes' : 'No' }}<br>
                                     Frequency - {{ $r->invest_frequency ?? '' }}<br>
                                     Start Timeline - {{ $r->start_timline ?? '' }}<br>
-                                    Products - {{ $r->products ?? '' }}
+                                    Products - {{ is_array($r->products) ? implode(', ', $r->products) : $r->products }}
                                 </td>
                                 <td>{{ $r->lead_score }}</td>
                                 <td>{{ $r->lead_status }}</td>
