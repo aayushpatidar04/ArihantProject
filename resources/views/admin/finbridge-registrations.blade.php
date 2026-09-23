@@ -227,7 +227,7 @@
                             <th>Type</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Status</th>
+                            <th>Goodies</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -264,7 +264,7 @@
                                 </td>
                                 <td>
                                     @if ($r->status === 'confirmed')
-                                        <span class="badge badge-checkin">Confirmed</span>
+                                        <span class="badge badge-checkin">Given</span>
                                     @else
                                         <span class="badge badge-pending">Pending</span>
                                     @endif

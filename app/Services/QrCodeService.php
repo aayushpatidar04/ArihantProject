@@ -10,6 +10,11 @@ use App\Models\Stall;
 use Illuminate\Support\Facades\Storage;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Style\EyeStyle;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Color\Color;
 
@@ -106,21 +111,35 @@ class QrCodeService
     {
         // Create QR code instance
         $qrCode = new QrCode($data);
-        $qrCode->setSize(400);
-        $qrCode->setMargin(10);
+        $qrCode->setSize(600);
+        $qrCode->setMargin(20);
+
+        // REQUIRED when placing a logo in the center — high error correction (~30% redundancy)
+        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::High);
 
         // Set colors using Color objects (not arrays)
         $qrCode->setForegroundColor(new Color(255, 255, 255)); // white
         $qrCode->setBackgroundColor(new Color(6, 2, 8));       // dark background
 
-        // Render with PNG writer
+        // Optional visual polish — rounded modules + rounded eyes
+        $qrCode->setRoundBlockSizeMode(RoundBlockSizeMode::Margin);
+
+        // Company logo in the center
+        // punchoutBackground removes the logo's own background so it blends with the dark QR
+        $logo = new Logo(
+            public_path('assets/images/favicon-circle-bg.png'), // adjust path to your logo
+            150,                                // width in px (keep ~20-25% of QR size)
+            null,                               // height (null = keep aspect ratio)
+            true                                // punchoutBackground
+        );
+
+        // Render with PNG writer + logo
         $writer = new PngWriter();
-        $result = $writer->write($qrCode);
+        $result = $writer->write($qrCode, logo: $logo);
 
         // Return raw image string (binary PNG data)
         return $result->getString();
     }
-
 
     public function validateQr(string $code): ?QrCodeModel
     {

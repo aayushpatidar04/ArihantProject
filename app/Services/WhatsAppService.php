@@ -190,7 +190,7 @@ class WhatsAppService
             $response = Http::timeout(60)->post($this->apiUrl, [
                 'token' => $this->token,
                 'application' => $this->applicationId,
-                'template_id' => 'JJ21403323',
+                'template_id' => 'XP17888979',
                 'data' => [
                     [
                         'number' => $this->formatPhone($registration->phone),

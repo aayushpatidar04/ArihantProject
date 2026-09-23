@@ -4816,7 +4816,7 @@
 
     <section class="panel-sec" id="speaker">
         <div class="section-head">
-            <h2>Meet Our Past Speakers</h2>
+            <h2>Our Past Speakers</h2>
         </div>
 
         <div class="panelist-slider-wrap">
@@ -4969,7 +4969,7 @@
             <p>The best traders don't learn alone. Bring your circle, get rewarded for it.</p>
             <a href="#" class="btn btn-ghost" id="benefitsBtn">Benefits</a>
             @auth
-                <a href="/refer" class="btn btn-primary">Refer a friend</a>
+                <a href="https://www.arihantplus.com/refer-and-earn" class="btn btn-primary">Refer a friend</a>
             @endauth
         </div>
     </section>
