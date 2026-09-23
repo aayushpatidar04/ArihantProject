@@ -4,6 +4,9 @@
 
 @push('styles')
     <style>
+        option {
+            color: #000000 !important;
+        }
         .reg-page {
             min-height: 100vh;
             padding: 80px 24px 60px;
@@ -178,6 +181,35 @@
                 padding: 28px 22px
             }
         }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #e9e4f0;
+            transition: border-color 0.2s;
+        }
+
+        .checkbox-option:hover {
+            border-color: #6f42c1;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            accent-color: #6f42c1;
+        }
     </style>
 @endpush
 
@@ -197,34 +229,114 @@
 
             <form action="{{ route('registration.finbridge-details.submit') }}" method="POST" id="detailsForm">
                 @csrf
+
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" name="full_name" value="{{ old('full_name') }}" placeholder="Enter your full name"
                         required>
                 </div>
+
                 <div class="form-group">
                     <label>Email Address</label>
                     <input type="email" name="email" value="{{ old('email') }}" placeholder="you@example.com" required>
                 </div>
+
                 <div class="form-group">
                     <label>City</label>
                     <input type="text" name="city" value="{{ old('city') }}" placeholder="Your city" required>
                 </div>
 
-                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:10px;color:#e9e4f0">I am a</label>
+                {{-- 5. What are you primarily interested in? (extended card picker) --}}
+                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:10px;color:#e9e4f0">
+                    What are you primarily interested in?
+                </label>
                 <div class="type-select">
-                    <div class="type-option active" onclick="selectType('investor', this)">
+                    <div class="type-option active" onclick="selectType('investing', this)">
                         <div class="icon">📈</div>
-                        <div class="lbl">Investor</div>
+                        <div class="lbl">Investing</div>
                         <div class="sub">Long-term wealth</div>
                     </div>
-                    <div class="type-option" onclick="selectType('trader', this)">
+                    <div class="type-option" onclick="selectType('trading', this)">
                         <div class="icon">⚡</div>
-                        <div class="lbl">Trader</div>
+                        <div class="lbl">Trading</div>
                         <div class="sub">Active markets</div>
                     </div>
+                    <div class="type-option" onclick="selectType('both', this)">
+                        <div class="icon">📊</div>
+                        <div class="lbl">Both</div>
+                        <div class="sub">Invest &amp; trade</div>
+                    </div>
+                    <div class="type-option" onclick="selectType('exploring', this)">
+                        <div class="icon">🔍</div>
+                        <div class="lbl">Exploring</div>
+                        <div class="sub">Just browsing</div>
+                    </div>
                 </div>
-                <input type="hidden" name="type" id="userType" value="investor">
+                <input type="hidden" name="interest" id="userType" value="investing">
+
+                {{-- 6. Demat account --}}
+                <div class="form-group">
+                    <label>Do you currently have a Demat &amp; Trading Account?</label>
+                    <select name="has_demat" required>
+                        <option value="">-- Select --</option>
+                        <option value="yes" {{ old('has_demat') == 'yes' ? 'selected' : '' }}>Yes</option>
+                        <option value="no" {{ old('has_demat') == 'no' ? 'selected' : '' }}>No</option>
+                    </select>
+                </div>
+
+                {{-- 7. Frequency --}}
+                <div class="form-group">
+                    <label>How frequently do you currently invest or trade?</label>
+                    <select name="invest_frequency" required>
+                        <option value="">-- Select --</option>
+                        <option value="regularly" {{ old('invest_frequency') == 'regularly' ? 'selected' : '' }}>Regularly
+                        </option>
+                        <option value="occasionally" {{ old('invest_frequency') == 'occasionally' ? 'selected' : '' }}>
+                            Occasionally</option>
+                        <option value="planning_to_start" {{ old('invest_frequency') == 'planning_to_start' ? 'selected' : '' }}>I am planning to start</option>
+                        <option value="dont_invest" {{ old('invest_frequency') == 'dont_invest' ? 'selected' : '' }}>I
+                            currently don't invest or trade</option>
+                    </select>
+                </div>
+
+                {{-- 8. Timeline --}}
+                <div class="form-group">
+                    <label>When are you planning to start or increase your investing/trading?</label>
+                    <select name="start_timeline" required>
+                        <option value="">-- Select --</option>
+                        <option value="immediately" {{ old('start_timeline') == 'immediately' ? 'selected' : '' }}>Immediately
+                        </option>
+                        <option value="within_1_month" {{ old('start_timeline') == 'within_1_month' ? 'selected' : '' }}>
+                            Within 1 month</option>
+                        <option value="within_3_months" {{ old('start_timeline') == 'within_3_months' ? 'selected' : '' }}>
+                            Within 3 months</option>
+                        <option value="not_sure" {{ old('start_timeline') == 'not_sure' ? 'selected' : '' }}>Not sure / Just
+                            Exploring</option>
+                    </select>
+                </div>
+
+                {{-- 9. Products (multi-select checkboxes) --}}
+                <div class="form-group">
+                    <label>What are you most interested in?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="stocks" {{ 'stocks' === old('products') ? 'checked' : '' }}>
+                            Stocks</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="mutual_funds" {{ 'mutual_funds' === old('products') ? 'checked' : '' }}>
+                            Mutual Funds</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="ipos" {{ 'ipos' === old('products') ? 'checked' : '' }}>
+                            IPOs</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="fno" {{ 'fno' === old('products') ? 'checked' : '' }}>
+                            F&amp;O</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="algo_trading" {{ 'algo_trading' === old('products') ? 'checked' : '' }}>
+                            Algo Trading</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="us_stocks" {{ 'us_stocks' === old('products') ? 'checked' : '' }}> US
+                            Stocks</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="multiple" {{ 'multiple' === old('products') ? 'checked' : '' }}>
+                            Multiple Products</label>
+                        <label class="checkbox-option"><input type="checkbox" name="products[]" value="not_sure" {{ 'not_sure' === old('products') ? 'checked' : '' }}> Not
+                            Sure Yet</label>
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary" style="width:100%">Complete Registration →</button>
             </form>

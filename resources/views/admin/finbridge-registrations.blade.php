@@ -228,6 +228,9 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Goodies</th>
+                            <th>User Preference</th>
+                            <th>Lead Score</th>
+                            <th>Lead Status</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -269,6 +272,15 @@
                                         <span class="badge badge-pending">Pending</span>
                                     @endif
                                 </td>
+                                <td>
+                                    Interest - {{ $r->interest ?? '' }}<br>
+                                    Has Demat - {{ $r->interest ? 'Yes' : 'No' }}<br>
+                                    Frequency - {{ $r->invest_frequency ?? '' }}<br>
+                                    Start Timeline - {{ $r->start_timline ?? '' }}<br>
+                                    Products - {{ $r->products ?? '' }}
+                                </td>
+                                <td>{{ $r->lead_score }}</td>
+                                <td>{{ $r->lead_status }}</td>
                                 <td>{{ $r->created_at->format('M d, Y') }}</td>
                             </tr>
                         @empty

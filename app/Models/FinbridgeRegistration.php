@@ -19,10 +19,22 @@ class FinbridgeRegistration extends Model
         'phone',
         'city',
         'type',
+        'interest',
+        'has_demat',
+        'invest_frequency',
+        'start_timeline',
+        'products',
+        'lead_score',
+        'lead_status',
         'status',
         'otp_verified_at',
         'kyc_completed_at',
         'is_existing_client',
+    ];
+
+    protected $casts = [
+        'has_demat' => 'boolean',
+        'products'  => 'array',
     ];
 
     public function qrCodes(): HasMany

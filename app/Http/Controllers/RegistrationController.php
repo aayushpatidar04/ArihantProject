@@ -12,6 +12,7 @@ use App\Models\WaitlistNumber;
 use App\Services\ClientApiService;
 use App\Services\WhatsAppService;
 use App\Services\EmailService;
+use App\Services\FinbridgeLeadScoringService;
 use App\Services\LeadScoringService;
 use App\Services\PaymentGatewayService;
 use App\Services\razorPaymentGatewayService;
@@ -147,7 +148,7 @@ class RegistrationController extends Controller
 
         // PRIORITY 3: New user flow (OTP + payment)
         $otp = random_int(100000, 999999);
-
+        
         Session::put('reg_phone', $phone);
         Session::put('reg_otp', $otp);
         Session::put('otp_expires', now()->addMinutes(10));
@@ -332,20 +333,29 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function submitFinbridgeClientConfirm(Request $request)
+    public function submitFinbridgeClientConfirm(Request $request, FinbridgeLeadScoringService $leadScoring)
     {
         if (!Session::get('is_existing_client') || !Session::has('client_users')) {
             return redirect()->route('registration.form');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'selected_uid' => 'required|string',
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:finbridge_registrations,email',
-            'phone' => 'required|unique:event_registrations,phone',
+            'phone' => 'required|unique:finbridge_registrations,phone',
             'city' => 'required|string|max:100',
-            'type' => 'required|in:investor,trader',
+            'interest'         => 'required|in:investing,trading,both,exploring',
+            'has_demat'        => 'required|in:yes,no',
+            'invest_frequency' => 'required|in:regularly,occasionally,planning_to_start,dont_invest',
+            'start_timeline'   => 'required|in:immediately,within_1_month,within_3_months,not_sure',
+            'products'         => 'required|array',
+            'products.*'       => 'in:stocks,mutual_funds,ipos,fno,algo_trading,us_stocks,multiple,not_sure',
         ]);
+
+        $legacyType = in_array($validated['interest'], ['trading', 'both']) ? 'trader' : 'investor';
+
+        $lead = $leadScoring->evaluate($validated);
 
         $clientUsers = Session::get('client_users');
         $selectedUser = collect($clientUsers)->firstWhere('uid', $request->selected_uid);
@@ -368,7 +378,14 @@ class RegistrationController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'city' => $request->city,
-            'type' => $request->type,
+            'type'                => $legacyType,
+            'interest'            => $validated['interest'],
+            'has_demat'           => $validated['has_demat'] === 'yes',
+            'invest_frequency'    => $validated['invest_frequency'],
+            'start_timeline'      => $validated['start_timeline'],
+            'products'            => $request->input('products', []),
+            'lead_score'          => $lead['lead_score'],
+            'lead_status'         => $lead['lead_status'],
             'is_existing_client' => true,
             'status' => 'pending',
             'otp_verified_at' => now(),
@@ -648,7 +665,7 @@ class RegistrationController extends Controller
         return redirect()->route('registration.payment');
     }
 
-    public function submitFinBridgeDetails(Request $request)
+    public function submitFinBridgeDetails(Request $request, FinbridgeLeadScoringService $leadScoring)
     {
         if (Session::get('is_existing_client') || !Session::get('phone_verified')) {
             return redirect()->route('registration.form');
@@ -658,8 +675,17 @@ class RegistrationController extends Controller
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:finbridge_registrations,email',
             'city' => 'required|string|max:100',
-            'type' => 'required|in:investor,trader'
+            'interest'         => 'required|in:investing,trading,both,exploring',
+            'has_demat'        => 'required|in:yes,no',
+            'invest_frequency' => 'required|in:regularly,occasionally,planning_to_start,dont_invest',
+            'start_timeline'   => 'required|in:immediately,within_1_month,within_3_months,not_sure',
+            'products'         => 'required|array',
+            'products.*'       => 'in:stocks,mutual_funds,ipos,fno,algo_trading,us_stocks,multiple,not_sure',
         ]);
+
+        $legacyType = in_array($validated['interest'], ['trading', 'both']) ? 'trader' : 'investor';
+
+        $lead = $leadScoring->evaluate($validated);
 
         $user = User::updateOrCreate([
             'email' => $validated['email']
@@ -675,7 +701,14 @@ class RegistrationController extends Controller
             'email' => $validated['email'],
             'phone' => Session::get('reg_phone'),
             'city' => $validated['city'],
-            'type' => $validated['type'],
+            'type'                => $legacyType,
+            'interest'            => $validated['interest'],
+            'has_demat'           => $validated['has_demat'] === 'yes',
+            'invest_frequency'    => $validated['invest_frequency'],
+            'start_timeline'      => $validated['start_timeline'],
+            'products'            => $request->input('products', []),
+            'lead_score'          => $lead['lead_score'],
+            'lead_status'         => $lead['lead_status'],
             'status' => 'pending',
             'otp_verified_at' => now(),
             'kyc_completed_at' => now(),
