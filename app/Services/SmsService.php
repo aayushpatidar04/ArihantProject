@@ -24,6 +24,20 @@ class SmsService
     /**
      * Send OTP via Arihant SMS API (Registration flow).
      */
+    // public function sendOtp(string $phone, string $otp): bool
+    // {
+    //     if (empty($this->apiKey)) {
+    //         Log::warning('SMS API key not configured. SMS skipped.');
+    //         return false;
+    //     }
+
+    //     $phone = $this->normalizePhone($phone);
+
+    //     $message = "Your OTP for registering for ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Marriott Hotel, Indore, is {$otp}.\nThis OTP is valid for 5 minutes. By entering this OTP, you provide your consent to register for the event.\nArihant Capital Markets Limited";
+
+    //     return $this->dispatch($phone, $message);
+    // }
+
     public function sendOtp(string $phone, string $otp): bool
     {
         if (empty($this->apiKey)) {
@@ -33,7 +47,7 @@ class SmsService
 
         $phone = $this->normalizePhone($phone);
 
-        $message = "Your OTP for registering for ARIHANT PLUS AI & ALGO CONCLAVE, scheduled on 5th September 2026 at Marriott Hotel, Indore, is {$otp}.\nThis OTP is valid for 5 minutes. By entering this OTP, you provide your consent to register for the event.\nArihant Capital Markets Limited";
+        $message = "Your OTP for the ArihantPlus Finbridge Expo is {$otp}.\nThis OTP will expire in 2 minutes.\nPlease do not share this OTP with anyone. Team Arihant";
 
         return $this->dispatch($phone, $message);
     }
