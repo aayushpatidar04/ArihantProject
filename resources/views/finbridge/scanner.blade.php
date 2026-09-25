@@ -317,6 +317,8 @@
             <div class="detail-row"><span class="lbl">Email</span><span class="val">${data.email}</span></div>
             <div class="detail-row"><span class="lbl">Phone</span><span class="val">+91 ${data.phone}</span></div>
             <div class="detail-row"><span class="lbl">City</span><span class="val">${data.city}</span></div>
+            <div class="detail-row"><span class="lbl">Lead Score</span><span class="val">${data.lead_score}</span></div>
+            <div class="detail-row"><span class="lbl">Lead Status</span><span class="val">${data.lead_status}</span></div>
             <div class="detail-row"><span class="lbl">Type</span><span class="val">${data.type.charAt(0).toUpperCase() + data.type.slice(1)}</span></div>
         `;
             document.getElementById('details').innerHTML = html;
