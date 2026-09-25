@@ -181,6 +181,8 @@ class CheckInController extends Controller
             'email' => $reg->email,
             'phone' => $reg->phone,
             'city' => $reg->city,
+            'lead_score' => $reg->lead_score,
+            'lead_status' => $reg->lead_status,
             'registration_number' => $reg->registration_number,
             'type' => $reg->type,
             'is_existing_client' => $reg->is_existing_client,
