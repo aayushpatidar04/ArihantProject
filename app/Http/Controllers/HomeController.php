@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\LoginOtpMail;
 use App\Models\EventRegistration;
+use App\Models\FinbridgeRegistration;
 use App\Models\User;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
@@ -57,7 +58,7 @@ class HomeController extends Controller
         $phone = $this->normalizePhone($request->phone);
 
         // Verify phone exists in event_registrations
-        $reg = EventRegistration::where('phone', $phone)->first();
+        $reg = FinbridgeRegistration::where('phone', $phone)->first();
 
         if (!$reg) {
             return back()
@@ -81,7 +82,7 @@ class HomeController extends Controller
         Cache::put('login_otp_attempts_' . $phone, $attempts + 1, now()->addMinutes(10));
 
         $sent = $this->sms->sendLoginOtp($phone, $otp);
-        Mail::to($reg->email)->send(new LoginOtpMail($reg, $otp));
+        // Mail::to($reg->email)->send(new LoginOtpMail($reg, $otp));
 
         if (!$sent) {
             return back()
