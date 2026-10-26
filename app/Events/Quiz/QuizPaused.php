@@ -5,7 +5,6 @@ namespace App\Events\Quiz;
 use App\Models\QuizSession;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -33,6 +32,10 @@ class QuizPaused implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
-        return ['session_id' => $this->session->id, 'message' => 'Quiz paused'];
+        return [
+            'session_id' => $this->session->id,
+            'message' => 'Quiz paused',
+            'paused_remaining_ms' => $this->session->paused_remaining_ms,
+        ];
     }
 }

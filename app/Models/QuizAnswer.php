@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuizAnswer extends Model
 {
-    protected $fillable = ['session_id', 'participant_id', 'question_id', 'selected_option', 'is_correct', 'response_time_ms', 'submitted_at'];
+    protected $fillable = ['session_id', 'participant_id', 'question_id', 'selected_option', 'is_correct', 'points', 'response_time_ms', 'submitted_at'];
     public $timestamps = false;
-    protected $casts = ['is_correct' => 'boolean', 'response_time_ms' => 'integer', 'submitted_at' => 'datetime'];
+    protected $casts = ['is_correct' => 'boolean', 'points' => 'integer', 'response_time_ms' => 'integer', 'submitted_at' => 'datetime'];
 
     public function session(): BelongsTo
     {

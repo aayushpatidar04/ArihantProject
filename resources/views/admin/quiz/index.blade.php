@@ -217,20 +217,16 @@
                             {{ \App\Models\QuizQuestion::where('quiz_type', $activeSession->quiz_type)->count() }}</strong></span>
                 </div>
                 <div class="btn-row">
-                    <a href="{{ route('admin.quiz.live', $activeSession->quiz_type) }}" class="btn btn-primary">📊 Live
-                        Dashboard</a>
+                    <a href="{{ route('admin.quiz.host', $activeSession->quiz_type) }}" target="_blank" rel="noopener" class="btn btn-primary">🖥 Open Host Screen</a>
+                    <a href="{{ route('admin.quiz.live', $activeSession->quiz_type) }}" class="btn btn-ghost">📊 Live Dashboard</a>
                     <form method="POST" action="{{ route('admin.quiz.end', $activeSession->quiz_type) }}" style="display:inline"
                         onsubmit="return confirm('End this quiz?')">
-                        <div>
-                            <form method="POST" action="{{ route('admin.quiz.types') }}" style="text-align:center">
-                                @csrf
-                                <button type="submit" class="btn"
-                                    style="background:rgba(220,60,60,0.15);border:1px solid rgba(220,60,60,0.3);color:#f87171">⏹
-                                    End
-                                    Quiz</button>
-                            </form>
-                        </div>
+                        @csrf
+                        <button type="submit" class="btn"
+                            style="background:rgba(220,60,60,0.15);border:1px solid rgba(220,60,60,0.3);color:#f87171">⏹ End Quiz</button>
+                    </form>
                 </div>
+            </div>
         @endif
 
             <h2 style="font-size:20px;font-weight:700;margin-bottom:20px">Quiz Types</h2>
@@ -258,7 +254,9 @@
                                 </p>
                                 <div class="card-actions">
                                     @if($isActive)
-                                        <a href="{{ route('admin.quiz.live', $key) }}" class="btn btn-primary"
+                                        <a href="{{ route('admin.quiz.host', $key) }}" target="_blank" rel="noopener" class="btn btn-primary"
+                                            style="font-size:13px;padding:8px 16px">&#x1F5A5; Host Screen</a>
+                                        <a href="{{ route('admin.quiz.live', $key) }}" class="btn btn-ghost"
                                             style="font-size:13px;padding:8px 16px">&#x1F4CA; Dashboard</a>
                                     @elseif($lastStatus === 'completed')
                                         <a href="{{ route('admin.quiz.results', $key) }}" class="btn btn-ghost"
@@ -325,11 +323,15 @@
                     if (!confirm('Start quiz for ' + label + '?')) return;
                     const btn = event.target;
                     btn.disabled = true;
-                    fetch('/admin/quiz/' + type + '/start', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' }, body: '{}' })
+                    const tab = window.open('about:blank', '_blank');   // opened inside the click so it is not popup-blocked
+                    if (tab) tab.document.write('<body style="background:#05020a;color:#fff;font-family:sans-serif;display:grid;place-items:center;height:100vh">Starting quiz…</body>');
+                    fetch('/admin/quiz/' + type + '/start', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: '{}' })
                         .then(r => r.json()).then(d => {
-                            if (d.success) location.reload();
-                            else { alert(d.message || 'Failed to start'); btn.disabled = false; }
-                        }).catch(() => { alert('Error'); btn.disabled = false; });
+                            if (d.success) {
+                                if (tab) tab.location.href = d.host_url; else window.open(d.host_url, '_blank');
+                                location.reload();
+                            } else { if (tab) tab.close(); alert(d.message || 'Failed to start'); btn.disabled = false; }
+                        }).catch(() => { if (tab) tab.close(); alert('Error'); btn.disabled = false; });
                 }
             </script>
         @endpush

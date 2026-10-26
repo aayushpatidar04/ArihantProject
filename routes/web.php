@@ -310,7 +310,7 @@ Route::get('/detail', [HomeController::class, 'detail'])->name('detail');
 
 /* ---------- Quiz Routes ---------- */
 Route::get('/quiz', [App\Http\Controllers\QuizController::class, 'index'])->name('quiz.index');
-Route::post('/api/quiz/validate-pin', [App\Http\Controllers\QuizController::class, 'validatePin'])->name('quiz.validate-pin');
+Route::post('/api/quiz/validate-pin', [App\Http\Controllers\QuizController::class, 'validatePin'])->middleware('throttle:20,1')->name('quiz.validate-pin');
 Route::post('/api/quiz/join', [App\Http\Controllers\QuizController::class, 'join'])->name('quiz.join');
 Route::post('/api/quiz/submit-answer', [App\Http\Controllers\QuizController::class, 'submitAnswer'])->name('quiz.submit-answer');
 Route::get('/quiz/results', [App\Http\Controllers\QuizController::class, 'results'])->name('quiz.results');
@@ -334,6 +334,10 @@ Route::middleware(['admin'])->prefix('admin/quiz')->name('admin.quiz.')->group(f
     Route::post('/{type}/pause', [App\Http\Controllers\Admin\AdminQuizController::class, 'pause'])->name('pause');
     Route::post('/{type}/resume', [App\Http\Controllers\Admin\AdminQuizController::class, 'resume'])->name('resume');
     Route::post('/{type}/end', [App\Http\Controllers\Admin\AdminQuizController::class, 'end'])->name('end');
+    Route::get('/{type}/host', [App\Http\Controllers\Admin\AdminQuizController::class, 'hostScreen'])->middleware('permission:quiz,view')->name('host');
+    Route::get('/{type}/host-state', [App\Http\Controllers\Admin\AdminQuizController::class, 'hostState'])->middleware('permission:quiz,view')->name('host-state');
+    Route::post('/{type}/reveal', [App\Http\Controllers\Admin\AdminQuizController::class, 'reveal'])->name('reveal');
+    Route::post('/{type}/scoreboard', [App\Http\Controllers\Admin\AdminQuizController::class, 'scoreboard'])->name('scoreboard');
     Route::get('/{type}/live', [App\Http\Controllers\Admin\AdminQuizController::class, 'liveDashboard'])->name('live');
     Route::get('/{type}/results', [App\Http\Controllers\Admin\AdminQuizController::class, 'sessionResults'])->name('results');
 });

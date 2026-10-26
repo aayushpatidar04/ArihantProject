@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QuizSession;
+use App\Events\Quiz\AnswerReceived;
+use App\Events\Quiz\ParticipantJoined;
 use App\Models\QuizParticipant;
-use App\Models\QuizAnswer;
 use App\Models\QuizQuestion;
+use App\Models\QuizSession;
 use App\Models\QuizType;
 use App\Services\QuizService;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class QuizController extends Controller
     public function index(Request $request)
     {
         $quizType = $request->query('type');
-        $allTypes = \App\Models\QuizType::where('is_active', true)->orderBy('sort_order')->get();
+        $allTypes = QuizType::where('is_active', true)->orderBy('sort_order')->get();
         $quizTypes = $allTypes->pluck('name', 'key')->toArray();
 
         // No type param => show quiz listing page
@@ -26,6 +27,8 @@ class QuizController extends Controller
                 'allTypes' => $allTypes,
                 'quizType' => null,
                 'session' => null,
+                'participant' => null,
+                'totalQuestions' => 0,
                 'mode' => 'listing',
             ]);
         }
@@ -39,11 +42,27 @@ class QuizController extends Controller
             ->whereIn('status', ['waiting', 'active', 'paused'])
             ->first();
 
-        return view('quiz.index', ['quizTypes' => $quizTypes, 'quizType' => $quizType, 'session' => $session, 'mode' => 'join']);
+        // Page refresh: restore the player straight back into the game
+        $participant = null;
+        if ($session && ($pid = Session::get('quiz_participant_id'))) {
+            $participant = QuizParticipant::where('id', $pid)->where('session_id', $session->id)->first();
+        }
+
+        return view('quiz.index', [
+            'quizTypes' => $quizTypes,
+            'quizType' => $quizType,
+            'quizName' => $quizTypes[$quizType],
+            'session' => $session,
+            'participant' => $participant,
+            'totalQuestions' => $session ? (new QuizService())->totalQuestions($session) : 0,
+            'mode' => 'join',
+        ]);
     }
+
     public function validatePin(Request $request)
     {
         $request->validate(['quiz_type' => 'required|string', 'pin' => 'required|string|size:6']);
+
         $session = QuizSession::where('quiz_type', $request->quiz_type)
             ->where('pin', $request->pin)
             ->whereIn('status', ['waiting', 'active', 'paused'])
@@ -51,7 +70,8 @@ class QuizController extends Controller
 
         if (!$session)
             return response()->json(['valid' => false, 'message' => 'Invalid PIN or quiz not active.']);
-        return response()->json(['valid' => true, 'session_id' => $session->id]);
+
+        return response()->json(['valid' => true, 'session_id' => $session->id, 'status' => $session->status]);
     }
 
     public function join(Request $request)
@@ -68,7 +88,7 @@ class QuizController extends Controller
             ->where('quiz_type', $request->quiz_type)
             ->firstOrFail();
 
-        if (!in_array($session->status, ['waiting', 'active', 'paused'])) {
+        if (!$session->isActive()) {
             return response()->json(['success' => false, 'message' => 'This quiz has ended. You cannot join.']);
         }
 
@@ -78,22 +98,25 @@ class QuizController extends Controller
 
         if ($existing) {
             Session::put('quiz_participant_id', $existing->id);
-            broadcast(new \App\Events\Quiz\ParticipantJoined($session, $existing))->toOthers();
-            return response()->json(['success' => true, 'participant_id' => $existing->id, 'rejoined' => true]);
+            return response()->json(['success' => true, 'participant_id' => $existing->id, 'name' => $existing->name, 'rejoined' => true]);
+        }
+
+        if ($session->participants()->count() >= config('quiz.max_participants', 1000)) {
+            return response()->json(['success' => false, 'message' => 'This quiz is full.']);
         }
 
         $participant = QuizParticipant::create([
             'session_id' => $session->id,
-            'name' => $request->name,
+            'name' => trim($request->name),
             'email' => $request->email,
             'mobile' => $request->mobile,
             'joined_at' => now(),
         ]);
 
         Session::put('quiz_participant_id', $participant->id);
-        broadcast(new \App\Events\Quiz\ParticipantJoined($session, $participant))->toOthers();
+        broadcast(new ParticipantJoined($session, $participant));
 
-        return response()->json(['success' => true, 'participant_id' => $participant->id, 'rejoined' => false]);
+        return response()->json(['success' => true, 'participant_id' => $participant->id, 'name' => $participant->name, 'rejoined' => false]);
     }
 
     public function submitAnswer(Request $request)
@@ -106,85 +129,46 @@ class QuizController extends Controller
 
         $participantId = Session::get('quiz_participant_id');
         if (!$participantId)
-            return response()->json(['success' => false, 'message' => 'Not joined.']);
+            return response()->json(['success' => false, 'message' => 'Not joined.'], 401);
 
         $session = QuizSession::where('id', $request->session_id)
             ->whereIn('status', ['active', 'paused'])
-            ->firstOrFail();
+            ->first();
+        if (!$session)
+            return response()->json(['success' => false, 'message' => 'This quiz is not running.'], 404);
+
+        $participant = QuizParticipant::where('id', $participantId)->where('session_id', $session->id)->first();
+        if (!$participant)
+            return response()->json(['success' => false, 'message' => 'Not joined.'], 401);
 
         $question = QuizQuestion::where('id', $request->question_id)
             ->where('quiz_type', $session->quiz_type)
             ->firstOrFail();
 
-        $isCorrect = (int) $request->selected_option === (int) $question->correct_option;
+        $svc = new QuizService();
+        $result = $svc->submitAnswer($session, $participant, $question, (int) $request->selected_option);
 
-        $existing = QuizAnswer::where('session_id', $session->id)
-            ->where('participant_id', $participantId)
-            ->where('question_id', $question->id)
-            ->first();
-        $startedAt = $session->question_started_at;
+        if (!$result['ok'])
+            return response()->json(['success' => false, 'message' => $result['message']], 422);
 
-        $responseMs = $startedAt
-            ? max(0, now()->timestamp * 1000 - $startedAt->timestamp * 1000)
-            : 0;
-
-        if ($existing) {
-            $existing->update([
-                'selected_option' => (int) $request->selected_option,
-                'is_correct' => $isCorrect,
-                'response_time_ms' => $responseMs,
-                'submitted_at' => now(),
-            ]);
-            $answer = $existing;
-        } else {
-            $answer = QuizAnswer::create([
-                'session_id' => $session->id,
-                'participant_id' => $participantId,
-                'question_id' => $question->id,
-                'selected_option' => (int) $request->selected_option,
-                'is_correct' => $isCorrect,
-                'response_time_ms' => $responseMs,
-                'submitted_at' => now(),
-            ]);
+        // Per-answer broadcasts are only worth their cost in smaller rooms; the host screen also polls.
+        if ($session->participants()->count() <= (int) config('quiz.answer_event_max_participants', 100)) {
+            broadcast(new AnswerReceived($session, $participant, $result['answer']));
         }
 
-        broadcast(new \App\Events\Quiz\AnswerReceived($session, $answer->participant, $answer))->toOthers();
-
-        return response()->json(['success' => true, 'is_correct' => $isCorrect, 'updated' => (bool) $existing]);
+        // Correctness is NOT returned: players find out at reveal time, like Kahoot.
+        return response()->json(['success' => true, 'locked' => true]);
     }
 
     public function sessionState(Request $request, $sessionId)
     {
         $session = QuizSession::findOrFail($sessionId);
         $participantId = Session::get('quiz_participant_id');
-        $participant = $participantId ? QuizParticipant::find($participantId) : null;
+        $participant = $participantId
+            ? QuizParticipant::where('id', $participantId)->where('session_id', $session->id)->first()
+            : null;
 
-        $question = (new \App\Services\QuizService())->getCurrentQuestion($session);
-        $participantAnswered = false;
-        $isCorrect = null;
-
-        if ($question && $participant) {
-            $answer = QuizAnswer::where('session_id', $session->id)
-                ->where('participant_id', $participant->id)
-                ->where('question_id', $question->id)
-                ->first();
-            if ($answer) {
-                $participantAnswered = true;
-                $isCorrect = $answer->is_correct;
-            }
-        }
-
-        return response()->json([
-            'status' => $session->status,
-            'current_question' => $question ? [
-                'id' => $question->id,
-                'text' => $question->question_text,
-                'options' => $question->options,
-                'order' => $question->order,
-            ] : null,
-            'participant_answered' => $participantAnswered,
-            'is_correct' => $isCorrect,
-        ]);
+        return response()->json((new QuizService())->participantState($session, $participant));
     }
 
     public function leaderboard(Request $request)
@@ -198,18 +182,18 @@ class QuizController extends Controller
         $participantCount = 0;
         $showAnalytics = false;
         $isCompleted = false;
+        $service = new QuizService();
 
         if ($activeSession) {
             $quizType = QuizType::where('key', $activeSession->quiz_type)->first();
             $questions = QuizQuestion::where('quiz_type', $activeSession->quiz_type)->orderBy('order')->get();
-            $participantCount = QuizParticipant::where("session_id", $activeSession->id)->count();
+            $participantCount = QuizParticipant::where('session_id', $activeSession->id)->count();
 
             if ($activeSession->current_question_order >= 1) {
                 $prevOrder = $activeSession->current_question_order - 1;
                 $prevQuestion = $questions->firstWhere('order', $prevOrder);
                 if ($prevQuestion) {
                     $showAnalytics = true;
-                    $service = new QuizService();
                     $analytics = $service->getQuestionAnalytics($activeSession, $prevQuestion);
                     $leaderboard = $service->getLeaderboard($activeSession, 20);
                 }
@@ -218,9 +202,8 @@ class QuizController extends Controller
             $isCompleted = true;
             $quizType = QuizType::where('key', $lastCompleted->quiz_type)->first();
             $questions = QuizQuestion::where('quiz_type', $lastCompleted->quiz_type)->orderBy('order')->get();
-            $service = new QuizService();
             $leaderboard = $service->getLeaderboard($lastCompleted, 20);
-            $participantCount = QuizParticipant::where("session_id", $lastCompleted->id)->count();
+            $participantCount = QuizParticipant::where('session_id', $lastCompleted->id)->count();
         }
 
         return view('quiz.leaderboard', compact('activeSession', 'lastCompleted', 'quizType', 'questions', 'leaderboard', 'analytics', 'showAnalytics', 'isCompleted', 'participantCount'));

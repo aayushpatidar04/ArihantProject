@@ -2,30 +2,30 @@
 
 namespace App\Events\Quiz;
 
-use App\Models\QuizSession;
 use App\Models\QuizQuestion;
+use App\Models\QuizSession;
+use App\Services\QuizService;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * A new question goes live. The correct option is deliberately NOT included
+ * (this channel is public); it arrives later in QuestionRevealed.
+ */
 class QuestionShown implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $session;
     public $question;
-    public $questionOrder;
-    public $totalQuestions;
 
     public function __construct(QuizSession $session, QuizQuestion $question)
     {
         $this->session = $session;
         $this->question = $question;
-        $this->questionOrder = $question->order;
-        $this->totalQuestions = QuizQuestion::where('quiz_type', $session->quiz_type)->count();
     }
 
     public function broadcastOn(): Channel
@@ -40,16 +40,18 @@ class QuestionShown implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
+        $svc = new QuizService();
         return [
             'session_id' => $this->session->id,
+            'phase' => 'question',
+            'server_now_ms' => $svc->nowMs(),
+            'question' => $svc->questionPayload($this->session, $this->question, false),
+            // kept for the legacy admin live dashboard
             'question_id' => $this->question->id,
             'question_text' => $this->question->question_text,
             'options' => $this->question->options,
-            'correct_option' => $this->question->correct_option,
-           
-            'question_order' => $this->questionOrder,
-            'total_questions' => $this->totalQuestions,
-            'server_time' => now()->toIso8601String(),
+            'question_order' => $this->question->order,
+            'total_questions' => $svc->totalQuestions($this->session),
         ];
     }
 }

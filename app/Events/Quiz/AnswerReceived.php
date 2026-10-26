@@ -2,15 +2,19 @@
 
 namespace App\Events\Quiz;
 
-use App\Models\QuizSession;
-use App\Models\QuizParticipant;
 use App\Models\QuizAnswer;
+use App\Models\QuizParticipant;
+use App\Models\QuizSession;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Lightweight on purpose: one grouped query, no leaderboard.
+ * (The old version rebuilt analytics + a 20-row leaderboard for every single answer.)
+ */
 class AnswerReceived implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
@@ -18,18 +22,25 @@ class AnswerReceived implements ShouldBroadcastNow
     public $session;
     public $participant;
     public $answer;
-    public $analytics;
-    public $leaderboard;
+    public $answeredCount;
+    public $optionCounts = [0, 0, 0, 0];
+    public $correctCount = 0;
 
     public function __construct(QuizSession $session, QuizParticipant $participant, QuizAnswer $answer)
     {
         $this->session = $session;
         $this->participant = $participant;
         $this->answer = $answer;
-
-        $quizService = new \App\Services\QuizService();
-        $this->analytics = $quizService->getQuestionAnalytics($session, $answer->question);
-        $this->leaderboard = $quizService->getLeaderboard($session, 20);
+        $rows = QuizAnswer::where('session_id', $session->id)
+            ->where('question_id', $answer->question_id)
+            ->selectRaw('selected_option, COUNT(*) AS c, SUM(is_correct) AS ok')
+            ->groupBy('selected_option')->get();
+        foreach ($rows as $r) {
+            if (isset($this->optionCounts[$r->selected_option]))
+                $this->optionCounts[$r->selected_option] = (int) $r->c;
+            $this->correctCount += (int) $r->ok;
+        }
+        $this->answeredCount = array_sum($this->optionCounts);
     }
 
     public function broadcastOn(): Channel
@@ -46,19 +57,14 @@ class AnswerReceived implements ShouldBroadcastNow
     {
         return [
             'session_id' => $this->session->id,
-            'participant_name' => $this->participant->name,
+            'question_id' => $this->answer->question_id,
             'participant_id' => $this->participant->id,
-            'selected_option' => $this->answer->selected_option,
-            'is_correct' => $this->answer->is_correct,
-            'response_time_ms' => $this->answer->response_time_ms,
-            'submitted_at' => $this->answer->submitted_at->toIso8601String(),
-            'option_counts' => $this->analytics['option_counts'] ?? [],
-            'total_responded' => $this->analytics['total_responded'] ?? 0,
-            'correct_count' => $this->analytics['correct_count'] ?? 0,
-            'correct_rate' => $this->analytics['correct_rate'] ?? 0,
-            'avg_response_time_ms' => $this->analytics['avg_response_time_ms'] ?? 0,
-            'first_correct' => $this->analytics['first_correct'] ?? null,
-            'leaderboard' => $this->leaderboard,
+            'participant_name' => $this->participant->name,
+            'total_responded' => $this->answeredCount,
+            // consumed by the legacy admin live dashboard
+            'option_counts' => $this->optionCounts,
+            'correct_count' => $this->correctCount,
+            'correct_rate' => $this->answeredCount > 0 ? round($this->correctCount / $this->answeredCount * 100, 1) : 0,
         ];
     }
 }

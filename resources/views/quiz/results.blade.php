@@ -79,7 +79,7 @@
             @if(isset($results))
                 <div class="result-rank">#{{ $results['rank'] ?? '-' }}</div>
                 <div class="result-score">{{ $results['score'] }}</div>
-                <div class="result-label">out of {{ $results['correct_count'] * 10 }} points ·
+                <div class="result-label">points ·
                     {{ $results['correct_count'] }}/{{ $results['total_questions'] }} correct
                 </div>
                 @if($results['avg_response_time_ms'])
@@ -98,7 +98,7 @@
                         </div>
                     @endforeach
                 </div>
-                <a href="/quiz?type={{ $session->quiz_type ?? '' }}" class="btn btn-ghost">← Back to Quizzes</a>
+                <a href="/quiz" class="btn btn-ghost">← Back to Quizzes</a>
             @else
                 <h1>Results Not Available</h1>
                 <p style="color:var(--muted);margin-top:8px">Quiz results will appear here after the quiz ends.</p>
