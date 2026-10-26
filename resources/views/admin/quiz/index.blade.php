@@ -217,7 +217,7 @@
                             {{ \App\Models\QuizQuestion::where('quiz_type', $activeSession->quiz_type)->count() }}</strong></span>
                 </div>
                 <div class="btn-row">
-                    <a href="{{ route('admin.quiz.host', $activeSession->quiz_type) }}" target="_blank" rel="noopener" class="btn btn-primary">🖥 Open Host Screen</a>
+                    <a href="{{ route('admin.quiz.host', $activeSession->quiz_type) }}" target="_blank" rel="noopener" class="btn btn-primary">Open Host Screen</a>
                     <a href="{{ route('admin.quiz.live', $activeSession->quiz_type) }}" class="btn btn-ghost">📊 Live Dashboard</a>
                     <form method="POST" action="{{ route('admin.quiz.end', $activeSession->quiz_type) }}" style="display:inline"
                         onsubmit="return confirm('End this quiz?')">
