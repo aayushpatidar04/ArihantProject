@@ -277,7 +277,7 @@
     <script>
         function openModal() {
             document.getElementById('questionModal').classList.add('active'); document.getElementById('modalTitle').textContent = 'Add Question'; document.getElementById('questionForm').action = '{{ route("admin.quiz.questions", $type) }}';
-            document.getElementById('formMethod').value = 'POST'; document.getElementById('qText').value = ''; document.querySelectorAll('#questionForm input[name="options[]"]').forEach(i => i.value = ''); document.getElementById('qTimeLimit').value = '';
+            document.getElementById('formMethod').value = 'POST'; document.getElementById('qText').value = ''; document.querySelectorAll('#questionForm input[name="options[]"]').forEach(i => i.value = '');
         }
         function closeModal() { document.getElementById('questionModal').classList.remove('active'); }
         function editQuestion(id, text, options, correct, timeLimit) {
@@ -287,7 +287,6 @@
             document.getElementById('qText').value = text;
             const inputs = document.querySelectorAll('#questionForm input[name="options[]"]');
             options.forEach((opt, i) => { if (inputs[i]) inputs[i].value = opt; });
-            document.getElementById('qTimeLimit').value = timeLimit || '';
             document.querySelector(`input[name="correct_option"][value="${correct}"]`).checked = true;
             document.getElementById('questionModal').classList.add('active');
         }
