@@ -290,12 +290,33 @@ class AdminQuizController extends Controller
         return back()->with('success', 'Question updated.');
     }
 
+    
     public function destroyQuestion(Request $request, $type, $id)
     {
-        $question = QuizQuestion::where('quiz_type', $type)->findOrFail($id);
+        $question = QuizQuestion::where('quiz_type', $type)
+            ->findOrFail($id);
+
         $question->delete();
-        return back()->with('success', 'Question deleted.');
+
+        // Renumber the remaining questions for this quiz.
+        $questions = QuizQuestion::where('quiz_type', $type)
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get();
+
+        foreach ($questions as $index => $remainingQuestion) {
+            $newOrder = $index + 1;
+
+            if ($remainingQuestion->order !== $newOrder) {
+                $remainingQuestion->update([
+                    'order' => $newOrder,
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Question deleted and question order updated.');
     }
+
 
     public function reorderQuestions(Request $request, $type)
     {
