@@ -461,7 +461,7 @@
         const adminChannel = pusher.subscribe('admin.quiz.' + sessionId);
 
         channel.bind('quiz.question.shown', (data) => { currentQuestion = data; loadQuestion(data); });
-        channel.bind('quiz.ended', () => { alert('Quiz ended!'); window.location.href = '/admin/dashboard'; });
+        channel.bind('quiz.ended', () => { alert('Quiz ended!'); window.location.href = '/admin'; });
 
         adminChannel.bind('quiz.answer.received', (data) => {
             updateAnalytics(data);

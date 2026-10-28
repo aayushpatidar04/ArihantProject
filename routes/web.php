@@ -339,7 +339,7 @@ Route::middleware(['admin'])->prefix('admin/quiz')->name('admin.quiz.')->group(f
     Route::post('/{type}/reveal', [App\Http\Controllers\Admin\AdminQuizController::class, 'reveal'])->name('reveal');
     Route::post('/{type}/scoreboard', [App\Http\Controllers\Admin\AdminQuizController::class, 'scoreboard'])->name('scoreboard');
     Route::get('/{type}/live', [App\Http\Controllers\Admin\AdminQuizController::class, 'liveDashboard'])->name('live');
-    Route::get('/{type}/results', [App\Http\Controllers\Admin\AdminQuizController::class, 'sessionResults'])->name('results');
+    Route::get('/{type}/results/{session?}', [App\Http\Controllers\Admin\AdminQuizController::class, 'sessionResults'])->name('results');
 });
 
 // Public leaderboard API

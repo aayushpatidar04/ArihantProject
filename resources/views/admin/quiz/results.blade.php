@@ -141,6 +141,17 @@
             justify-content: space-between;
             margin-bottom: 15px;
         }
+        .session-history {
+            overflow-x: auto;
+            margin-bottom: 32px;
+        }
+        .session-history .leaderboard-table {
+            margin-bottom: 0;
+        }
+        .session-history .selected-session {
+            color: var(--purple-1);
+            font-weight: 700;
+        }
     </style>
 @endpush
 
@@ -153,6 +164,43 @@
                 </p>
             </div>
             <a href="{{ route('admin.quiz.index') }}" class="btn btn-ghost">← Back to Quizzes</a>
+        </div>
+
+        <h2 style="font-size:20px;font-weight:700;margin-bottom:16px">Session History</h2>
+        <div class="session-history">
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Session</th>
+                        <th>PIN</th>
+                        <th>Participants</th>
+                        <th>Ended</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($sessions as $historicalSession)
+                        <tr>
+                            <td>
+                                @if($historicalSession->id === $session->id)
+                                    <span class="selected-session">Selected session</span>
+                                @else
+                                    Session
+                                @endif
+                            </td>
+                            <td style="font-family:monospace">{{ $historicalSession->pin }}</td>
+                            <td>{{ $historicalSession->participants_count }}</td>
+                            <td>{{ $historicalSession->ended_at?->format('M d, Y H:i') ?? '-' }}</td>
+                            <td>
+                                @if($historicalSession->id !== $session->id)
+                                    <a href="{{ route('admin.quiz.results', ['type' => $type, 'session' => $historicalSession->id]) }}"
+                                        class="btn btn-ghost" style="font-size:12px;padding:6px 12px">View Results</a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
 
         <div class="overview-grid">

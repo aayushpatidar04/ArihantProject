@@ -238,7 +238,6 @@
                     $qCount = \App\Models\QuizQuestion::where('quiz_type', $key)->count();
                     $lastSession = \App\Models\QuizSession::where('quiz_type', $key)->orderByDesc('started_at')->first();
                     $lastStatus = $lastSession ? $lastSession->status : null;
-                    $showStart = !$isActive && ($lastStatus !== 'completed');
                                                     ?>
                             <div class="quiz-card {{ $isActive ? 'active' : '' }}">
                                 <span class="quiz-badge {{ $isActive ? 'badge-active' : 'badge-inactive' }}">
@@ -258,14 +257,15 @@
                                             style="font-size:13px;padding:8px 16px">&#x1F5A5; Host Screen</a>
                                         <a href="{{ route('admin.quiz.live', $key) }}" class="btn btn-ghost"
                                             style="font-size:13px;padding:8px 16px">&#x1F4CA; Dashboard</a>
-                                    @elseif($lastStatus === 'completed')
-                                        <a href="{{ route('admin.quiz.results', $key) }}" class="btn btn-ghost"
-                                            style="font-size:13px;padding:8px 16px">&#x1F4CB; View Results</a>
-                                    @elseif($showStart)
+                                    @else
+                                        @if($lastStatus === 'completed')
+                                            <a href="{{ route('admin.quiz.results', $key) }}" class="btn btn-ghost"
+                                                style="font-size:13px;padding:8px 16px">&#x1F4CB; View Results</a>
+                                        @endif
                                         <a href="{{ route('admin.quiz.questions', $key) }}" class="btn btn-ghost"
                                             style="font-size:13px;padding:8px 16px">📝 Add Questions</a>
                                         <button onclick="startQuiz('{{ $key }}', '{{ $label }}')" class="btn btn-primary"
-                                            style="font-size:13px;padding:8px 16px">&#x25B6; Start Quiz</button>
+                                            style="font-size:13px;padding:8px 16px">&#x25B6; {{ $lastStatus === 'completed' ? 'Start New Session' : 'Start Quiz' }}</button>
                                     @endif
                                 </div>
                             </div>

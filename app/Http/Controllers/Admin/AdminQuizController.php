@@ -42,11 +42,6 @@ class AdminQuizController extends Controller
 
     public function startSession(Request $request, $type)
     {
-        $lastSession = QuizSession::where('quiz_type', $type)->orderByDesc('created_at')->first();
-        if ($lastSession && $lastSession->status === 'completed') {
-            return $this->fail($request, 'This quiz has already ended and cannot be restarted.');
-        }
-
         $questionCount = QuizQuestion::where('quiz_type', $type)->count();
         if ($questionCount === 0) {
             return $this->fail($request, 'Add at least 1 question before starting.');
@@ -331,13 +326,22 @@ class AdminQuizController extends Controller
         return view('admin.quiz.live', compact('session', 'type', 'questions', 'currentQuestion', 'participantCount', 'question', 'analytics', 'leaderboard'));
     }
 
-    public function sessionResults(Request $request, $type)
+    public function sessionResults(Request $request, $type, $sessionId = null)
     {
-        $session = QuizSession::where('quiz_type', $type)->where('status', 'completed')->orderByDesc('ended_at')->firstOrFail();
+        $sessions = QuizSession::where('quiz_type', $type)
+            ->where('status', 'completed')
+            ->withCount('participants')
+            ->orderByDesc('ended_at')
+            ->orderByDesc('started_at')
+            ->get();
+        $session = $sessionId ? $sessions->firstWhere('id', $sessionId) : $sessions->first();
+
+        abort_unless($session, 404);
+
         $overview = $this->quiz->getSessionOverview($session);
         $questions = QuizQuestion::where('quiz_type', $type)->orderBy('order')->get();
 
-        return view('admin.quiz.results', compact('session', 'overview', 'questions', 'type'));
+        return view('admin.quiz.results', compact('session', 'sessions', 'overview', 'questions', 'type'));
     }
 
     public function createType(Request $request)
